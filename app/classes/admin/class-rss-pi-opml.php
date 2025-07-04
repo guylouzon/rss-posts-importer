@@ -213,5 +213,12 @@ if (!class_exists("Rss_pi_opml")) {
 
     }
     // Class Rss_pi_opml
-			header("Content-Type: application/download");
-			// disposition / encoding on response body			header("Content-Disposition: attachment;filename={$filename}");			header("Content-Transfer-Encoding: binary");			header("Content-type: text/html;charset=utf-8");		}	}	// CLass Rss_pi_opml}
+			// header("Content-Type: application/download");
+			// disposition / encoding on response body
+            // 			header("Content-Disposition: attachment;filename={$filename}");
+            // 			header("Content-Transfer-Encoding: binary");
+            // 			header("Content-type: text/html;charset=utf-8");
+            // 		}
+            // 	}
+            	// CLass Rss_pi_opml
+            }

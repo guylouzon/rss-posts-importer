@@ -1,59 +1,30 @@
-function uniqid(prefix, more_entropy) {
-  //  discuss at: http://phpjs.org/functions/uniqid/
-  // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  //  revised by: Kankrelune (http://www.webfaktory.info/)
-  //        note: Uses an internal counter (in php_js global) to avoid collision
-  //        test: skip
-  //   example 1: uniqid();
-  //   returns 1: 'a30285b160c14'
-  //   example 2: uniqid('foo');
-  //   returns 2: 'fooa30285b1cd361'
-  //   example 3: uniqid('bar', true);
-  //   returns 3: 'bara20285b23dfd1.31879087'
+/**
+ * Generates a unique ID, similar to PHP's uniqid().
+ * @param {string} [prefix=''] - Optional prefix for the ID.
+ * @param {boolean} [more_entropy=false] - If true, adds additional entropy.
+ * @returns {string} The unique ID.
+ */
+function uniqid(prefix = '', more_entropy = false) {
+    let seed = uniqid._seed = (uniqid._seed || Math.floor(Math.random() * 0x75bcd15)) + 1;
 
-  if (typeof prefix === 'undefined') {
-    prefix = '';
-  }
+    const formatSeed = (seed, reqWidth) => {
+        seed = parseInt(seed, 10).toString(16);
+        if (reqWidth < seed.length) {
+            return seed.slice(seed.length - reqWidth);
+        }
+        if (reqWidth > seed.length) {
+            return '0'.repeat(reqWidth - seed.length) + seed;
+        }
+        return seed;
+    };
 
-  var retId;
-  var formatSeed = function (seed, reqWidth) {
-    seed = parseInt(seed, 10)
-      .toString(16); // to hex str
-    if (reqWidth < seed.length) {
-      // so long we split
-      return seed.slice(seed.length - reqWidth);
+    let retId = prefix;
+    retId += formatSeed(Math.floor(Date.now() / 1000), 8);
+    retId += formatSeed(seed, 5);
+
+    if (more_entropy) {
+        retId += (Math.random() * 10).toFixed(8).toString();
     }
-    if (reqWidth > seed.length) {
-      // so short we pad
-      return Array(1 + (reqWidth - seed.length))
-        .join('0') + seed;
-    }
-    return seed;
-  };
 
-  // BEGIN REDUNDANT
-  if (!this.php_js) {
-    this.php_js = {};
-  }
-  // END REDUNDANT
-  if (!this.php_js.uniqidSeed) {
-    // init seed with big random int
-    this.php_js.uniqidSeed = Math.floor(Math.random() * 0x75bcd15);
-  }
-  this.php_js.uniqidSeed++;
-
-  // start with prefix, add current milliseconds hex string
-  retId = prefix;
-  retId += formatSeed(parseInt(new Date()
-    .getTime() / 1000, 10), 8);
-  // add seed hex string
-  retId += formatSeed(this.php_js.uniqidSeed, 5);
-  if (more_entropy) {
-    // for more entropy we add a float lower to 10
-    retId += (Math.random() * 10)
-      .toFixed(8)
-      .toString();
-  }
-
-  return retId;
+    return retId;
 }

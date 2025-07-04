@@ -1,382 +1,388 @@
-(function($) {
+document.addEventListener('DOMContentLoaded', function () {
 
-$('document').ready(function(){
-	// Edit-buttons
-	$('body').on('click', 'a.toggle-edit', function () {
-        var target = $(this).attr('data-target');
-
-        var modified = $('#modified_feeds').val();
-
-        if (modified) {
-            modified = modified.split(',');
-        } else {
-            modified = [target];
-        }
-
-        var index = modified.indexOf(target);
-        if ($('#display_' + target).hasClass('show')) {
-            $('#edit_' + target).remove();
-            $('#display_' + target).toggleClass('show');
-
-            if (index > -1) {
-                modified.splice(index, 1);
+    // Helper functions
+    function $(selector, context = document) {
+        return context.querySelector(selector);
+    }
+    function $all(selector, context = document) {
+        return Array.from(context.querySelectorAll(selector));
+    }
+    function on(event, selector, handler) {
+        document.body.addEventListener(event, function (e) {
+            if (e.target.closest(selector)) {
+                handler.call(e.target.closest(selector), e);
             }
+        });
+    }
+    function ajax(options) {
+        const xhr = new XMLHttpRequest();
+        xhr.open(options.type || 'GET', options.url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                options.success && options.success(xhr.responseText);
+            }
+        };
+        let data = '';
+        if (options.data) {
+            data = Object.entries(options.data).map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
+        }
+        xhr.send(data);
+    }
 
+    function uniqid() {
+        return 'id' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Toggle edit
+    on('click', 'a.toggle-edit', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('data-target');
+        let modified = $('#modified_feeds').value;
+        modified = modified ? modified.split(',') : [target];
+        const index = modified.indexOf(target);
+
+        const displayRow = $('#display_' + target);
+        const editRow = $('#edit_' + target);
+
+        if (displayRow.classList.contains('show')) {
+            if (editRow) editRow.remove();
+            displayRow.classList.toggle('show');
+            if (index > -1) modified.splice(index, 1);
             return false;
         } else {
-            if (index == -1) {
-                modified.push(target);
+            if (index === -1) modified.push(target);
+        }
+        $('#modified_feeds').value = modified.join(',');
+
+        ajax({
+            type: 'POST',
+            url: rss_pi.ajaxurl,
+            data: {
+                action: 'rss_pi_edit_row',
+                feed_id: target
+            },
+            success: function (data) {
+                displayRow.insertAdjacentHTML('afterend', data);
+                const newEditRow = $('#edit_' + target);
+                if (newEditRow) newEditRow.classList.toggle('show');
+                displayRow.classList.toggle('show');
             }
-        }
+        });
+    });
 
-        $('#modified_feeds').val(modified.join(','));
+    // Delete row
+    on('click', 'a.delete-row', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('data-target');
+        let deleted = $('#deleted_feeds').value;
+        let modified = $('#modified_feeds').value;
+        let new_feeds = $('#new_feeds').value;
 
-		$.ajax({
-			type: 'POST',
-			url: rss_pi.ajaxurl,
-			data: ({
-				action: 'rss_pi_edit_row',
-                feed_id: $(this).attr('data-target')
-			}),
-			success: function (data) {
-                $(data).insertAfter($('#display_' + target));
-                $('#edit_' + target).toggleClass('show');
-                $('#display_' + target).toggleClass('show');
-			}
-		});
-
-		return false;
-	});
-
-	// Delete-buttons
-	$('body').on('click', 'a.delete-row', function () {
-        var target = $(this).attr('data-target');
-
-        var deleted = $('#deleted_feeds').val();
-        var modified = $('#modified_feeds').val();
-        var new_feeds = $('#new_feeds').val();
-
-        if (deleted) {
-            deleted = deleted.split(',');
-            deleted.push(target);
-        } else {
-            deleted = [target];
-        }
+        deleted = deleted ? deleted.split(',') : [];
+        deleted.push(target);
 
         if (modified) {
             modified = modified.split(',');
-            var index = modified.indexOf(target);
-            if (index > -1) {
-                modified.splice(index, 1);
-            }
-            $('#modified_feeds').val(modified.join(','));
+            const idx = modified.indexOf(target);
+            if (idx > -1) modified.splice(idx, 1);
+            $('#modified_feeds').value = modified.join(',');
         }
-
         if (new_feeds) {
             new_feeds = new_feeds.split(',');
-            var index = new_feeds.indexOf(target);
-            if (index > -1) {
-                new_feeds.splice(index, 1);
-            }
-            $('#new_feeds').val(new_feeds.join(','));
+            const idx = new_feeds.indexOf(target);
+            if (idx > -1) new_feeds.splice(idx, 1);
+            $('#new_feeds').value = new_feeds.join(',');
         }
+        $('#deleted_feeds').value = deleted.join(',');
 
+        const editRow = $('#edit_' + target);
+        const displayRow = $('#display_' + target);
+        if (editRow) editRow.remove();
+        if (displayRow) displayRow.remove();
+    });
 
-        $('#deleted_feeds').val(deleted.join(','));
-
-		$('#edit_' + target).remove();
-		$('#display_' + target).remove();
-
-		return false;
-	});
-
-
-	// status-buttons
-	$('body').on('click', 'a.status-row', function () {
-		var action = $(this).attr('data-action');
-		var target = $(this).attr('data-target');
-
-		if (action == 'pause') {
-		   $(this).attr('data-action', 'enable');
-		   $(this).html('Enable Feed');
-		} else {
-		   $(this).attr('data-action', 'pause');
-		   $(this).html('Pause');
-	    }
-
-		var paused_feeds = $('#paused_feeds').val();
-        if (paused_feeds) {
-            paused_feeds = paused_feeds.split(',');
-            paused_feeds.push(target);
+    // Status row
+    on('click', 'a.status-row', function (e) {
+        e.preventDefault();
+        const action = this.getAttribute('data-action');
+        const target = this.getAttribute('data-target');
+        if (action === 'pause') {
+            this.setAttribute('data-action', 'enable');
+            this.innerHTML = 'Enable Feed';
         } else {
-            paused_feeds = [target];
+            this.setAttribute('data-action', 'pause');
+            this.innerHTML = 'Pause';
         }
+        let paused_feeds = $('#paused_feeds').value;
+        paused_feeds = paused_feeds ? paused_feeds.split(',') : [];
+        paused_feeds.push(target);
+        $('#paused_feeds').value = paused_feeds.join(',');
+    });
 
-		$('#paused_feeds').val(paused_feeds.join(','));
+    // Feed table change detection
+    const feedTable = $('#rss_pi-feed-table');
+    if (feedTable) {
+        feedTable.addEventListener('change', function (e) {
+            const tr = e.target.closest('tr.edit-row');
+            if (tr) {
+                const id = tr.id.replace('edit_', '');
+                const displayTr = $('#display_' + id);
+                const editTr = $('#edit_' + id);
+                const fields = displayTr.dataset.fields.split(',');
+                fields.forEach(function (field) {
+                    const fieldSelector = '.field-' + field;
+                    const displayField = displayTr.querySelector(fieldSelector);
+                    const editField = editTr.querySelector(fieldSelector);
+                    if (displayField && editField) {
+                        displayField.textContent = editField.value;
+                    }
+                });
+                displayTr.classList.add('rss-pi-unsaved');
+            }
+        });
+        let do_save = false;
+        window.addEventListener('beforeunload', function (e) {
+            if (!do_save && $all("#rss_pi-feed-table .rss-pi-unsaved").length) {
+                e.preventDefault();
+                e.returnValue = rss_pi.l18n.unsaved;
+                return rss_pi.l18n.unsaved;
+            }
+        });
+        $('#rss_pi-settings-form').addEventListener('submit', function () {
+            do_save = true;
+        });
+    }
 
-		return false;
-	});
-
-	if ( $("#rss_pi-feed-table").length ) {
-
-		$("#rss_pi-feed-table").on("rss-pi-changed", "tr", function () {
-			var $tr = $(this),
-				id = $tr.attr("id").replace("display_","").replace("edit_",""),
-				$tr_data = $("#display_"+id),
-				$tr_edit = $("#edit_"+id),
-				fields = $tr_data.data("fields").split(",");
-			$.each(fields,function(i){
-				var field = ".field-"+fields[i];
-				$tr_data.find(field).text($tr_edit.find(field).val());
-			});
-			$tr_data.addClass("rss-pi-unsaved");
-		});
-
-		var do_save = false;
-		$(window).bind('beforeunload', function() {
-			if( ! do_save && $("#rss_pi-feed-table .rss-pi-unsaved").length ){
-				return rss_pi.l18n.unsaved;
-			}
-		});
-		$("#rss_pi-settings-form").on("submit",function(){
-			do_save = true;
-		});
-		// Monitor dynamic inputs
-		$("#rss_pi-feed-table").on('change', ':input', function(){ //triggers change in all input fields including text type
-			$(this).parents("tr.edit-row").trigger("rss-pi-changed");
-		});
-
-	}
-
-	$('a.add-row').on('click', function (e) {
-		e.preventDefault();
-		var target = uniqid();
-
-		$.ajax({
-			type: 'POST',
-			url: rss_pi.ajaxurl,
-			data: ({
-				action: 'rss_pi_add_row',
-                feed_id: target
-			}),
-			success: function (data) {
-                $('.rss-rows').append(data);
-                $("#" + target + "-name").focus().select();
-			}
-		});
-
-        var new_feeds = $('#new_feeds').val();
-
-        if (new_feeds) {
-            new_feeds = new_feeds.split(',');
+    // Add new feed row
+    $all('a.add-row').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = uniqid();
+            ajax({
+                type: 'POST',
+                url: rss_pi.ajaxurl,
+                data: {
+                    action: 'rss_pi_add_row',
+                    feed_id: target
+                },
+                success: function (data) {
+                    $('.rss-rows').insertAdjacentHTML('beforeend', data);
+                    const input = $('#' + target + '-name');
+                    if (input) {
+                        input.focus();
+                        input.select && input.select();
+                    }
+                }
+            });
+            let new_feeds = $('#new_feeds').value;
+            new_feeds = new_feeds ? new_feeds.split(',') : [];
             new_feeds.push(target);
-        } else {
-            new_feeds = [target];
+            $('#new_feeds').value = new_feeds.join(',');
+        });
+    });
+
+    // Save and import
+    const saveAndImport = $('#save_and_import');
+    if (saveAndImport) {
+        saveAndImport.addEventListener('click', function () {
+            $('#save_to_db').value = 'true';
+        });
+    }
+
+    // Max posts validation
+    if (window.Modernizr && Modernizr.input.min && Modernizr.input.max) {
+        $all("#rss_pi-settings-form [type='submit']").forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                $all("[name$='-max_posts']").forEach(function (input) {
+                    const val = parseInt(input.value);
+                    const min = parseInt(input.getAttribute('min'));
+                    const max = parseInt(input.getAttribute('max'));
+                    const id = input.id.replace("-max_posts", "");
+                    if (val < min || val > max) {
+                        $('#edit_' + id).classList.add('show');
+                        $('#display_' + id).classList.add('show');
+                    }
+                });
+            });
+        });
+    }
+
+    // Load log
+    $all('a.load-log').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            $('#main_ui').style.display = 'none';
+            $('.ajax_content').innerHTML = '<img src="/wp-admin/images/wpspin_light.gif" alt="" class="loader" />';
+            ajax({
+                type: 'POST',
+                url: rss_pi.ajaxurl,
+                data: { action: 'rss_pi_load_log' },
+                success: function (data) {
+                    $('.ajax_content').innerHTML = data;
+                }
+            });
+        });
+    });
+
+    // Show main UI
+    on('click', 'a.show-main-ui', function (e) {
+        e.preventDefault();
+        $('#main_ui').style.display = '';
+        $('.ajax_content').innerHTML = '';
+    });
+
+    // Clear log
+    on('click', 'a.clear-log', function (e) {
+        e.preventDefault();
+        ajax({
+            type: 'POST',
+            url: rss_pi.ajaxurl,
+            data: { action: 'rss_pi_clear_log' },
+            success: function (data) {
+                $('.log').innerHTML = data;
+            }
+        });
+    });
+
+    // Datepicker (requires a vanilla JS datepicker library if needed)
+    if ($('#from_date')) $('#from_date').type = 'date';
+    if ($('#till_date')) $('#till_date').type = 'date';
+
+    // Stats placeholder AJAX
+    if ($('#rss_pi-stats-placeholder')) {
+        function rss_filter_stats(form) {
+            const data = {
+                action: "rss_pi_stats",
+                rss_from_date: $('#from_date') ? $('#from_date').value : "",
+                rss_till_date: $('#till_date') ? $('#till_date').value : ""
+            };
+            let loading = false;
+            if (form && $('#submit-rss_filter_stats')) {
+                data.rss_filter_stats = $('#submit-rss_filter_stats').value;
+            } else {
+                loading = document.createElement('div');
+                loading.className = 'rss_pi_overlay';
+                loading.innerHTML = '<img class="rss_pi_loading" src="' + rss_pi.pluginurl + 'app/assets/img/loading.gif" /><p>Stats are loading. Please wait...</p>';
+                $('#rss_pi-stats-placeholder').appendChild(loading);
+            }
+            ajax({
+                type: "POST",
+                url: rss_pi.ajaxurl,
+                data: data,
+                success: function (data) {
+                    if (loading) loading.remove();
+                    $('#rss_pi-stats-placeholder').innerHTML = data;
+                    if (typeof drawChart === 'function') drawChart();
+                    if ($('#from_date')) $('#from_date').type = 'date';
+                    if ($('#till_date')) $('#till_date').type = 'date';
+                    const submitBtn = $('#submit-rss_filter_stats');
+                    if (submitBtn) {
+                        submitBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            rss_filter_stats(true);
+                        });
+                    }
+                }
+            });
         }
+        rss_filter_stats();
+    }
 
-        $('#new_feeds').val(new_feeds.join(','));
-	});
+    // Progress bar (requires a vanilla JS progress bar if needed)
+    if ($('#rss_pi_progressbar') && typeof feeds !== 'undefined' && feeds.count) {
+        function import_feed(id) {
+            ajax({
+                type: 'POST',
+                url: rss_pi.ajaxurl,
+                data: {
+                    action: 'rss_pi_import',
+                    feed: id
+                },
+                success: function (resp) {
+                    let data;
+                    try { data = JSON.parse(resp).data || {}; } catch (e) { data = {}; }
+                    const progressbar = $('#rss_pi_progressbar');
+                    if (progressbar) {
+                        progressbar.value = feeds.processed();
+                        progressbar.max = feeds.total();
+                    }
+                    $('#rss_pi_progressbar_label .processed').textContent = feeds.processed();
+                    if (data.count !== undefined) feeds.imported(data.count);
+                    if (feeds.left()) {
+                        $('#rss_pi_progressbar_label .count').textContent = feeds.imported();
+                        import_feed(feeds.get());
+                    } else {
+                        $('#rss_pi_progressbar_label').innerHTML = "Import completed. Imported posts: " + feeds.imported();
+                    }
+                }
+            });
+        }
+        const progressbar = $('#rss_pi_progressbar');
+        if (progressbar) {
+            progressbar.value = 0;
+            progressbar.max = feeds.total();
+        }
+        $('#rss_pi_progressbar_label').innerHTML = "Import in progres. Processed feeds: <span class='processed'>0</span> of <span class='max'>" + feeds.total() + "</span>. Imported posts so far: <span class='count'>0</span>";
+        import_feed(feeds.get());
+    }
 
-	$('#save_and_import').on('click', function () {
-		$('#save_to_db').val('true');
-	});
+    // Custom frequency
+    const freqSelect = $('#frequency');
+    const customFreq = $('#rss_custom_frequency');
+    if (freqSelect && customFreq) {
+        freqSelect.addEventListener('change', function () {
+            if (this.value === "custom_frequency") {
+                customFreq.style.display = 'inline';
+                customFreq.focus();
+            } else {
+                customFreq.value = '';
+                customFreq.style.display = 'none';
+            }
+        });
+    }
 
-	if ( Modernizr !== undefined && Modernizr.input.min && Modernizr.input.max )
-	$("#rss_pi-settings-form [type='submit']").on("click",function(e){
-		$("[name$='-max_posts']").each(function(){
-			var max_posts = {
-				val: parseInt($(this).val()),
-				min: parseInt($(this).attr("min")),
-				max: parseInt($(this).attr("max")),
-				id: $(this).attr("id").replace("-max_posts","")
-			}
-			if ( max_posts.val < max_posts.min || max_posts.val > max_posts.max ) {
-				$("#edit_"+max_posts.id).addClass("show");
-				$("#display_"+max_posts.id).addClass("show");
-			}
-		});
-	});
-
-	$('a.load-log').on('click', function () {
-		$('#main_ui').hide();
-		$('.ajax_content').html('<img src="/wp-admin/images/wpspin_light.gif" alt="" class="loader" />');
-		$.ajax({
-			type: 'POST',
-			url: rss_pi.ajaxurl,
-			data: ({
-				action: 'rss_pi_load_log'
-			}),
-			success: function (data) {
-				$('.ajax_content').html(data);
-			}
-		});
-		return false;
-	});
-
-	$('body').delegate('a.show-main-ui', 'click', function () {
-		$('#main_ui').show();
-		$('.ajax_content').html('');
-		return false;
-	});
-
-	$('body').delegate('a.clear-log', 'click', function () {
-		$.ajax({
-			type: 'POST',
-			url: rss_pi.ajaxurl,
-			data: ({
-				action: 'rss_pi_clear_log'
-			}),
-			success: function (data) {
-				$('.log').html(data);
-			}
-		});
-		return false;
-	});
-
-	$("#from_date").datepicker();
-	$("#till_date").datepicker();
-
-	if ( $("#rss_pi-stats-placeholder").length ) {
-		rss_filter_stats = function(form) {
-			var data = {
-					action: "rss_pi_stats",
-					rss_from_date: $("#from_date").val() || "",
-					rss_till_date: $("#till_date").val() || ""
-				},
-				$loading = false;
-			if (form && $("#submit-rss_filter_stats").length) {
-				data.rss_filter_stats = $("#submit-rss_filter_stats").val();
-			} else {
-				$loading = $('<div class="rss_pi_overlay"><img class="rss_pi_loading" src="'+rss_pi.pluginurl+'app/assets/img/loading.gif" /><p>Stats are loading. Please wait...</p></div>').appendTo("#rss_pi-stats-placeholder");
-			}
-			$.ajax({
-				type: "POST",
-				url: rss_pi.ajaxurl,
-				data: data,
-				success: function (data) {
-					if ($loading) { $loading.remove(); $loading = false; }
-					$("#rss_pi-stats-placeholder").empty().append(data);
-					drawChart();
-					$("#from_date").datepicker();
-					$("#till_date").datepicker();
-					$("#submit-rss_filter_stats").on("click",function(e){
-						e.preventDefault();
-						$loading = $('<div class="rss_pi_overlay"><img class="rss_pi_loading" src="'+rss_pi.pluginurl+'app/assets/img/loading.gif" /><p>Stats are loading. Please wait...</p></div>').appendTo("#rss_pi-stats-placeholder");
-						rss_filter_stats(true);
-					});
-				}
-			});
-		};
-		rss_filter_stats();
-	}
-
-	if ( $("#rss_pi_progressbar").length && feeds !== undefined && feeds.count ) {
-		var import_feed = function(id) {
-
-			$.ajax({
-				type: 'POST',
-				url: rss_pi.ajaxurl,
-				data: {
-					action: 'rss_pi_import',
-					feed: id
-				},
-				success: function (data) {
-					var data = data.data || {};
-					$("#rss_pi_progressbar").progressbar({
-						value: feeds.processed()
-					});
-					$("#rss_pi_progressbar_label .processed").text(feeds.processed());
-					if ( data.count !== undefined ) feeds.imported(data.count);
-					if (feeds.left()) {
-						$("#rss_pi_progressbar_label .count").text(feeds.imported());
-						import_feed(feeds.get());
-					} else {
-						$("#rss_pi_progressbar_label").html("Import completed. Imported posts: " + feeds.imported());
-					}
-				}
-			});
-		}
-		$("#rss_pi_progressbar").progressbar({
-			value: 0,
-			max: feeds.total()
-		});
-		$("#rss_pi_progressbar_label").html("Import in progres. Processed feeds: <span class='processed'>0</span> of <span class='max'>"+feeds.total()+"</span>. Imported posts so far: <span class='count'>0</span>");
-		import_feed(feeds.get());
-	}
-
-
-/*This is for custom frequency*/
-  $("#frequency").change(function(){
-
-	  if($(this).val()=="custom_frequency")
-	  {
-		  $("#rss_custom_frequency").show();
-		  $("#rss_custom_frequency").focus();
-	  }else{
-		 $("#rss_custom_frequency").val('');
-		 $("#rss_custom_frequency").hide();
-	  }
-
-
-	  })
-
-        var url = location.href;
-
-        var myParam1 = location.search.split('version=')[1];
-
-
-		if (typeof(myParam1) == 'undefined')
-		{
-		 if(new_js_url=='')
-		 {
-			 var api_add = "normal";
-		 }
-		 else
-		 {
-			var api_add = "premium";
-		 }
-		 window.location.assign(window.location.href+='&version='+new_js_version+'&type='+api_add);
-		}
-
-		else{}
-
-		//alert(myParam);
-
-
+    // URL version param logic
+    const url = location.href;
+    const myParam1 = location.search.split('version=')[1];
+    if (typeof (myParam1) === 'undefined') {
+        let api_add = (typeof new_js_url !== 'undefined' && new_js_url !== '') ? "premium" : "normal";
+        window.location.assign(window.location.href + '&version=' + new_js_version + '&type=' + api_add);
+    }
 });
 
-})(jQuery);
-
+// Helper for updating feed IDs
 function update_ids() {
-	var feed_ids = jQuery("#rss_pi-feed-table > tbody input[name='id']").map(function () {
-		return jQuery(this).val();
-	}).get().join();
-
-	jQuery('#feed_ids').val(feed_ids);
+    const feed_ids = Array.from(document.querySelectorAll("#rss_pi-feed-table > tbody input[name='id']")).map(function (el) {
+        return el.value;
+    }).join();
+    const feed_ids_input = document.getElementById('feed_ids');
+    if (feed_ids_input) feed_ids_input.value = feed_ids;
 }
 
+// Feeds object (global)
 var feeds = {
-	ids: feeds || [],
-	count: feeds && feeds.length ? feeds.length : 0,
-	imported_posts: 0,
-	set: function(ids){
-		this.ids = ids;
-		this.count = ids.length;
-	},
-	get: function(){
-		return this.ids.splice(0,1)[0];
-	},
-	left: function(){
-		return this.ids.length;
-	},
-	processed: function(){
-		return this.count - this.ids.length;
-	},
-	total: function(){
-		return this.count;
-	},
-	imported: function(num){
-		if ( num !== undefined && !isNaN(parseInt(num)) ) this.imported_posts += parseInt(num);
-		return this.imported_posts;
-	}
+    ids: typeof feeds !== 'undefined' && feeds.ids ? feeds.ids : [],
+    count: typeof feeds !== 'undefined' && feeds.count ? feeds.count : 0,
+    imported_posts: 0,
+    set: function (ids) {
+        this.ids = ids;
+        this.count = ids.length;
+    },
+    get: function () {
+        return this.ids.splice(0, 1)[0];
+    },
+    left: function () {
+        return this.ids.length;
+    },
+    processed: function () {
+        return this.count - this.ids.length;
+    },
+    total: function () {
+        return this.count;
+    },
+    imported: function (num) {
+        if (num !== undefined && !isNaN(parseInt(num))) this.imported_posts += parseInt(num);
+        return this.imported_posts;
+    }
 };
