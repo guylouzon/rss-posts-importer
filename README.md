@@ -9,6 +9,7 @@ I took a simple, old WordPress plugin that imports RSS feeds as posts — and br
 
 🧠 Rewritten and modernized **entirely with AI assistance**.
 
+Coming soon - integration with [interQ.link](https://interq.link) ! an RSS generator based on user sharing
 
 
 Original readme Below
