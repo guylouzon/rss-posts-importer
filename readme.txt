@@ -1,6 +1,23 @@
+# RSS posts importer
+a code refresh for an old WP rss plugin
+
+
+
+Original readme Below
+
+Starting a new changelog !
+
+== Change Log ==
+
+= Version 2025.7.01 = 4/7/2025
+ * Upgraded to php 8
+
+
+
+
 === RSS Post Importer ===
 Contributors: feedsapi
-Donate link: https://www.feedsapi.org/
+Donate link: https://www.feedsapi.org/ (outdated)
 Tags: rss aggregation, wordpress autoblog aggregator, Autoblogger, rss autopost and syndicator, blog content curation, feedsyndicate, feedwordpress, multiple rss feed importer, rss feeds to post, content syndication, blog migration, yahoo pipes
 Requires at least: 3.5
 Tested up to: 4.7.4
@@ -310,3 +327,4 @@ Learn more (and get detailed instructions) in our [contribute guide](http://jetp
 
 = Version 1.0.1 =
 * Fixed some localization issues.
+

@@ -3,7 +3,17 @@ a code refresh for an old WP rss plugin
 
 
 
-Original readme
+Original readme Below
+
+Starting a new changelog !
+
+== Change Log ==
+
+= Version 2025.7.01 = 4/7/2025
+ * Upgraded to php 8
+
+
+
 
 === RSS Post Importer ===
 Contributors: feedsapi
