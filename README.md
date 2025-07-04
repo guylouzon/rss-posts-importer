@@ -1,5 +1,13 @@
-# RSS posts importer
-a code refresh for an old WP rss plugin
+# RSS posts importer - 2025 updated
+
+I took a simple, old WordPress plugin that imports RSS feeds as posts — and brought it up to date with modern standards.
+
+### ✅ What's Changed
+- Upgraded the code to support the **latest PHP versions**
+- Replaced jQuery with **vanilla JavaScript**
+- Ensured full compatibility with the **latest WordPress (6.x)**
+
+🧠 Rewritten and modernized **entirely with AI assistance**.
 
 
 
@@ -11,9 +19,13 @@ Starting a new changelog !
 
 = Version 2025.7.01 = 4/7/2025
  * Upgraded to php 8
+ * Changed jQuery to Vanilla js
 
 
 
+***
+OLD readme starts here
+***
 
 === RSS Post Importer ===
 Contributors: feedsapi
