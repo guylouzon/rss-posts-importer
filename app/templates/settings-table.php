@@ -17,17 +17,20 @@
 						<td>
                         <?php
 							$schedules = wp_get_schedules();
-							$custom_cron_options = get_option( 'rss_custom_cron_frequency', array());
-							if (! empty($custom_cron_options)) {
-                                $rss_custom_cron = unserialize($custom_cron_options);
+							$custom_cron_options = get_option('rss_custom_cron_frequency', []);
+							if (!empty($custom_cron_options) && is_string($custom_cron_options)) {
+                                $rss_custom_cron = @unserialize($custom_cron_options);
+                                if (!is_array($rss_custom_cron)) {
+                                    $rss_custom_cron = [];
+                                }
                             } else {
-                                $rss_custom_cron = array();
+                                $rss_custom_cron = [];
                             }
 						  ?>
 							<select name="frequency" id="frequency">
                                 <?php
                                     foreach (array_keys($schedules) as $interval) :
-                                    if (empty($rss_custom_cron) || $rss_custom_cron['frequency'] != $interval) :
+                                    if (empty($rss_custom_cron) || ($rss_custom_cron['frequency'] ?? '') != $interval) :
 								?>
                                         <option value="<?php echo $interval; ?>"
                                                 <?php if ($this->options['settings']['frequency'] == $interval) echo('selected="selected"'); ?>
@@ -67,7 +70,7 @@
 							<?php endif; ?>
 						</td>
 						<td>
-							<?php $feeds_api_key = isset($this->options['settings']["feeds_api_key"]) ? $this->options['settings']["feeds_api_key"] : ""; ?>
+							<?php $feeds_api_key = $this->options['settings']["feeds_api_key"] ?? ""; ?>
 							<input type="text" name="feeds_api_key" id="feeds_api_key" value="<?php echo $feeds_api_key; ?>" />
 						</td>
 					</tr>
@@ -117,7 +120,7 @@
 							}
 							?>
 							<textarea name="keyword_filter" id="post_template" cols="30" rows="10"<?php echo $disabled; ?>><?php
-								echo implode(', ', $this->options['settings']['keywords']);
+								echo implode(', ', $this->options['settings']['keywords'] ?? []);
 								?></textarea>
 						</td>
 					</tr>
@@ -284,7 +287,7 @@
 								$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=purge-deleted-cache&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
 							}
 							?>
-							<?php $rss_pi_deleted_posts = count( get_option( 'rss_pi_deleted_posts', array() ) ); ?>
+							<?php $rss_pi_deleted_posts = count( get_option( 'rss_pi_deleted_posts', [] ) ); ?>
 							<p><?php printf( _n('Cached: <strong>%d</strong> deleted post', 'Cached: <strong>%d</strong> deleted posts', $rss_pi_deleted_posts, 'rss-post-importer'), $rss_pi_deleted_posts ); ?></p>
 							<input type="submit" value="Purge Cache" name="purge_deleted_cache" class="button button-primary button-large"<?php echo $disabled; ?> />
 						</td>

@@ -10,62 +10,60 @@ class rssPIFront {
     /**
      * Whether the API key is valid
      *
-     * @var boolean
+     * @var bool
      */
-    var $is_key_valid;
+    public bool $is_key_valid;
 
     /**
      * The options
      *
      * @var array
      */
-    var $options;
+    public array $options;
 
     /**
      * Aprompt for invalid/absent API keys
      * @var string
      */
-    var $key_prompt;
+    public string $key_prompt;
 
     /**
      * Initialise and hook all actions
      */
-    public function init() {
+    public function init(): void {
         global $post, $rss_post_importer;
 
         // add noidex to front
-        add_action('wp_head', array($this, 'rss_pi_noindex_meta_tag'));
+        add_action('wp_head', [$this, 'rss_pi_noindex_meta_tag']);
         // add canonical urls
 
-        remove_action( 'wp_head', 'rel_canonical' );
-        add_action('wp_head', array($this, 'rss_pi_canonical_urls_meta_tag'));
+        remove_action('wp_head', 'rel_canonical');
+        add_action('wp_head', [$this, 'rss_pi_canonical_urls_meta_tag']);
 
         // add options
         $this->options = $rss_post_importer->options;
 
         // Check for block indexing
-        if ($this->options['settings']['nofollow_outbound'] == 'true') {
-            add_filter('the_content', array($this, 'rss_pi_url_parse'));
+        if (($this->options['settings']['nofollow_outbound'] ?? '') === 'true') {
+            add_filter('the_content', [$this, 'rss_pi_url_parse']);
         }
 
-        $social = array(
+        $social = [
             'tw_show' => 'add_twitter_cards',
             'gg_show' => 'add_google_item',
             'og_show' => 'fb_opengraph',
-        );
+        ];
 
-        foreach($social as $key => $value) {
+        foreach ($social as $key => $value) {
             if (isset($this->options['settings'][$key]) &&
                 $this->options['settings'][$key] == 1) {
 
-                add_action('wp_head', array($this, $value));
-
+                add_action('wp_head', [$this, $value]);
             }
         }
-
     }
 
-    function rss_pi_noindex_meta_tag() {
+    public function rss_pi_noindex_meta_tag(): void {
         global $post, $rss_post_importer;
 
         //Add meta tag for UTF-8 character encoding.
@@ -81,10 +79,10 @@ class rssPIFront {
             $this->options = $rss_post_importer->options;
 
             // get value of block indexing
-            $block_indexing = $this->options['settings']['block_indexing'];
+            $block_indexing = $this->options['settings']['block_indexing'] ?? '';
 
             // Check for block indexing
-            if ($this->options['settings']['block_indexing'] == 'true') {
+            if ($block_indexing === 'true') {
                 $meta_values = get_post_meta($current_post_id, 'rss_pi_source_url', false);
                 // if meta value array is empty it means post is not imported by this plugin.
                 if (!empty($meta_values)) {
@@ -94,8 +92,7 @@ class rssPIFront {
         }
     }
 
-
-    function rss_pi_canonical_urls_meta_tag() {
+    public function rss_pi_canonical_urls_meta_tag(): void {
         global $post, $rss_post_importer;
 
         // Check if single post
@@ -106,52 +103,43 @@ class rssPIFront {
             // add options
             $this->options = $rss_post_importer->options;
 
-            // Check for block indexing
-
             $meta_rss_pi_canonical_url = get_post_meta($current_post_id, 'rss_pi_canonical_url', false);
-            if(!empty($meta_rss_pi_canonical_url) && $meta_rss_pi_canonical_url[0]=="source_blog"){
+            if (!empty($meta_rss_pi_canonical_url) && $meta_rss_pi_canonical_url[0] === "source_blog") {
                 $meta_values_source = get_post_meta($current_post_id, 'rss_pi_source_url', false);
                 if (!empty($meta_values_source)) {
                     $pieces = parse_url($meta_values_source[0]);
-                    $domain = isset($pieces['host']) ? $pieces['host'] : '';
+                    $domain = $pieces['host'] ?? '';
                     if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-                        $domain= $regs['domain'];
+                        $domain = $regs['domain'];
                     }
-                    $domain= $regs['domain'];
-                    $check_domain = explode('.',$domain);
+                    $check_domain = explode('.', $domain);
                     //Check URL for Google Only
-                    if(isset($check_domain[0]) && $check_domain[0]=="google"){
-                        $google_url     = $pieces['fragment'];
-                        $google_explode = explode("url=",$google_url);
-                        if(isset($google_explode[1]) && $google_explode[1]!='')
-                        {
+                    if (isset($check_domain[0]) && $check_domain[0] === "google") {
+                        $google_url = $pieces['fragment'] ?? '';
+                        $google_explode = explode("url=", $google_url);
+                        if (isset($google_explode[1]) && $google_explode[1] !== '') {
                             $canonical_urls = $google_explode[1];
+                        } else {
+                            $canonical_urls = $meta_values_source[0];
                         }
-                    }else{
+                    } else {
                         $canonical_urls = $meta_values_source[0];
                     }
 
                     // if meta value array is empty it means post is not imported by this plugin.
                     if (!empty($meta_values_source)) {
-
-                        echo "<link rel='canonical' href='".$canonical_urls."' />";
+                        echo "<link rel='canonical' href='" . esc_url($canonical_urls) . "' />";
                     }
-
                 }
-            }else
-            {
+            } else {
                 // original code
-                $link = get_permalink( $current_post_id );
-                echo "<link rel='canonical' href='$link' />\n";
-
+                $link = get_permalink($current_post_id);
+                echo "<link rel='canonical' href='" . esc_url($link) . "' />\n";
             }
-
-
         }
     }
 
-
-    function rss_pi_url_parse($content) {
+    public function rss_pi_url_parse(string $content): string {
 
         $regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>";
         if (preg_match_all("/$regexp/siU", $content, $matches, PREG_SET_ORDER)) {
@@ -190,88 +178,85 @@ class rssPIFront {
         return $content;
     }
 
-    function add_twitter_cards() {
+    public function add_twitter_cards(): void {
         global $post;
-        if($this->options['settings']['tw_show']==1){
-            if(is_single()) {
-                $tc_url    = get_permalink();
-                $tc_title  = get_the_title();
-                if($excerpt  = $post->post_content) {
+        if (($this->options['settings']['tw_show'] ?? 0) == 1) {
+            if (is_single()) {
+                $tc_url = get_permalink();
+                $tc_title = get_the_title();
+                $excerpt = '';
+                if ($post && $post->post_content) {
                     $excerpt = strip_tags($post->post_content);
                     $excerpt = str_replace("", "'", $excerpt);
                 }
-                $tc_description = trim(substr($excerpt, 0,150));
-                if(has_post_thumbnail($post->ID)) {
-                    $img_src = wp_get_attachment_image_src(get_post_thumbnail_id( $post->ID ), full );
-                    $tc_image_thumb  = $img_src[0];
+                $tc_description = trim(substr($excerpt, 0, 150));
+                if (has_post_thumbnail($post->ID)) {
+                    $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
+                    $tc_image_thumb = $img_src[0];
                 } else {
-                    //$tc_image_thumb = site_url() . '/wp-content/plugins/rss-post-importer/app/assets/img/03-04-feedsapi-api.jpg';
-                    //plugins_url( 'images/wordpress.png', __FILE__ )
-                    $tc_image_thumb = plugins_url( 'app/assets/img/03-04-feedsapi-api.jpg', __FILE__ );
+                    $tc_image_thumb = plugins_url('app/assets/img/03-04-feedsapi-api.jpg', __FILE__);
                 }
                 echo '<meta name="twitter:card" value="summary" />';
                 echo '<meta name="twitter:site" value="@feedsapi" />';
-                echo '<meta name="twitter:title" value="'.$tc_title.'" />';
-                echo '<meta name="twitter:description" value="'.$tc_description.'" />';
-                echo '<meta name="twitter:url" value="'.$tc_url.'" />';
-                echo '<meta name="twitter:image" value="'.$tc_image_thumb.'" />';
+                echo '<meta name="twitter:title" value="' . esc_attr($tc_title) . '" />';
+                echo '<meta name="twitter:description" value="' . esc_attr($tc_description) . '" />';
+                echo '<meta name="twitter:url" value="' . esc_url($tc_url) . '" />';
+                echo '<meta name="twitter:image" value="' . esc_url($tc_image_thumb) . '" />';
                 echo '<meta name="twitter:creator" value="@feedsapi" />';
             }
         }
     }
 
-    function fb_opengraph() {
+    public function fb_opengraph(): void {
         global $post;
-        if($this->options['settings']['og_show']==1){
-            if(is_single()) {
-                if(has_post_thumbnail($post->ID)) {
-                    $img_src = wp_get_attachment_image_src(get_post_thumbnail_id( $post->ID ), 'medium');
-                    $tc_image_thumb  = $img_src[0];
+        if (($this->options['settings']['og_show'] ?? 0) == 1) {
+            if (is_single()) {
+                if (has_post_thumbnail($post->ID)) {
+                    $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
+                    $tc_image_thumb = $img_src[0];
                 } else {
-                    //$tc_image_thumb = site_url() . '/wp-content/plugins/rss-post-importer/app/assets/img/03-04-feedsapi-api.jpg';
-                    $tc_image_thumb = plugins_url( 'app/assets/img/03-04-feedsapi-api.jpg', __FILE__ );
+                    $tc_image_thumb = plugins_url('app/assets/img/03-04-feedsapi-api.jpg', __FILE__);
                 }
 
-                if($excerpt  = $post->post_content) {
+                $excerpt = '';
+                if ($post && $post->post_content) {
                     $excerpt = strip_tags($post->post_content);
                     $excerpt = str_replace("", "'", $excerpt);
                 }
-                $rest = trim(substr($excerpt, 0,150));
-                $post_date = $post->post_date;
-                $og_title  = get_the_title();
-                $og_url    = get_permalink();
-                echo '<meta property="og:title" content="'.$og_title.'"/>';
-                echo '<meta property="og:image" content="'.$tc_image_thumb.'"/>';
+                $rest = trim(substr($excerpt, 0, 150));
+                $og_title = get_the_title();
+                echo '<meta property="og:title" content="' . esc_attr($og_title) . '"/>';
+                echo '<meta property="og:image" content="' . esc_url($tc_image_thumb) . '"/>';
                 echo '<meta property="og:image:width" content="681" />';
                 echo '<meta property="og:image:height" content="358" />';
-                echo '<meta property="og:site_name" content="'.get_bloginfo().'"/>';
-                echo '<meta property="og:description" content="'.$rest.'"/>';
+                echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo()) . '"/>';
+                echo '<meta property="og:description" content="' . esc_attr($rest) . '"/>';
             }
         }
     }
 
-    function add_google_item() {
+    public function add_google_item(): void {
         global $post;
-        if($this->options['settings']['gg_show']==1){
-            if(is_single()) {
-                if(has_post_thumbnail($post->ID)) {
-                    $img_src = wp_get_attachment_image_src(get_post_thumbnail_id( $post->ID ), full );
-                    $tc_image_thumb  = $img_src[0];
+        if (($this->options['settings']['gg_show'] ?? 0) == 1) {
+            if (is_single()) {
+                if (has_post_thumbnail($post->ID)) {
+                    $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
+                    $tc_image_thumb = $img_src[0];
                 } else {
-                    //$tc_image_thumb = site_url() . '/wp-content/plugins/rss-post-importer/app/assets/img/03-04-feedsapi-api.jpg';
-                    $tc_image_thumb = plugins_url( 'app/assets/img/03-04-feedsapi-api.jpg', __FILE__ );
+                    $tc_image_thumb = plugins_url('app/assets/img/03-04-feedsapi-api.jpg', __FILE__);
                 }
 
-                if($excerpt  = $post->post_content) {
+                $excerpt = '';
+                if ($post && $post->post_content) {
                     $excerpt = strip_tags($post->post_content);
                     $excerpt = str_replace("", "'", $excerpt);
                 }
-                $rest = trim(substr($excerpt, 0,150));
-                $gg_url    = get_permalink();
-                $gg_title  = get_the_title();
-                echo '<meta itemprop="name" content="'.$gg_title.'">';
-                echo '<meta itemprop="description" content="'.$rest.'">';
-                echo '<meta itemprop="image" content="'.$tc_image_thumb.'">';
+                $rest = trim(substr($excerpt, 0, 150));
+                $gg_url = get_permalink();
+                $gg_title = get_the_title();
+                echo '<meta itemprop="name" content="' . esc_attr($gg_title) . '">';
+                echo '<meta itemprop="description" content="' . esc_attr($rest) . '">';
+                echo '<meta itemprop="image" content="' . esc_url($tc_image_thumb) . '">';
             }
         }
     }

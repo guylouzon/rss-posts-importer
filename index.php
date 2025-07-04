@@ -15,36 +15,32 @@
 
 // define some constants
 if (!defined('RSS_PI_PATH')) {
-	define('RSS_PI_PATH', trailingslashit(plugin_dir_path(__FILE__)));
+    define('RSS_PI_PATH', trailingslashit(plugin_dir_path(__FILE__)));
 }
 
 if (!defined('RSS_PL_PATH')) {
-	define('RSS_PL_PATH', trailingslashit(plugin_dir_path(dirname(__FILE__))));
+    define('RSS_PL_PATH', trailingslashit(plugin_dir_path(dirname(__FILE__))));
 }
 
-
 if (!defined('RSS_PI_URL')) {
-	define('RSS_PI_URL', trailingslashit(plugin_dir_url(__FILE__)));
+    define('RSS_PI_URL', trailingslashit(plugin_dir_url(__FILE__)));
 }
 
 if (!defined('RSS_PI_BASENAME')) {
-	define('RSS_PI_BASENAME', plugin_basename(__FILE__));
+    define('RSS_PI_BASENAME', plugin_basename(__FILE__));
 }
 
 if (!defined('RSS_PI_VERSION')) {
-	define('RSS_PI_VERSION', '2.5.2');
+    define('RSS_PI_VERSION', '2.5.2');
 }
 
 if (!defined('RSS_PI_LOG_PATH')) {
-	define('RSS_PI_LOG_PATH', trailingslashit(WP_CONTENT_DIR) . 'rsspi-log/');
+    define('RSS_PI_LOG_PATH', trailingslashit(WP_CONTENT_DIR) . 'rsspi-log/');
 }
 
 if (!is_dir(RSS_PI_LOG_PATH)) {
-//if (!file_exists(RSS_PI_LOG_PATH)){
-	mkdir(RSS_PI_LOG_PATH);
+    mkdir(RSS_PI_LOG_PATH);
 }
-
-
 
 // helper classes
 include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-log.php';

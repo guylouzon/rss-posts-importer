@@ -5,83 +5,82 @@
  *
  * @since 0.1
  * @author Webdados
- *
- *
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-		
-	//First we save!
-	if ( isset($_POST['action']) ) {
-		if (trim($_POST['action'])=='save') {
-			//This should also use the $wonderm00n_open_graph_plugin_settings array, but because of intval and trim we still can't
-			$usersettings['fb_app_id_show']= 					intval(webdados_fb_open_graph_post('fb_app_id_show'));
-			$usersettings['fb_app_id']= 						trim(webdados_fb_open_graph_post('fb_app_id'));
-			$usersettings['fb_admin_id_show']= 					intval(webdados_fb_open_graph_post('fb_admin_id_show'));
-			$usersettings['fb_admin_id']= 						trim(webdados_fb_open_graph_post('fb_admin_id'));
-			$usersettings['fb_locale_show']= 					intval(webdados_fb_open_graph_post('fb_locale_show'));
-			$usersettings['fb_locale']= 						trim(webdados_fb_open_graph_post('fb_locale'));
-			$usersettings['fb_sitename_show']= 					intval(webdados_fb_open_graph_post('fb_sitename_show'));
-			$usersettings['fb_title_show']= 					intval(webdados_fb_open_graph_post('fb_title_show'));
-			$usersettings['fb_title_show_schema']= 				intval(webdados_fb_open_graph_post('fb_title_show_schema'));
-			$usersettings['fb_title_show_twitter']= 			intval(webdados_fb_open_graph_post('fb_title_show_twitter'));
-			$usersettings['fb_url_show']= 						intval(webdados_fb_open_graph_post('fb_url_show'));
-			$usersettings['fb_url_show_twitter']= 				intval(webdados_fb_open_graph_post('fb_url_show_twitter'));
-			$usersettings['fb_url_canonical']= 					intval(webdados_fb_open_graph_post('fb_url_canonical'));
-			$usersettings['fb_url_add_trailing']= 				intval(webdados_fb_open_graph_post('fb_url_add_trailing'));
-			$usersettings['fb_type_show']= 						intval(webdados_fb_open_graph_post('fb_type_show'));
-			$usersettings['fb_type_homepage']= 					trim(webdados_fb_open_graph_post('fb_type_homepage'));
-			$usersettings['fb_article_dates_show']=				intval(webdados_fb_open_graph_post('fb_article_dates_show'));
-			$usersettings['fb_article_sections_show']=			intval(webdados_fb_open_graph_post('fb_article_sections_show'));
-			$usersettings['fb_publisher_show']= 				intval(webdados_fb_open_graph_post('fb_publisher_show'));
-			$usersettings['fb_publisher']= 						trim(webdados_fb_open_graph_post('fb_publisher'));
-			$usersettings['fb_publisher_show_schema']= 			intval(webdados_fb_open_graph_post('fb_publisher_show_schema'));
-			$usersettings['fb_publisher_schema']= 				trim(webdados_fb_open_graph_post('fb_publisher_schema'));
-			$usersettings['fb_publisher_show_twitter']= 		intval(webdados_fb_open_graph_post('fb_publisher_show_twitter'));
-			$usersettings['fb_publisher_twitteruser']= 			trim(webdados_fb_open_graph_post('fb_publisher_twitteruser'));
-			$usersettings['fb_author_show']= 					intval(webdados_fb_open_graph_post('fb_author_show'));
-			$usersettings['fb_author_show_meta']= 				intval(webdados_fb_open_graph_post('fb_author_show_meta'));
-			$usersettings['fb_author_show_linkrelgp']= 			intval(webdados_fb_open_graph_post('fb_author_show_linkrelgp'));
-			$usersettings['fb_author_show_twitter']= 			intval(webdados_fb_open_graph_post('fb_author_show_twitter'));
-			$usersettings['fb_author_hide_on_pages']= 			intval(webdados_fb_open_graph_post('fb_author_hide_on_pages'));
-			$usersettings['fb_desc_show']= 						intval(webdados_fb_open_graph_post('fb_desc_show'));
-			$usersettings['fb_desc_show_meta']= 				intval(webdados_fb_open_graph_post('fb_desc_show_meta'));
-			$usersettings['fb_desc_show_schema']= 				intval(webdados_fb_open_graph_post('fb_desc_show_schema'));
-			$usersettings['fb_desc_show_twitter']= 				intval(webdados_fb_open_graph_post('fb_desc_show_twitter'));
-			$usersettings['fb_desc_chars']= 					intval(webdados_fb_open_graph_post('fb_desc_chars'));
-			$usersettings['fb_desc_homepage']= 					trim(webdados_fb_open_graph_post('fb_desc_homepage'));
-			$usersettings['fb_desc_homepage_customtext']= 		trim(webdados_fb_open_graph_post('fb_desc_homepage_customtext'));
-			$usersettings['fb_image_show']= 					intval(webdados_fb_open_graph_post('fb_image_show'));
-			$usersettings['fb_image_size_show']= 				intval(webdados_fb_open_graph_post('fb_image_size_show'));
-			$usersettings['fb_image_show_schema']= 				intval(webdados_fb_open_graph_post('fb_image_show_schema'));
-			$usersettings['fb_image_show_twitter']= 			intval(webdados_fb_open_graph_post('fb_image_show_twitter'));
-			$usersettings['fb_image']= 							trim(webdados_fb_open_graph_post('fb_image'));
-			$usersettings['fb_image_rss']= 						intval(webdados_fb_open_graph_post('fb_image_rss'));
-			$usersettings['fb_image_use_specific']= 			intval(webdados_fb_open_graph_post('fb_image_use_specific'));
-			$usersettings['fb_image_use_featured']= 			intval(webdados_fb_open_graph_post('fb_image_use_featured'));
-			$usersettings['fb_image_use_content']= 				intval(webdados_fb_open_graph_post('fb_image_use_content'));
-			$usersettings['fb_image_use_media']= 				intval(webdados_fb_open_graph_post('fb_image_use_media'));
-			$usersettings['fb_image_use_default']= 				intval(webdados_fb_open_graph_post('fb_image_use_default'));
-			$usersettings['fb_show_wpseoyoast']= 				intval(webdados_fb_open_graph_post('fb_show_wpseoyoast'));
-			$usersettings['fb_show_subheading']= 				intval(webdados_fb_open_graph_post('fb_show_subheading'));
-			$usersettings['fb_show_businessdirectoryplugin']=	intval(webdados_fb_open_graph_post('fb_show_businessdirectoryplugin'));
-			$usersettings['fb_adv_force_local']= 				intval(webdados_fb_open_graph_post('fb_adv_force_local'));
-			$usersettings['fb_adv_notify_fb']= 					intval(webdados_fb_open_graph_post('fb_adv_notify_fb'));
-			$usersettings['fb_adv_supress_fb_notice']= 			intval(webdados_fb_open_graph_post('fb_adv_supress_fb_notice'));
-			$usersettings['fb_twitter_card_type']= 				trim(webdados_fb_open_graph_post('fb_twitter_card_type'));
-			//Update
-			update_option('wonderm00n_open_graph_settings', $usersettings);
-			//WPML - Register custom website description
-			if (function_exists('icl_object_id') && function_exists('icl_register_string')) {
-				icl_register_string('wd-fb-og', 'wd_fb_og_desc_homepage_customtext', trim(webdados_fb_open_graph_post('fb_desc_homepage_customtext')));
-			}
-		}
-	}
-	
-	//Load the settings
-	extract(webdados_fb_open_graph_load_settings());
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
-	?>
+// First we save!
+if (isset($_POST['action'])) {
+    if (trim($_POST['action']) === 'save') {
+        $usersettings = [
+            'fb_app_id_show' => intval(webdados_fb_open_graph_post('fb_app_id_show')),
+            'fb_app_id' => trim(webdados_fb_open_graph_post('fb_app_id')),
+            'fb_admin_id_show' => intval(webdados_fb_open_graph_post('fb_admin_id_show')),
+            'fb_admin_id' => trim(webdados_fb_open_graph_post('fb_admin_id')),
+            'fb_locale_show' => intval(webdados_fb_open_graph_post('fb_locale_show')),
+            'fb_locale' => trim(webdados_fb_open_graph_post('fb_locale')),
+            'fb_sitename_show' => intval(webdados_fb_open_graph_post('fb_sitename_show')),
+            'fb_title_show' => intval(webdados_fb_open_graph_post('fb_title_show')),
+            'fb_title_show_schema' => intval(webdados_fb_open_graph_post('fb_title_show_schema')),
+            'fb_title_show_twitter' => intval(webdados_fb_open_graph_post('fb_title_show_twitter')),
+            'fb_url_show' => intval(webdados_fb_open_graph_post('fb_url_show')),
+            'fb_url_show_twitter' => intval(webdados_fb_open_graph_post('fb_url_show_twitter')),
+            'fb_url_canonical' => intval(webdados_fb_open_graph_post('fb_url_canonical')),
+            'fb_url_add_trailing' => intval(webdados_fb_open_graph_post('fb_url_add_trailing')),
+            'fb_type_show' => intval(webdados_fb_open_graph_post('fb_type_show')),
+            'fb_type_homepage' => trim(webdados_fb_open_graph_post('fb_type_homepage')),
+            'fb_article_dates_show' => intval(webdados_fb_open_graph_post('fb_article_dates_show')),
+            'fb_article_sections_show' => intval(webdados_fb_open_graph_post('fb_article_sections_show')),
+            'fb_publisher_show' => intval(webdados_fb_open_graph_post('fb_publisher_show')),
+            'fb_publisher' => trim(webdados_fb_open_graph_post('fb_publisher')),
+            'fb_publisher_show_schema' => intval(webdados_fb_open_graph_post('fb_publisher_show_schema')),
+            'fb_publisher_schema' => trim(webdados_fb_open_graph_post('fb_publisher_schema')),
+            'fb_publisher_show_twitter' => intval(webdados_fb_open_graph_post('fb_publisher_show_twitter')),
+            'fb_publisher_twitteruser' => trim(webdados_fb_open_graph_post('fb_publisher_twitteruser')),
+            'fb_author_show' => intval(webdados_fb_open_graph_post('fb_author_show')),
+            'fb_author_show_meta' => intval(webdados_fb_open_graph_post('fb_author_show_meta')),
+            'fb_author_show_linkrelgp' => intval(webdados_fb_open_graph_post('fb_author_show_linkrelgp')),
+            'fb_author_show_twitter' => intval(webdados_fb_open_graph_post('fb_author_show_twitter')),
+            'fb_author_hide_on_pages' => intval(webdados_fb_open_graph_post('fb_author_hide_on_pages')),
+            'fb_desc_show' => intval(webdados_fb_open_graph_post('fb_desc_show')),
+            'fb_desc_show_meta' => intval(webdados_fb_open_graph_post('fb_desc_show_meta')),
+            'fb_desc_show_schema' => intval(webdados_fb_open_graph_post('fb_desc_show_schema')),
+            'fb_desc_show_twitter' => intval(webdados_fb_open_graph_post('fb_desc_show_twitter')),
+            'fb_desc_chars' => intval(webdados_fb_open_graph_post('fb_desc_chars')),
+            'fb_desc_homepage' => trim(webdados_fb_open_graph_post('fb_desc_homepage')),
+            'fb_desc_homepage_customtext' => trim(webdados_fb_open_graph_post('fb_desc_homepage_customtext')),
+            'fb_image_show' => intval(webdados_fb_open_graph_post('fb_image_show')),
+            'fb_image_size_show' => intval(webdados_fb_open_graph_post('fb_image_size_show')),
+            'fb_image_show_schema' => intval(webdados_fb_open_graph_post('fb_image_show_schema')),
+            'fb_image_show_twitter' => intval(webdados_fb_open_graph_post('fb_image_show_twitter')),
+            'fb_image' => trim(webdados_fb_open_graph_post('fb_image')),
+            'fb_image_rss' => intval(webdados_fb_open_graph_post('fb_image_rss')),
+            'fb_image_use_specific' => intval(webdados_fb_open_graph_post('fb_image_use_specific')),
+            'fb_image_use_featured' => intval(webdados_fb_open_graph_post('fb_image_use_featured')),
+            'fb_image_use_content' => intval(webdados_fb_open_graph_post('fb_image_use_content')),
+            'fb_image_use_media' => intval(webdados_fb_open_graph_post('fb_image_use_media')),
+            'fb_image_use_default' => intval(webdados_fb_open_graph_post('fb_image_use_default')),
+            'fb_show_wpseoyoast' => intval(webdados_fb_open_graph_post('fb_show_wpseoyoast')),
+            'fb_show_subheading' => intval(webdados_fb_open_graph_post('fb_show_subheading')),
+            'fb_show_businessdirectoryplugin' => intval(webdados_fb_open_graph_post('fb_show_businessdirectoryplugin')),
+            'fb_adv_force_local' => intval(webdados_fb_open_graph_post('fb_adv_force_local')),
+            'fb_adv_notify_fb' => intval(webdados_fb_open_graph_post('fb_adv_notify_fb')),
+            'fb_adv_supress_fb_notice' => intval(webdados_fb_open_graph_post('fb_adv_supress_fb_notice')),
+            'fb_twitter_card_type' => trim(webdados_fb_open_graph_post('fb_twitter_card_type')),
+        ];
+        // Update
+        update_option('wonderm00n_open_graph_settings', $usersettings);
+        // WPML - Register custom website description
+        if (function_exists('icl_object_id') && function_exists('icl_register_string')) {
+            icl_register_string('wd-fb-og', 'wd_fb_og_desc_homepage_customtext', trim(webdados_fb_open_graph_post('fb_desc_homepage_customtext')));
+        }
+    }
+}
+
+// Load the settings
+extract(webdados_fb_open_graph_load_settings());
+
+?>
 	<div class="wrap">
 		
 	<?php screen_icon(); ?>

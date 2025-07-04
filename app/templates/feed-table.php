@@ -9,14 +9,16 @@
 	</thead>
 	<tbody class="rss-rows">
 		<?php
-        $feed_ids = array();
-        $paused_feeds = array();
+        $feed_ids = [];
+        $paused_feeds = [];
 
 		if (is_array($this->options['feeds']) && count($this->options['feeds']) > 0) :
 			foreach ($this->options['feeds'] as $f) :
-                if ($f['feed_status'] == 'pause') array_push($paused_feeds, $f['id']);
+                if (($f['feed_status'] ?? '') == 'pause') {
+                    $paused_feeds[] = $f['id'];
+                }
 
-				$category = get_the_category($f['category_id']);
+                $category = get_the_category($f['category_id'] ?? []);
 				//array_push($feed_ids, $f['id']);
 				include(RSS_PI_PATH . 'app/templates/feed-table-row.php');
 			endforeach;

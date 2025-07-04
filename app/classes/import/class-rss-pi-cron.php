@@ -7,36 +7,35 @@
  */
 class rssPICron {
 
-	/**
-	 * Initialise
-	 */
-	public function init() {
+    /**
+     * Initialise
+     */
+    public function init(): void {
 
-		// hook up scheduled events
-		add_action('wp', array(&$this, 'schedule'));
+        // hook up scheduled events
+        add_action('wp', [$this, 'schedule']);
 
-		add_action('rss_pi_cron', array(&$this, 'import'));
-	}
+        add_action('rss_pi_cron', [$this, 'import']);
+    }
 
-	/**
-	 * Check and confirm scheduling
-	 */
-	function schedule() {
+    /**
+     * Check and confirm scheduling
+     */
+    public function schedule(): void {
 
-		if (!wp_next_scheduled('rss_pi_cron')) {
+        if (!wp_next_scheduled('rss_pi_cron')) {
+            wp_schedule_event(time(), 'hourly', 'rss_pi_cron');
+        }
+    }
 
-			wp_schedule_event(time(), 'hourly', 'rss_pi_cron');
-		}
-	}
-
-	/**
-	 * Import the feeds on schedule
+    /**
+     * Import the feeds on schedule
      *
-	 */
-	function import() {
+     */
+    public function import(): void {
 
-		$engine = new rssPIEngine();
-		$engine->import_feed();
-	}
+        $engine = new rssPIEngine();
+        $engine->import_feed();
+    }
 
 }
