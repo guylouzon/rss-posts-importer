@@ -1,5 +1,8 @@
 # RSS posts importer - 2025 updated
 
+![RSS Post Importer Logo](rss-pi.png)
+
+
 I took a simple, old WordPress plugin that imports RSS feeds as posts — and brought it up to date with modern standards.
 
 ### ✅ What's Changed
