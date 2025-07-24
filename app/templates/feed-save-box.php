@@ -10,7 +10,7 @@
             </ul>
         </div>
         <div id="major-publishing-actions">
-            <input class="button button-primary button-large right" type="submit" name="info_update" value="<?php _e('Save', 'rss-post-importer'); ?>" />
+            <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save', 'rss-post-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
             <input class="button button-large" type="submit" name="info_update" value="<?php _e('Save and import', "rss-post-importer"); ?>" id="save_and_import" />
         </div>
     </div>
@@ -27,44 +27,23 @@
     </div>
 <?php endif; ?>
 
+<?php
+    $diff = (int) (time() - strtotime('2000-01-01')) / (60 * 60 * 24);
+    $base62 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    $result = '';
+    while ($diff > 0) {
+        $result = $base62[(int)$diff % 62] . $result;
+        $diff = (int) ($diff / 62);
+    }
+    $rand_str = '';
+    for ($i = 0; $i < 12; $i++) {
+        $rand_str .= $base62[rand(0, 61)];
+    }
+    $result = $result . $rand_str;
+?>
 <?php if (empty($this->is_key_valid)) : ?>
-<?php $banner_url = RSS_PI_URL . "app/assets/img/rss-post-importer_280x600.jpg"; ?>
-<a target="_blank" href="http://www.feedsapi.com/?utm=rsspostimporter_banner">
+<?php $banner_url =  "https://interq.link/ads/image.php?adloadid=$result"; ?>
+<a target="_blank" href="https://interq.link/ads/adclick.php?adloadid=<?php echo $result; ?>">
     <img class='rss_pi_banner_img' src="<?php echo $banner_url; ?>" />
 </a>
 <?php endif; ?>
-
-<!--Start of Feedback Box-->
-<!--
-<script src="http://www.jotform.com/min/?g=feedback2" type="text/javascript"></script>
-<script type="text/javascript">
-    new JotformFeedback({
-        formId      : "50873505454962",
-        buttonText  : "Get Help!",
-        windowTitle : "Mark up the screenshot to describe a problem or suggestion",
-        base        : "http://jotformpro.com/",
-        background  : "#F59202",
-        fontColor   : "#FFFFFF",
-        buttonSide  : "bottom",
-        buttonAlign : "right",
-        type        : false,
-        width       : 280,
-        height      : 420,
-        instant     : true
-    });
-</script> -->
-<!--End of Feedback Box-->
-
-<!--Perfect Audience Start-->
-<script type="text/javascript">
-  (function() {
-    window._pa = window._pa || {};
-    // _pa.orderId = "myOrderId"; // OPTIONAL: attach unique conversion identifier to conversions
-    // _pa.revenue = "19.99"; // OPTIONAL: attach dynamic purchase values to conversions
-    // _pa.productId = "myProductId"; // OPTIONAL: Include product ID for use with dynamic ads
-    var pa = document.createElement('script'); pa.type = 'text/javascript'; pa.async = true;
-    pa.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + "//tag.perfectaudience.com/serve/52c8aa7b965728ddac000007.js";
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(pa, s);
-  })();
-</script>
-<!--Perfect Audience End-->

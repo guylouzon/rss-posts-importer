@@ -61,22 +61,6 @@
 					</tr>
 					<tr>
 						<td>
-							<label for="feeds_api_key"><?php _e('Full Text RSS Feed API Key', "rss-post-importer"); ?></label>
-							<?php if ( ! $this->is_key_valid ) : ?>
-							<p class="description">
-								<?php _e('Boost Your traffic with Full RSS Content - ', "rss-post-importer"); ?>
-								Request a Free 14 Days <a href="http://www.feedsapi.com/?utm_source=rsspi-full-rss-key-here" target="_blank"> Full RSS Key Here !</a>
-							</p>
-							<?php endif; ?>
-						</td>
-						<td>
-							<?php $feeds_api_key = $this->options['settings']["feeds_api_key"] ?? ""; ?>
-							<input type="text" name="feeds_api_key" id="feeds_api_key" value="<?php echo $feeds_api_key; ?>" />
-						</td>
-					</tr>
-
-					<tr>
-						<td>
 							<label for="post_template"><?php _e('Template', 'rss-post-importer'); ?></label>
 							<p class="description"><?php _e('This is how the post will be formatted.', "rss-post-importer"); ?></p>
 							<p class="description">
@@ -103,27 +87,7 @@
 								?></textarea>
 						</td>
 					</tr>
-					<tr>
-						<td>
-							<label for="post_template"><?php _e('Keywords Filter', 'rss-post-importer'); ?></label>
-							<p class="description"><?php _e('Enter keywords and/or regex, separated by commas', "rss-post-importer"); ?></p>
-							<p class="description">
-								<?php _e('Only posts matching these keywords/regex will be imported', "rss-post-importer"); ?>
-							</p>
-						</td>
-						<td>
-							<?php
-							$disabled = '';
-							if (!$this->is_key_valid) {
-								$disabled = ' disabled="disabled"';
-								$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=keywords-filters&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-							}
-							?>
-							<textarea name="keyword_filter" id="post_template" cols="30" rows="10"<?php echo $disabled; ?>><?php
-								echo implode(', ', $this->options['settings']['keywords'] ?? []);
-								?></textarea>
-						</td>
-					</tr>
+
 					<tr>
 						<td><label for="post_status"><?php _e('Post status', "rss-post-importer"); ?></label></td>
 						<td>
@@ -250,125 +214,6 @@
 							</ul>
 						</td>
 					</tr>
-					<tr>
-						<td>
-							<?php _e('Import already deleted posts?', "rss-post-importer"); ?>
-							<p class="description"><?php _e('Allow imported and later deleted posts to be imported once again.', "rss-post-importer"); ?></p>
-						</td>
-						<td>
-							<?php
-							$disabled = '';
-							if (!$this->is_key_valid) {
-								$disabled = ' disabled="disabled"';
-								$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=import-deleted&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-							}
-							?>
-							<ul class="radiolist">
-								<li>
-									<label class="tooltips"><input type="radio" id="cache_deleted_true" name="cache_deleted" value="false" <?php echo($this->options['settings']['cache_deleted'] == 'false' ? 'checked="checked"' : ''); ?><?php echo $disabled; ?> /> <?php _e('Yes', 'rss-post-importer'); ?></label>
-								</li>
-								<li>
-									<label><input type="radio" id="cache_deleted_false" name="cache_deleted" value="true" <?php echo($this->options['settings']['cache_deleted'] == 'true' || $this->options['settings']['cache_deleted'] == '' ? 'checked="checked"' : ''); ?><?php echo $disabled; ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
-								</li>
-							</ul>
-						</td>
-					</tr>
-					<?php if ( isset($this->options['upgraded']['deleted_posts']) ) { ?>
-					<tr>
-						<td>
-							<?php _e('Purge deleted posts cache', "rss-post-importer"); ?>
-							<p class="description"><?php _e('This option will allow you to reset the deleted posts cache and re-import posts you have deleted in the past.', "rss-post-importer"); ?></p>
-						</td>
-						<td>
-							<?php
-							$disabled = '';
-							if (!$this->is_key_valid) {
-								$disabled = ' disabled="disabled"';
-								$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=purge-deleted-cache&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-							}
-							?>
-							<?php $rss_pi_deleted_posts = count( get_option( 'rss_pi_deleted_posts', [] ) ); ?>
-							<p><?php printf( _n('Cached: <strong>%d</strong> deleted post', 'Cached: <strong>%d</strong> deleted posts', $rss_pi_deleted_posts, 'rss-post-importer'), $rss_pi_deleted_posts ); ?></p>
-							<input type="submit" value="Purge Cache" name="purge_deleted_cache" class="button button-primary button-large"<?php echo $disabled; ?> />
-						</td>
-					</tr>
-					<?php } ?>
-					<tr>
-						<td>
-							<?php _e('Export and backup your Feeds and setting as CSV File', "rss-post-importer"); ?>
-							<p class="description"><?php _e('This option will help you download a csv file with all your feeds setting , you can upload it back later.', "rss-post-importer"); ?></p>
-						</td>
-						<td>
-						<?php
-						$disabled = '';
-						if (!$this->is_key_valid) {
-							$disabled = ' disabled="disabled"';
-							$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=export-feeds&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-						}
-						?>
-							<input type="submit" value="Export your Feeds and Setting as CSV File" name="csv_download" class="button button-primary button-large"<?php echo $disabled; ?> />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<?php _e('Import your CSV file with your feeds\' settings', "rss-post-importer"); ?>
-							<p class="description"><?php _e('Create and Import a CSV file with your Feeds\' Setting with the following Structure and heading:<br/>
-<br/>
-url , name, max_posts, author_id, category_id, tags, keywords, strip_html<br/>
-<br/>
-url = your feed url<br/>
-name = the name you gives to your feed<br/>
-max_posts = the number of posts to simultaneously import<br/>
-author_id = your author ID, this is a number<br/>
-category_id = the Category IDs - number(s) separated with comma (,)<br/>
-tags = the Tag IDs - number(s) separated with comma (,)<br/>
-keywords = the filter keywords - string(s) separated with comma (,)<br/>
-strip_html = strip html tags - "true" or "false"', "rss-post-importer"); ?></p>
-						</td>
-						<td>
-						<?php
-						$disabled = '';
-						if (!$this->is_key_valid) {
-							$disabled = ' disabled="disabled"';
-							$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=import-feeds&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-						}
-						?>
-							<input type="file" name="import_csv"<?php echo $disabled; ?> />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<?php _e('Export and backup your Feeds as OPML File', "rss-post-importer"); ?>
-							<p class="description"><?php _e('This option will help you download an OPML file with all your feeds so you can upload it back later.', "rss-post-importer"); ?></p>
-						</td>
-						<td>
-						<?php
-						$disabled = '';
-						if (!$this->is_key_valid) {
-							$disabled = ' disabled="disabled"';
-							$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=export-opml&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-						}
-						?>
-							<input type="submit" value="Export your Feeds as OPML File" name="export_opml" class="button button-primary button-large"<?php echo $disabled; ?> />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<?php _e('Import your OPML file with your feeds', "rss-post-importer"); ?>
-							<p class="description"><?php _e('Create and Import an OPML file with your Feeds', "rss-post-importer"); ?></p>
-						</td>
-						<td>
-						<?php
-						$disabled = '';
-						if (!$this->is_key_valid) {
-							$disabled = ' disabled="disabled"';
-							$this->key_error( sprintf( $this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=import-opml&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress' ), true );
-						}
-						?>
-							<input type="file" name="import_opml"<?php echo $disabled; ?> />
-						</td>
-					</tr>
-
                     <tr>
 						<td>
 							<?php _e('Social Media Optimization and Open Graph', "rss-post-importer"); ?>
@@ -379,23 +224,15 @@ strip_html = strip html tags - "true" or "false"', "rss-post-importer"); ?></p>
                                 <li>
                                     <label>
                                         <input type="checkbox" name="tw_show" id="tw_show" value="1"
-                                            <?php echo(isset($this->options['settings']['tw_show']) && $this->options['settings']['tw_show'] == '1' ? 'checked="checked"' : ''); ?>
+                                            <?php echo(isset($this->options['settings']['tw_show']) && $this->options['settings']['tw_show'] == '1' ? '' : 'checked="checked"'); ?>
                                         />
-                                        <?php _e('Twitter', 'rss-post-importer'); ?>
-                                    </label>
-								</li>
-								<li>
-                                    <label>
-                                        <input type="checkbox" name="gg_show" id="gg_show" value="1"
-                                            <?php echo(isset($this->options['settings']['gg_show']) && $this->options['settings']['gg_show'] == '1' ? 'checked="checked"' : ''); ?>
-                                        />
-                                        <?php _e('Google+', 'rss-post-importer'); ?>
+                                        <?php _e('X', 'rss-post-importer'); ?>
                                     </label>
 								</li>
                                 <li>
                                     <label>
                                         <input type="checkbox" name="og_show" id="og_show" value="1"
-                                               <?php echo(isset($this->options['settings']['og_show']) && $this->options['settings']['og_show'] == '1' ? 'checked="checked"' : ''); ?>
+                                               <?php echo(isset($this->options['settings']['og_show']) && $this->options['settings']['og_show'] == '1' ? '' : 'checked="checked"'); ?>
                                         />
                                         <?php _e('Facebook Opengraph', 'rss-post-importer'); ?>
                                     </label>
