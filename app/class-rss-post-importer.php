@@ -100,7 +100,7 @@ class rssPostImporter {
         $options = get_option('rss_pi_feeds', []);
 
         // prepare default options when there is no record in the database
-        if (!isset($options['feeds'])) {
+        if (!isset($options['feeds']))  {
             $options['feeds'] = [];
         }
         if (!isset($options['settings'])) {
@@ -123,6 +123,36 @@ class rssPostImporter {
         }
 
         $this->options = $options;
+
+        if (empty($options['feeds'])) {
+            $default_feed = [
+                [
+                    'id' => uniqid(),
+                    'name' => 'interQ Trending',
+                    'url' => 'https://interq.link/42/6x7.php?v=rss&channel=238',
+                    'max_posts' => 10,
+                    'author_id' => 1,
+                    'category_id' => [1],
+                    'tags_id' => [],
+                    'strip_html' => 'false',
+                    'nofollow_outbound' => 'false',
+                    'automatic_import_categories' => 'false',
+                    'automatic_import_author' => 'false',
+                    'feed_status' => 'pause',
+                    'canonical_urls' => 'my_blog'
+                ]
+            ];
+            
+            $new_options = array(
+                'feeds' => $default_feed,
+                'settings' => $this->options['settings'],
+                'latest_import' => $this->options['latest_import'] ?? '',
+                'imports' => $this->options['imports'] ?? 0,
+                'upgraded' => $this->options['upgraded'] ?? null
+            );
+            // update in db
+            update_option('rss_pi_feeds', $new_options);
+        }
     }
 
     /**
