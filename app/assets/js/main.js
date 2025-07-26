@@ -34,10 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return 'id' + Math.random().toString(36).substr(2, 9);
     }
 
-    // Toggle edit
-    on('click', 'a.toggle-edit', function (e) {
-        e.preventDefault();
-        const target = this.getAttribute('data-target');
+    function toggleEdit(ths) {
+        const target = ths.getAttribute('data-target');
         let modified = $('#modified_feeds').value;
         modified = modified ? modified.split(',') : [target];
         const index = modified.indexOf(target);
@@ -68,8 +66,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (newEditRow) newEditRow.classList.toggle('show');
                 displayRow.classList.toggle('show');
             }
-        });
+        });       
+    }
+
+    // Toggle edit
+    on('click', 'a.toggle-edit', function (e) {
+        e.preventDefault();
+        ths = document.getElementById(this.getAttribute('id'));
+        toggleEdit(ths);
     });
+
+    on('click', 'a.just_save', function (e) {
+        e.preventDefault();
+        do_save = true;
+        ths = document.getElementById(this.getAttribute('id'));
+        console.log(ths);
+        toggleEdit(ths);
+    });
+
 
     // Delete row
     on('click', 'a.delete-row', function (e) {
@@ -207,6 +221,11 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    document.getElementById('toggle-rsspi-settings-table').addEventListener('click', function() {
+        document.getElementById('rsspi-settings-table').classList.toggle('rss_pi_open');
+    });
+
 
     // Load log
     $all('a.load-log').forEach(function (el) {

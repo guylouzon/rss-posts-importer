@@ -169,23 +169,7 @@ if ($ajax_add || $ajax_edit):
                     </ul>
                 </td>
             </tr>
-            <tr>
-                <td><label for="<?php echo ($f['id']); ?>-author_id"><?php _e("Feed Author", 'rss-post-importer'); ?></label></td>
-                <td>
-<?php
-if (!$this->is_key_valid) {
-    $this->key_error(sprintf($this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=feed-author&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress'), true);
-}
-$args = [
-    'id' => $f['id'] . '-author_id',
-    'name' => $f['id'] . '-author_id',
-    'selected' => $f['author_id'],
-    'class' => 'rss-pi-specific-feed-author'
-];
-wp_dropdown_users($args);
-?>
-                </td>
-            </tr>
+  
             <tr>
                 <td>
                     <label for="<?php echo ($f['id']); ?>-automatic_import_categories"><?php _e('Automatic import of Categories ?', "rss-post-importer"); ?></label>
@@ -282,6 +266,7 @@ wp_dropdown_users($args);
             <tr>
                 <td><input type="hidden" name="id" value="<?php echo($f['id']); ?>" /></td>
                 <td><a id="close-edit-table-<?php echo($f['id']); ?>" class="button button-large toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Close', 'rss-post-importer'); ?></a></td>
+                <td><a id="save-edit-table-<?php echo($f['id']); ?>" class="just_save button button-large" data-target="<?php echo ($f['id']); ?>"><?php _e('Save and close', 'rss-post-importer'); ?></a></td>
             </tr>
         </table>
     </td>

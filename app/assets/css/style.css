@@ -292,3 +292,14 @@ display:inline;
 .rss_hide_a {
 display:none;	
 }
+
+.rss_pi_open {
+	display:block !important;
+}
+.rss_pi_close {
+	display:none;
+}
+
+.rsspi_settings_control_button {
+	margin-bottom: 10px;
+}

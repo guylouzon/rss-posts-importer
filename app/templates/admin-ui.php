@@ -12,7 +12,7 @@ $new_api_url_2 = $rss_post_importer->is_valid_key($this->options['settings']['fe
 $new_version = RSS_PI_VERSION;
 ?>
 
-        <h2><?php _e("Rss Post Importer Settings", 'rss-post-importer'); ?></h2>
+        <h2><?php _e("Rss Post Importer Feeds and Settings", 'rss-post-importer'); ?></h2>
 
         <div id="rss_pi_progressbar"></div>
         <div id="rss_pi_progressbar_label"></div>
@@ -36,7 +36,7 @@ $new_version = RSS_PI_VERSION;
                         include_once RSS_PI_PATH . 'app/templates/feed-table.php';
                         include_once RSS_PI_PATH . 'app/templates/settings-table.php';
                         // include_once RSS_PI_PATH . 'app/templates/stats.php'; // doing this via AJAX
-                        include_once RSS_PI_PATH . 'app/templates/stats-placeholder.php';
+                        //include_once RSS_PI_PATH . 'app/templates/stats-placeholder.php';
                         ?>
                     </div>
 

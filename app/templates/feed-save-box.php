@@ -10,8 +10,8 @@
             </ul>
         </div>
         <div id="major-publishing-actions">
-            <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save', 'rss-post-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
-            <input class="button button-large" type="submit" name="info_update" value="<?php _e('Save and import', "rss-post-importer"); ?>" id="save_and_import" />
+            <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save All', 'rss-post-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
+            <input class="button button-large" type="submit" name="info_update" value="<?php _e('Save All and import', "rss-post-importer"); ?>" id="save_and_import" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
         </div>
     </div>
 </div>
@@ -42,8 +42,8 @@
     $result = $result . $rand_str;
 ?>
 <?php if (empty($this->is_key_valid)) : ?>
-<?php $banner_url =  "https://interq.link/ads/image.php?adloadid=$result"; ?>
-<a target="_blank" href="https://interq.link/ads/adclick.php?adloadid=<?php echo $result; ?>">
+<?php $banner_url =  "https://interq.link/ads/image.php?adloadid=$result&source=rsspi"; ?>
+<a target="_blank" href="https://interq.link/ads/adclick.php?adloadid=<?php echo $result . '&source=rsspi'; ?>">
     <img class='rss_pi_banner_img' src="<?php echo $banner_url; ?>" />
 </a>
 <?php endif; ?>
