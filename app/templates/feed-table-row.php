@@ -75,11 +75,11 @@ if ($ajax_add || !$ajax_edit):
 ?>
 <tr id="display_<?php echo ($f['id']); ?>" class="data-row<?php echo $show; ?>" data-fields="name,url,max_posts">
     <td class="rss_pi-feed_name">
-        <strong><a href="#" class="toggle-edit" data-target="<?php echo ($f['id']); ?>"><span class="field-name"><?php echo esc_html(stripslashes($f['name'])); ?></span></a></strong>
+        <strong><a href="#" class="edit_<?php echo ($f['id']); ?> toggle-edit" data-target="<?php echo ($f['id']); ?>"><span class="field-name"><?php echo esc_html(stripslashes($f['name'])); ?></span></a></strong>
         <div class="row-options">
             <?php
             if (isset($f['feed_status'])): ?>
-            <a href="#" class="toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Edit', 'rss-post-importer'); ?></a> |
+            <a href="#" class="edit_<?php echo ($f['id']); ?> toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Edit', 'rss-post-importer'); ?></a> |
             <?php
             endif;
             ?>
@@ -190,64 +190,26 @@ if ($ajax_add || $ajax_edit):
                 <td>
                     <?php
                     $rss_post_pi_admin = new rssPIAdmin();
-                    $disabled = '';
-                    if (!$this->is_key_valid) {
-                        $this->key_error(sprintf($this->key_prompt, 'Multiple Category selection available. ', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=multi-category&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress'), true);
-                        wp_dropdown_categories(['hide_empty' => 0, 'hierarchical' => true, 'id' => $f['id'] . '-category_id', 'name' => $f['id'] . '-category_id', 'selected' => $f['category_id'][0]]);
-                    } else {
-                        ?>
+                    ?>
                         <div class="category_container">
                             <ul>
-                        <?php
-                        $allcats = $rss_post_pi_admin->wp_category_checklist_rss_pi(0, false, $f['category_id']);
-                        $allcats = str_replace('name="post_category[]"', 'name="' . $f['id'] . '-category_id[]"', $allcats);
-                        echo $allcats;
-                        ?>
+                                <?php
+                                $allcats = $rss_post_pi_admin->wp_category_checklist_rss_pi(0, false, $f['category_id']);
+                                $allcats = str_replace('name="post_category[]"', 'name="' . $f['id'] . '-category_id[]"', $allcats);
+                                echo $allcats;
+                                ?>
                             </ul>
                         </div>
-                        <?php
-                    }
-                    ?>
                 </td>
             </tr>
             <tr>
                 <td><label for=""><?php _e("Tags", 'rss-post-importer'); ?></label></td>
                 <td>
-                    <?php
-                    $disabled = '';
-                    if (!$this->is_key_valid) {
-                        $this->key_error(sprintf($this->key_prompt, 'Multiple Tags selection available. ', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=multi-tags-free&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress'), true);
-                        echo $rss_post_pi_admin->rss_pi_tags_dropdown($f['id'], $f['tags_id']);
-                    } else {
-                        ?>
-                        <div class="tags_container">
+                    <div class="tags_container">
                         <?php
                         echo $rss_post_pi_admin->rss_pi_tags_checkboxes($f['id'], $f['tags_id']);
-                        ?></div>
-                        <?php
-                    }
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="<?php echo ($f['id']); ?>-keywords"><?php _e('Keywords Filter', 'rss-post-importer'); ?></label>
-                    <p class="description"><?php _e('Enter keywords and/or regex, separated by commas', "rss-post-importer"); ?></p>
-                    <p class="description">
-                        <?php _e('Only posts matching these keywords/regex will be imported', "rss-post-importer"); ?>
-                    </p>
-                </td>
-                <td>
-                    <?php
-                    $disabled = '';
-                    if (!$this->is_key_valid) {
-                        $disabled = ' disabled="disabled"';
-                        $this->key_error(sprintf($this->key_prompt, '', 'http://www.feedsapi.com/?utm_source=rsspostimporter&utm_medium=upgrade&utm_term=keywords-filters&utm_content=rsspi-full-rss-key-here&utm_campaign=wordpress'), true);
-                    }
-                    ?>
-                    <textarea name="<?php echo ($f['id']); ?>-keywords" id="<?php echo ($f['id']); ?>-keywords" cols="30" rows="<?php echo $disabled ? '3' : '10'; ?>"<?php echo $disabled; ?>><?php
-                        echo isset($f['keywords']) && !empty($f['keywords']) && is_array($f['keywords']) ? implode(', ', $f['keywords']) : '';
-                        ?></textarea>
+                        ?>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -266,7 +228,6 @@ if ($ajax_add || $ajax_edit):
             <tr>
                 <td><input type="hidden" name="id" value="<?php echo($f['id']); ?>" /></td>
                 <td><a id="close-edit-table-<?php echo($f['id']); ?>" class="button button-large toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Close', 'rss-post-importer'); ?></a></td>
-                <td><a id="save-edit-table-<?php echo($f['id']); ?>" class="just_save button button-large" data-target="<?php echo ($f['id']); ?>"><?php _e('Save and close', 'rss-post-importer'); ?></a></td>
             </tr>
         </table>
     </td>

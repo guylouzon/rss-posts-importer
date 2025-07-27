@@ -72,18 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Toggle edit
     on('click', 'a.toggle-edit', function (e) {
         e.preventDefault();
-        ths = document.getElementById(this.getAttribute('id'));
-        toggleEdit(ths);
+        let id = this.getAttribute('data-target');
+        // $('.edit_' + id).classList.add('show');
+        // $('#display_' + id).classList.add('show');
+        toggleEdit(this);
     });
-
-    on('click', 'a.just_save', function (e) {
-        e.preventDefault();
-        do_save = true;
-        ths = document.getElementById(this.getAttribute('id'));
-        console.log(ths);
-        toggleEdit(ths);
-    });
-
 
     // Delete row
     on('click', 'a.delete-row', function (e) {
