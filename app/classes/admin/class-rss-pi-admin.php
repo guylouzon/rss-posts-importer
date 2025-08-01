@@ -54,8 +54,7 @@ class rssPIAdmin {
 
         $this->load_options();
 
-        // add a key prompt
-        $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'rss-post-importer');
+        add_action('init', [$this, 'init_properties']);
 
         // initialise logging
         $this->log = new rssPILog();
@@ -63,6 +62,10 @@ class rssPIAdmin {
 
         // load the form processor
         $this->processor = new rssPIAdminProcessor();
+    }
+
+    public function init_properties() {
+        $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'rss-post-importer');
     }
 
     private function load_options(): void {
