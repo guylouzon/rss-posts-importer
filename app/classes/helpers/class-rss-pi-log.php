@@ -24,7 +24,7 @@ class rssPILog {
 
         // get the log file's contents
         if (!file_exists(RSS_PI_LOG_PATH . 'log.txt')) {
-            return '';
+            $log = 'No log file found.';
         }
         else {
             $log = file_get_contents(RSS_PI_LOG_PATH . 'log.txt');
