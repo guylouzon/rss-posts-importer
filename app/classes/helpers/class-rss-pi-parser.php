@@ -45,7 +45,7 @@ class rssPIParser {
 
         $parsed_content = preg_replace(
             '/\{\$permalink\}/i',
-            '<a href="' . esc_url($item->get_permalink()) . '" target="_blank">' . $item->get_title() . '</a>',
+            '<a href="' . esc_url($item->get_permalink()) . '" target="_blank" class="rss-pi-permalink">' . $item->get_title() . '</a>',
             $parsed_content
         );
 

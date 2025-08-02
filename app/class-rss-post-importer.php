@@ -82,10 +82,10 @@ class rssPostImporter {
     public function load_options(): void {
 
         $default_settings = [
-            'enable_logging' => false,
+            'enable_logging' => true,
             'feeds_api_key' => false,
             'frequency' => 0,
-            'post_template' => "{\$content}\nSource: {\$feed_title}",
+            'post_template' => "{\$content}\n<hr>\nContinue reading: {\$permalink}\n",
             'post_status' => 'publish',
             'author_id' => 1,
             'allow_comments' => 'open',
