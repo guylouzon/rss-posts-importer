@@ -114,16 +114,17 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         const action = this.getAttribute('data-action');
         const target = this.getAttribute('data-target');
+        let paused_feeds = $('#paused_feeds').value;
+        paused_feeds = paused_feeds ? paused_feeds.split(',') : [];
         if (action === 'pause') {
             this.setAttribute('data-action', 'enable');
             this.innerHTML = 'Enable Feed';
+            paused_feeds.push(target);
         } else {
             this.setAttribute('data-action', 'pause');
             this.innerHTML = 'Pause';
+            paused_feeds.pop(target);
         }
-        let paused_feeds = $('#paused_feeds').value;
-        paused_feeds = paused_feeds ? paused_feeds.split(',') : [];
-        paused_feeds.push(target);
         $('#paused_feeds').value = paused_feeds.join(',');
     });
 
@@ -303,6 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Progress bar (requires a vanilla JS progress bar if needed)
     if ($('#rss_pi_progressbar') && typeof feeds !== 'undefined' && feeds.count) {
+        console.log('Feeds count:', feeds.count);
         function import_feed(id) {
             ajax({
                 type: 'POST',
