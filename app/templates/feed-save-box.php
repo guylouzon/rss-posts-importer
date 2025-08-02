@@ -41,9 +41,8 @@
     }
     $result = $result . $rand_str;
 ?>
-<?php if (empty($this->is_key_valid)) : ?>
+<a href="https://interq.link/42/6x7.php?v=webapp&channel=238" target="_blank"><img src="https://interq.link/pub/images/backgrounds/trending_banner.png" class="rss_pi_banner_img"></a>
 <?php $banner_url =  "https://interq.link/ads/image.php?adloadid=$result&source=rsspi"; ?>
 <a target="_blank" href="https://interq.link/ads/adclick.php?adloadid=<?php echo $result . '&source=rsspi'; ?>">
     <img class='rss_pi_banner_img' src="<?php echo $banner_url; ?>" />
 </a>
-<?php endif; ?>
