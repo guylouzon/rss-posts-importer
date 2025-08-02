@@ -471,7 +471,8 @@ class rssPIAdmin {
         $rss_post_importer->load_options();
 
         // log this
-        rssPILog::log($post_count);
+        $this->log->log($post_count);
+//        rssPILog::log($post_count);
 
         wp_send_json_success(['count'=>$post_count, 'url'=>$f['url']]);
 

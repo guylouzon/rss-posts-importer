@@ -24,7 +24,7 @@ class rssPIParser {
         $post_template = $rss_post_importer->options['settings']['post_template'];
 
         // get the content
-        $c = $item->get_content() != "" ? $item->get_content() : $item->get_description();
+        $c = $item->get_description() != "" ? $item->get_description() : $item->get_content();
 
         $c = apply_filters('pre_rss_pi_parse_content', $c);
 
@@ -34,6 +34,8 @@ class rssPIParser {
         $parsed_content = preg_replace('/\{\$content\}/i', $c, $post_template);
         $parsed_content = preg_replace('/\{\$feed_title\}/i', $feed_title, $parsed_content);
         $parsed_content = preg_replace('/\{\$title\}/i', $item->get_title(), $parsed_content);
+        // Remove any script tags
+        $parsed_content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $parsed_content);
 
         // check if we need an excerpt
         $parsed_content = $this->_excerpt($parsed_content, $c);
