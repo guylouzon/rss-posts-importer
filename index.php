@@ -4,13 +4,12 @@
   Plugin Name: Rss Post Importer
   Plugin URI: https://wordpress.org/plugins/rss-post-importer/
   Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
-  Author: feedsapi | Guy Louzon
+  Author: Guy Louzon
   Version: 2025.7.01
-  Author URI: https://www.feedsapi.org/
+  Author URI: https://github.com/guylouzon/RSS-posts-importer
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
   Text Domain: rss-post-importer
-  Domain Path: /lang/
  */
 
 // define some constants
