@@ -44,7 +44,7 @@ class rssPIFront {
         $this->options = $rss_post_importer->options;
 
         // Check for block indexing
-        if (($this->options['settings']['nofollow_outbound'] ?? '') === 'true') {
+        if (($this->options['settings']['nofollow_outbound'] ?? '') === 'true' || ($this->options['settings']['nofollow_outbound'] ?? '') === '1') {
             add_filter('the_content', [$this, 'rss_pi_url_parse']);
         }
 
