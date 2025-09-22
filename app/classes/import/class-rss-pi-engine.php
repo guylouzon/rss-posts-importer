@@ -447,7 +447,7 @@ class rssPIEngine {
                     $post_id = $this->_insert($post, $item->get_permalink());
 
                     // set thumbnail
-                    if (($this->options['settings']['disable_thumbnail'] ?? '') === 'false'  || (string)($this->options['settings']['disable_thumbnail'] ?? '') === '0')) {
+                    if (($this->options['settings']['disable_thumbnail'] ?? '') === 'false'  || (string)($this->options['settings']['disable_thumbnail'] ?? '') === '0') {
                         // assign a thumbnail (featured image) to the post
                         $thumbnail->_set($item, $post_id);
                         $attachment_id = get_post_thumbnail_id($post_id);
