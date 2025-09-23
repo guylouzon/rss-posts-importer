@@ -11,7 +11,7 @@
         </div>
         <div id="major-publishing-actions">
             <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save All', 'rss-post-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
-            <input class="button button-large" type="submit" name="info_update" value="<?php _e('Save Settings and import', "rss-post-importer"); ?>" id="save_and_import" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
+            <input class="button button-large" type="submit" name="info_update" value="<?php _e('Save All and import', "rss-post-importer"); ?>" id="save_and_import" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
         </div>
     </div>
 </div>
