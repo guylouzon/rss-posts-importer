@@ -40,9 +40,10 @@ class rssPIFeaturedImage {
             // Get content with fallback to description
             $content = '';
             try {
-                $content = method_exists($item, 'get_content') && $item->get_content() ? 
-                        $item->get_content() : 
-                        (method_exists($item, 'get_description') ? $item->get_description() : '');
+                $content = (method_exists($item, 'get_content') && $item->get_content() ? $item->get_content() : '') . 
+           (method_exists($item, 'get_description') && $item->get_description() ? $item->get_description() : '');
+
+                        
             } catch (Exception $e) {
                 error_log("RSS PI Featured Image: Error getting item content: " . $e->getMessage());
                 return false;
@@ -76,7 +77,7 @@ class rssPIFeaturedImage {
             }
             
             // Validate the final URL
-            if (!$this->is_valid_image_url($absolute_img_url)) {
+            if (!filter_var($absolute_img_url, FILTER_VALIDATE_URL)) {
                 error_log("RSS PI Featured Image: Invalid image URL: {$absolute_img_url}");
                 return false;
             }
@@ -165,7 +166,19 @@ class rssPIFeaturedImage {
             // Self-closing img tag
             '/<img[^>]+src=["\']([^"\']+)["\'][^>]*\/>/i',
             // Img tag without quotes (less common but possible)
-            '/<img[^>]+src=([^\s>]+)[^>]*>/i'
+            '/<img[^>]+src=([^\s>]+)[^>]*>/i',
+
+            // one pattern to rule them all
+            '/<img[^>]*src\s*=\s*(["\']?)([^"\'>\s]+)\1[^>]*\/?>/i',
+
+            // NEW PATTERNS FOR YOUR CASE: - to check
+            // Img tag with HTML entities in URL (like &amp;)
+            '/<img[^>]+src=["\']([^"\']*&[^"\']*)["\'][^>]*>/i',
+            // Img tag with complex URLs containing query parameters and HTML entities
+            '/<img[^>]+src=["\']([^"\']*[?&][^"\']*)["\'][^>]*>/i',
+            // More comprehensive pattern for URLs with special characters
+            '/<img[^>]+src=["\']([^"\']*(?:&(?:amp|lt|gt|quot|#\d+);[^"\']*)*)["\'][^>]*>/i'
+
         ];
         
         foreach ($patterns as $pattern) {

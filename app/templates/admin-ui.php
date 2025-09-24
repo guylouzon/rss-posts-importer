@@ -19,7 +19,8 @@ $new_version = RSS_PI_VERSION;
 
         <form method="post" id="rss_pi-settings-form" enctype="multipart/form-data" action="<?php echo esc_url($rss_post_importer->page_link); ?>">
 
-            <input type="hidden" name="save_to_db" id="save_to_db" />
+            <input type="hidden" name="save_to_db" id="save_to_db" >
+            <input type="hidden" name="import_now" id="import_now" value="false">
 
             <?php wp_nonce_field('settings_page', 'rss_pi_nonce'); ?>
 

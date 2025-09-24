@@ -70,6 +70,11 @@ class rssPIAdminProcessor {
         // save and reload the options
         $this->save_reload_options($settings, $feeds);
 
+        if (isset($_POST['import_now']) && $_POST['import_now'] == 'true') {
+            // yield the routine for import feeds via AJAX when needed
+            do_action('rss_pi_cron');
+        }
+
         wp_redirect(add_query_arg(
             [
                 'settings-updated' => 'true',

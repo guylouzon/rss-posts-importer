@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (saveAndImport) {
         saveAndImport.addEventListener('click', function () {
             $('#save_to_db').value = 'true';
+            $('#import_now').value = 'true';
         });
     }
 
