@@ -79,7 +79,7 @@ if ($ajax_add || !$ajax_edit):
         <div class="row-options">
             <?php
             if (isset($f['feed_status'])): ?>
-            <a href="#" class="edit_<?php echo ($f['id']); ?> toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Edit', 'rss-post-importer'); ?></a> |
+            <a href="#" id="edit_btn_<?php echo ($f['id']); ?>" class="edit_<?php echo ($f['id']); ?> toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Edit', 'rss-post-importer'); ?></a> |
             <?php
             endif;
             ?>
@@ -227,7 +227,7 @@ if ($ajax_add || $ajax_edit):
             </tr>
             <tr>
                 <td><input type="hidden" name="id" value="<?php echo($f['id']); ?>" /></td>
-                <td><a id="close-edit-table-<?php echo($f['id']); ?>" class="button button-large toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Close', 'rss-post-importer'); ?></a></td>
+                <td><a id="close-table-edit_btn_<?php echo($f['id']); ?>" class="button button-large toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Close', 'rss-post-importer'); ?></a></td>
             </tr>
         </table>
     </td>
