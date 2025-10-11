@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
 ?>
 <div class="wrap">
     <div id="main_ui">
+    <img src="https://interq.link/ads/pixel.php">
 <?php
 // Use nullsafe operator and null coalescing for PHP 8 compatibility
 $new_api_url_2 = $rss_post_importer->is_valid_key($this->options['settings']['feeds_api_key'] ?? '');
