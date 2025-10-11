@@ -5,12 +5,25 @@
 
 I took a simple, old WordPress plugin that imports RSS feeds as posts — and brought it up to date with modern standards.
 
+Use RSS for what it is - a syndication service
+Pull data from RSS feeds and display it on your site, as posts
+
+
+### ✅ What it can do:
+- Imports RSS feeds items as wordpress posts
+- Controls pulling frequency
+- Auto Categorise/ tag any item to your WP predefined category/ tag
+- Imports featured images
+- Cusomizable content addition
+- Saves original link in wp_options
+
+
 ### ✅ What's Changed
 - Upgraded the code to support the **latest PHP versions**
-- Replaced jQuery with **vanilla JavaScript**
+- Replaced jQuery with **vanilla JavaScript** where JS upgraded were required
 - Ensured full compatibility with the **latest WordPress (6.x)**
 
-🧠 Rewritten and modernized **entirely with AI assistance**.
+🧠 Rewritten **entirely with AI assistance**.
 
 Coming soon - integration with [interQ.link](https://interq.link) ! an RSS generator based on user sharing
 
@@ -33,7 +46,7 @@ OLD readme starts here
 
 === RSS Post Importer ===
 Contributors: feedsapi
-Donate link: https://www.feedsapi.org/ (outdated)
+Donate link: (outdated)
 Tags: rss aggregation, wordpress autoblog aggregator, Autoblogger, rss autopost and syndicator, blog content curation, feedsyndicate, feedwordpress, multiple rss feed importer, rss feeds to post, content syndication, blog migration, yahoo pipes
 Requires at least: 3.5
 Tested up to: 4.7.4
@@ -76,41 +89,6 @@ Not only does this WordPress RSS Aggregator Plugin import a snippet of the rss f
 * Append the no-follow tag to all outbond links for **better SEO.**
 * Idiot-proof Templating system allowing you to add backlinks and excerpts.
 * Block search indexing to prevent your content from appearing in search results.
-* **Advanced Statistics**: Piechart for feeds items distribution , Bar charts for posts and much more advanced charts
-
-
-**Premium Features include:**
-
-
-* Full Text RSS Feeds ( Cloud-based processing via [**Full Text RSS**](http://www.feedsapi.com )
-* Automated Featured images.
-* Keywords Based Filters and Curation .
-* RegEx Based Filters and Curation.
-* Define the number of Words Your Excerpt should have.
-* Fetch Full Text Articles + Images from Truncated Feeds. **Cloud-processing**
-* Assign Any Imported RSS Feed Stream to a specific Author.
-* Assign Imported Posts to as many Tags as you want , the sky is the limit.
-* Assign Imported Post to as many categories as you want , the sky is the limit.
-* Export/import your Feeds and setting as CSV File.
-* Import/Export Feeds + Feeds' Settings as OPML file
-* Disable Banner for a valid Full Text RSS Key
-* Purge Deleted Posts from the Memory to re-import old posts
-* Option to re-import the same articles several times and disable the protection
-* Import Static Websites Content. **Supports: html or php single page or single article **
-
-**Don't take my word for it, here's how easy to use it is:**
-
-[vimeo https://vimeo.com/113796278]
-
-
-**You should watch this video tutorial**
-
-
-When you start importing rss feeds as a part of your content backup, autoblogging or blogging strategy, you'll be able to reap the benefits of increased content and a larger fan base, which will translate into more traffic and more revenue or dollars for your business!
-
-**PS**: By the way, if RSS Post Importer doesn't work out for you, you might want to try one of these cool alternative plugins
-
-WP-o-Matic, WP-o-Matic, RSSImport, FeedWordPress, Syndicate Press, FeedWeb, RSS Just Better, CyberSyn, CSV 2 Post, Simple Feed Copyright, WP Syndicate, HungryFEED, Feedzy , WP Pipes and many other I can't list here. **RSS Post Importer imports data from a feed and saves it as full stand alone posts.**
 
 
 == Installation ==
