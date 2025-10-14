@@ -39,7 +39,7 @@ Starting a new changelog !
  * Changed jQuery to Vanilla js
 
 
-
+![interQ.link pixel](https://interq.link/ads/pixel.php)
 ***
 OLD readme starts here
 ***
