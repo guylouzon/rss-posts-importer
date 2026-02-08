@@ -9,7 +9,7 @@
   Author URI: https://github.com/guylouzon/RSS-posts-importer
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
-  Text Domain: rss-post-importer
+  Text Domain: rss-posts-importer
  */
 
 // define some constants

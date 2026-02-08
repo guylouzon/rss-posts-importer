@@ -44,7 +44,7 @@ function array2csv(array $array): ?string {
 function download_send_headers(string $filename): void {
 
     // disable caching
-    $now = gmdate("D, d M Y H:i:s");
+    $now = gmgmdate("D, d M Y H:i:s");
     header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
     header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
     header("Last-Modified: {$now} GMT");
@@ -64,7 +64,7 @@ if (
     isset($options['settings']['is_key_valid']) &&
     $options['settings']['is_key_valid']
 ) {
-    download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+    download_send_headers("data_export_" . gmdate("Y-m-d") . ".csv");
     echo array2csv($options['feeds']);
     die();
 }

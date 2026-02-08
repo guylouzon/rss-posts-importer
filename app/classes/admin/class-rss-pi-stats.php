@@ -35,9 +35,9 @@ if (!class_exists("Rss_pi_stats")) {
                 $start_time = strtotime(sanitize_text_field($_POST["rss_from_date"]));
                 $end_time = strtotime(sanitize_text_field($_POST["rss_till_date"]));
             } else {
-                $date_today           = date("Y-m-d");// current date
+                $date_today           = gmdate("Y-m-d");// current date
                 $date_today_unix      = strtotime($date_today);
-                $date_seven_days_unix = strtotime(date("Y-m-d", strtotime($date_today)) . " -7 day");
+                $date_seven_days_unix = strtotime(gmdate("Y-m-d", strtotime($date_today)) . " -7 day");
 
                 // for last seven days stats
                 $start_time = $date_seven_days_unix;
@@ -69,8 +69,8 @@ if (!class_exists("Rss_pi_stats")) {
                 $start_time = $end_time;
                 $end_time = $_;
             }
-            $_POST["rss_from_date"] = date('m/d/Y', $start_time);
-            $_POST["rss_till_date"] = date('m/d/Y', $end_time);
+            $_POST["rss_from_date"] = gmdate('m/d/Y', $start_time);
+            $_POST["rss_till_date"] = gmdate('m/d/Y', $end_time);
 
             if (isset($feeds["feeds"]) && is_array($feeds["feeds"]) && !empty($feeds["feeds"])) {
                 $pie_feeds_data = $this->get_pie_chart_data_between($start_time, $end_time);
@@ -121,7 +121,7 @@ function drawChart() {};
                 $feedname = $feed["name"];
                 $feedurl = $feed["url"];
                 foreach ($dates as $date) {
-                    $key = date("d-m-Y", $date);
+                    $key = gmdate("d-m-Y", $date);
                     $data[$key][$feedname] = $this->get_feedcount_for($feedurl, $date);
                 }
             }
@@ -131,11 +131,11 @@ function drawChart() {};
 
         public function get_feedcount_for(string $feedurl, int $date): int {
 
-            $year = date("Y", $date);
-            $month = date("m", $date);
-            $day = date("d", $date);
+            $year = gmdate("Y", $date);
+            $month = gmdate("m", $date);
+            $day = gmdate("d", $date);
 
-            $parse = parse_url($feedurl);
+            $parse = wp_parse_url($feedurl);
             $url = $parse['host'] ?? '';
             $args = [
                 "date_query" => [
@@ -291,13 +291,13 @@ function drawChart() {};
 
             $feeds = get_option("rss_pi_feeds", []);
 
-            $s_year = date("Y", $start_time);
-            $s_month = date("m", $start_time);
-            $s_day = date("d", $start_time);
+            $s_year = gmdate("Y", $start_time);
+            $s_month = gmdate("m", $start_time);
+            $s_day = gmdate("d", $start_time);
 
-            $e_year = date("Y", $end_time);
-            $e_month = date("m", $end_time);
-            $e_day = date("d", $end_time);
+            $e_year = gmdate("Y", $end_time);
+            $e_month = gmdate("m", $end_time);
+            $e_day = gmdate("d", $end_time);
 
             $data = [];
 
@@ -339,7 +339,7 @@ function drawChart() {};
         }
 
         public function get_domain(string $url): string {
-            $parse = parse_url($url);
+            $parse = wp_parse_url($url);
             return $parse['host'] ?? '';
         }
 
@@ -353,9 +353,9 @@ function drawChart() {};
 
             foreach ($dates as $date) {
 
-                $year = date("Y", $date);
-                $month = date("m", $date);
-                $day = date("d", $date);
+                $year = gmdate("Y", $date);
+                $month = gmdate("m", $date);
+                $day = gmdate("d", $date);
 
                 $args = [
                     "date_query" => [
@@ -372,7 +372,7 @@ function drawChart() {};
 
                 $posts = get_posts($args);
 
-                $date_str = date("d-m-Y", $date);
+                $date_str = gmdate("d-m-Y", $date);
 
                 $data[$date_str] = count($posts);
             }
