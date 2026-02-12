@@ -239,7 +239,7 @@ class rssPostImporter {
      * Load translations
      */
     public function localize(): void {
-        load_plugin_textdomain('rss-post-importer', false, RSS_PI_PATH . 'app/lang/');
+        load_plugin_textdomain('rss-posts-importer', false, RSS_PI_PATH . 'app/lang/');
     }
 
     /**

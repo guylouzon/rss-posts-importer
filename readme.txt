@@ -1,4 +1,4 @@
-# RSS posts importer
+# RSS Posts Importer
 a code refresh for an old WP rss plugin
 
 
@@ -20,8 +20,8 @@ Contributors: feedsapi
 Donate link: https://www.feedsapi.org/ (outdated)
 Tags: rss aggregation, wordpress autoblog aggregator, Autoblogger, rss autopost and syndicator, blog content curation, feedsyndicate, feedwordpress, multiple rss feed importer, rss feeds to post, content syndication, blog migration, yahoo pipes
 Requires at least: 3.5
-Tested up to: 4.7.4
-Stable tag: 2.5.2
+Tested up to: 6.6
+Stable tag: 2025.7.01
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,11 +112,11 @@ WP-o-Matic, WP-o-Matic, RSSImport, FeedWordPress, Syndicate Press, FeedWeb, RSS 
 
 = I've already installed RSS Post Importer, but not all features are enable, what's going on? =
 
-RSS Post Importer requires a Full Text RSS Key [Try it Free for 14 Days](http://www.feedsapi.org/register.htm?utm_source=rss-post-importer_upgrade-free-trial) to enable all premium features. It comes with a 14 day free trial and will save you several hours of manual work.
+RSS Post Importer requires a Full Text RSS Key [Try it Free for 14 Days](http://www.feedsapi.org/register.htm?utm_source=rss-posts-importer_upgrade-free-trial) to enable all premium features. It comes with a 14 day free trial and will save you several hours of manual work.
 
 = How do I upgrade RSS Post Importer? =
 
-You need a Full Text RSS Key to upgrade your RSS Post Importer Plugin and boost your traffic and revenues, you simply need to go to [Boost my Traffic](http://www.feedsapi.org/register.htm?utm_source=rss-post-importer_upgrade) and create a premium account , then use the key you receive with your RSS Post Importer
+You need a Full Text RSS Key to upgrade your RSS Post Importer Plugin and boost your traffic and revenues, you simply need to go to [Boost my Traffic](http://www.feedsapi.org/register.htm?utm_source=rss-posts-importer_upgrade) and create a premium account , then use the key you receive with your RSS Post Importer
 
 = How do I view my stats? =
 
@@ -131,7 +131,7 @@ This exceptionally powerful and user-friendly wordpress plugin premium features 
 Easy! There are opportunities for developers and non-developers at all levels to contribute:
 
 * Join our Beta Test group.
-* Give us a hand answering questions in our [support forum](https://wordpress.org/support/plugin/rss-post-importer).
+* Give us a hand answering questions in our [support forum](https://wordpress.org/support/plugin/rss-posts-importer).
 * Report bugs, with reproduction steps, to [Support](rsspostimporter@feedsapi.com).
 
 Learn more (and get detailed instructions) in our [contribute guide](http://jetpack.me/contribute/).

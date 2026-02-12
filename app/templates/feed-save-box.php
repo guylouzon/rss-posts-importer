@@ -4,25 +4,25 @@
             <h3 class="version">V. <?php echo RSS_PI_VERSION; ?></h3>
             <ul>
                 <li>
-                    <i class="icon-calendar"></i> <?php _e("Latest import:", 'rss-post-importer'); ?> <strong><?php echo $this->options['latest_import'] ?? 'never'; ?></strong>
+                    <i class="icon-calendar"></i> <?php _e("Latest import:", 'rss-posts-importer'); ?> <strong><?php echo $this->options['latest_import'] ?? 'never'; ?></strong>
                 </li>
-                <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php _e("View the log", 'rss-post-importer'); ?></a></li>
+                <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php _e("View the log", 'rss-posts-importer'); ?></a></li>
             </ul>
         </div>
         <div id="major-publishing-actions">
-            <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save All', 'rss-post-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
+            <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save All', 'rss-posts-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
         </div>
     </div>
 </div>
 <?php if (($this->options['imports'] ?? 0) > 10) : ?>
     <div class="rate-box">
-        <h4><?php printf(__('%d posts imported and counting!', "rss-post-importer"), $this->options['imports']); ?></h4>
+        <h4><?php printf(__('%d posts imported and counting!', "rss-posts-importer"), $this->options['imports']); ?></h4>
         <i class="icon-star"></i>
         <i class="icon-star"></i>
         <i class="icon-star"></i>
         <i class="icon-star"></i>
         <i class="icon-star"></i>
-        <p class="description"><a href="http://wordpress.org/plugins/rss-post-importer/" target="_blank">Please support this plugin by rating it!</a></p>
+        <p class="description"><a href="http://wordpress.org/plugins/rss-posts-importer/" target="_blank">Please support this plugin by rating it!</a></p>
     </div>
 <?php endif; ?>
 

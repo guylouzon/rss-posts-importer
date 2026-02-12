@@ -12,9 +12,9 @@
 					<table class="widefat edit-table">
 						<tr>
 							<td>
-								<label for="frequency"><?php _e('Frequency', "rss-post-importer"); ?></label>
-								<p class="description"><?php _e('How often will the import run.', "rss-post-importer"); ?></p>
-								<p class="description"><?php _e('Custom Frequency in minutes only.', "rss-post-importer"); ?></p>
+								<label for="frequency"><?php esc_html_e('Frequency', "rss-posts-importer"); ?></label>
+								<p class="description"><?php esc_html_e('How often will the import run.', "rss-posts-importer"); ?></p>
+								<p class="description"><?php esc_html_e('Custom Frequency in minutes only.', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 							<?php
@@ -44,11 +44,11 @@
 
 									<option value="custom_frequency"
 											<?php if (isset($this->options['settings']['custom_frequency']) && $this->options['settings']['custom_frequency'] == "true") echo('selected="selected"'); ?>
-									><?php _e('Custom frequency', "rss-post-importer"); ?></option>
+									><?php esc_html_e('Custom frequency', "rss-posts-importer"); ?></option>
 								</select>
 								&nbsp;
 
-								<input type="text" id="rss_custom_frequency" name="rss_custom_frequency" value="<?php echo(isset($rss_custom_cron['time']) ? $rss_custom_cron['time'] : ''); ?>" placeholder="Minutes"
+								<input type="text" id="rss_custom_frequency" name="rss_custom_frequency" value="<?php esc_html_e(isset($rss_custom_cron['time']) ? $rss_custom_cron['time'] : ''); ?>" placeholder="Minutes"
 									<?php
 											if (isset($this->options['settings']['custom_frequency']) && $this->options['settings']['custom_frequency'] == 'true') {
 												echo('style="display:inline"');
@@ -63,10 +63,10 @@
 						</tr>
 						<tr>
 							<td>
-								<label for="post_template"><?php _e('Template', 'rss-post-importer'); ?></label>
-								<p class="description"><?php _e('This is how the post will be formatted.', "rss-post-importer"); ?></p>
+								<label for="post_template"><?php esc_html_e('Template', 'rss-posts-importer'); ?></label>
+								<p class="description"><?php esc_html_e('This is how the post will be formatted.', "rss-posts-importer"); ?></p>
 								<p class="description">
-									<?php _e('Available tags:', "rss-post-importer"); ?>
+									<?php esc_html_e('Available tags:', "rss-posts-importer"); ?>
 								<dl>
 									<dt><code>&lcub;$content&rcub;</code></dt>
 									<dt><code>&lcub;$permalink&rcub;</code></dt>
@@ -91,7 +91,7 @@
 						</tr>
 
 						<tr>
-							<td><label for="post_status"><?php _e('Post status', "rss-post-importer"); ?></label></td>
+							<td><label for="post_status"><?php esc_html_e('Post status', "rss-posts-importer"); ?></label></td>
 							<td>
 
 								<select name="post_status" id="post_status">
@@ -100,10 +100,10 @@
 
 									foreach ($statuses as $status) {
 										?>
-										<option value="<?php echo($status->name); ?>" <?php
+										<option value="<?php esc_html_e($status->name); ?>" <?php
 										if ($this->options['settings']['post_status'] == $status->name) : echo('selected="selected"');
 										endif;
-										?>><?php echo($status->label); ?></option>
+										?>><?php esc_html_e($status->label); ?></option>
 												<?php
 											}
 											?>
@@ -111,7 +111,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><?php _e('Author', 'rss-post-importer'); ?></td>
+							<td><?php esc_html_e('Author', 'rss-posts-importer'); ?></td>
 							<td>
 								<?php
 								$args = array(
@@ -124,119 +124,119 @@
 							</td>
 						</tr>
 						<tr>
-							<td><?php _e('Allow comments', "rss-post-importer"); ?></td>
+							<td><?php esc_html_e('Allow comments', "rss-posts-importer"); ?></td>
 							<td>
 								<ul class="radiolist">
 									<li>
-										<label><input type="radio" id="allow_comments_open" name="allow_comments" value="open" <?php echo($this->options['settings']['allow_comments'] == 'open' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="allow_comments_open" name="allow_comments" value="open" <?php esc_html_e($this->options['settings']['allow_comments'] == 'open' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
 									</li>
 									<li>
-										<label><input type="radio" id="allow_comments_false" name="allow_comments" value="false" <?php echo($this->options['settings']['allow_comments'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="allow_comments_false" name="allow_comments" value="false" <?php esc_html_e($this->options['settings']['allow_comments'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
 									</li>
 								</ul>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<?php _e('Block search indexing?', "rss-post-importer"); ?>
-								<p class="description"><?php _e('Prevent your content from appearing in search results.', "rss-post-importer"); ?></p>
+								<?php esc_html_e('Block search indexing?', "rss-posts-importer"); ?>
+								<p class="description"><?php esc_html_e('Prevent your content from appearing in search results.', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 								<ul class="radiolist">
 									<li>
-										<label><input type="radio" id="block_indexing_true" name="block_indexing" value="true" <?php echo($this->options['settings']['block_indexing'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="block_indexing_true" name="block_indexing" value="true" <?php esc_html_e($this->options['settings']['block_indexing'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
 									</li>
 									<li>
-										<label><input type="radio" id="block_indexing_false" name="block_indexing" value="false" <?php echo($this->options['settings']['block_indexing'] == 'false' || $this->options['settings']['block_indexing'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="block_indexing_false" name="block_indexing" value="false" <?php esc_html_e($this->options['settings']['block_indexing'] == 'false' || $this->options['settings']['block_indexing'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
 									</li>
 								</ul>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<?php _e('Nofollow option for all outbound links?', "rss-post-importer"); ?>
-								<p class="description"><?php _e('Add rel="nofollow" to all outbounded links.', "rss-post-importer"); ?></p>
+								<?php esc_html_e('Nofollow option for all outbound links?', "rss-posts-importer"); ?>
+								<p class="description"><?php esc_html_e('Add rel="nofollow" to all outbounded links.', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 								<ul class="radiolist">
 									<li>
-										<label><input type="radio" id="nofollow_outbound_true" name="nofollow_outbound" value="true" <?php echo($this->options['settings']['nofollow_outbound'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="nofollow_outbound_true" name="nofollow_outbound" value="true" <?php esc_html_e($this->options['settings']['nofollow_outbound'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
 									</li>
 									<li>
-										<label><input type="radio" id="nofollow_outbound_false" name="nofollow_outbound" value="false" <?php echo($this->options['settings']['nofollow_outbound'] == 'false' || $this->options['settings']['nofollow_outbound'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="nofollow_outbound_false" name="nofollow_outbound" value="false" <?php esc_html_e($this->options['settings']['nofollow_outbound'] == 'false' || $this->options['settings']['nofollow_outbound'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
 									</li>
 								</ul>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<?php _e('Enable logging?', "rss-post-importer"); ?>
-								<p class="description"><?php _e('The logfile can be found <a href="#" class="load-log">here</a>.', "rss-post-importer"); ?></p>
+								<?php esc_html_e('Enable logging?', "rss-posts-importer"); ?>
+								<p class="description"><?php esc_html_e('The logfile can be found <a href="#" class="load-log">here</a>.', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 								<ul class="radiolist">
 									<li>
-										<label><input type="radio" id="enable_logging_true" name="enable_logging" value="true" <?php echo($this->options['settings']['enable_logging'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="enable_logging_true" name="enable_logging" value="true" <?php esc_html_e($this->options['settings']['enable_logging'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
 									</li>
 									<li>
-										<label><input type="radio" id="enable_logging_false" name="enable_logging" value="false" <?php echo($this->options['settings']['enable_logging'] == 'false' || $this->options['settings']['enable_logging'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="enable_logging_false" name="enable_logging" value="false" <?php esc_html_e($this->options['settings']['enable_logging'] == 'false' || $this->options['settings']['enable_logging'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
 									</li>
 								</ul>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<?php _e('Download and save images locally?', "rss-post-importer"); ?>
-								<p class="description"><?php _e('Images in the feeds will be downloaded and saved in the WordPress media.', "rss-post-importer"); ?></p>
+								<?php esc_html_e('Download and save images locally?', "rss-posts-importer"); ?>
+								<p class="description"><?php esc_html_e('Images in the feeds will be downloaded and saved in the WordPress media.', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 								<ul class="radiolist">
 									<li>
-										<label><input type="radio" id="import_images_locally_true" name="import_images_locally" value="true" <?php echo($this->options['settings']['import_images_locally'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="import_images_locally_true" name="import_images_locally" value="true" <?php esc_html_e($this->options['settings']['import_images_locally'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
 									</li>
 									<li>
-										<label><input type="radio" id="import_images_locally_false" name="import_images_locally" value="false" <?php echo($this->options['settings']['import_images_locally'] == 'false' || $this->options['settings']['enable_logging'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="import_images_locally_false" name="import_images_locally" value="false" <?php esc_html_e($this->options['settings']['import_images_locally'] == 'false' || $this->options['settings']['enable_logging'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
 									</li>
 								</ul>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<?php _e('Disable the featured image?', "rss-post-importer"); ?>
-								<p class="description"><?php _e('Don\'t set a featured image for the imported posts.', "rss-post-importer"); ?></p>
+								<?php esc_html_e('Disable the featured image?', "rss-posts-importer"); ?>
+								<p class="description"><?php esc_html_e('Don\'t set a featured image for the imported posts.', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 								<ul class="radiolist">
 									<li>
-										<label><input type="radio" id="disable_thumbnail_true" name="disable_thumbnail" value="true" <?php echo($this->options['settings']['disable_thumbnail'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss_pi'); ?></label>
+										<label><input type="radio" id="disable_thumbnail_true" name="disable_thumbnail" value="true" <?php esc_html_e($this->options['settings']['disable_thumbnail'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss_pi'); ?></label>
 									</li>
 									<li>
-										<label><input type="radio" id="disable_thumbnail_false" name="disable_thumbnail" value="false" <?php echo($this->options['settings']['disable_thumbnail'] == 'false' || $this->options['settings']['disable_thumbnail'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-post-importer'); ?></label>
+										<label><input type="radio" id="disable_thumbnail_false" name="disable_thumbnail" value="false" <?php esc_html_e($this->options['settings']['disable_thumbnail'] == 'false' || $this->options['settings']['disable_thumbnail'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
 									</li>
 								</ul>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<?php _e('Social Media Optimization and Open Graph', "rss-post-importer"); ?>
-								<p class="description"><?php _e('Social Media and Open Graph optimization', "rss-post-importer"); ?></p>
+								<?php esc_html_e('Social Media Optimization and Open Graph', "rss-posts-importer"); ?>
+								<p class="description"><?php esc_html_e('Social Media and Open Graph optimization', "rss-posts-importer"); ?></p>
 							</td>
 							<td>
 							<ul class="radiolist">
 									<li>
 										<label>
 											<input type="checkbox" name="tw_show" id="tw_show" value="1"
-												<?php echo(isset($this->options['settings']['tw_show']) && $this->options['settings']['tw_show'] == '1' ? '' : 'checked="checked"'); ?>
+												<?php esc_html_e(isset($this->options['settings']['tw_show']) && $this->options['settings']['tw_show'] == '1' ? '' : 'checked="checked"'); ?>
 											/>
-											<?php _e('X', 'rss-post-importer'); ?>
+											<?php esc_html_e('X', 'rss-posts-importer'); ?>
 										</label>
 									</li>
 									<li>
 										<label>
 											<input type="checkbox" name="og_show" id="og_show" value="1"
-												<?php echo(isset($this->options['settings']['og_show']) && $this->options['settings']['og_show'] == '1' ? '' : 'checked="checked"'); ?>
+												<?php esc_html_e(isset($this->options['settings']['og_show']) && $this->options['settings']['og_show'] == '1' ? '' : 'checked="checked"'); ?>
 											/>
-											<?php _e('Facebook Opengraph', 'rss-post-importer'); ?>
+											<?php esc_html_e('Facebook Opengraph', 'rss-posts-importer'); ?>
 										</label>
 									</li>
 								</ul>
