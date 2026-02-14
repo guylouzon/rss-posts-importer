@@ -193,12 +193,12 @@ extract(webdados_fb_open_graph_load_settings());
 									<br/>
 									<?php
 									if ($loadedOnline) {
-										_e('List loaded from Facebook (online)', 'wd-fb-og');
+										esc_html_e('List loaded from Facebook (online)', 'wd-fb-og');
 									} else {
 										if ($loadedOffline) {
-											_e('List loaded from local cache (offline)', 'wd-fb-og'); ?> - <a href="?page=wonderm00n-open-graph.php&amp;localeOnline=1" onClick="return(confirm('<?php esc_html_e('You\\\'l lose any changes you haven\\\'t saved. Are you sure?', 'wd-fb-og'); ?>'));"><?php esc_html_e('Reload from Facebook', 'wd-fb-og'); ?></a><?php
+											esc_html_e('List loaded from local cache (offline)', 'wd-fb-og'); ?> - <a href="?page=wonderm00n-open-graph.php&amp;localeOnline=1" onClick="return(confirm('<?php esc_html_e('You\\\'l lose any changes you haven\\\'t saved. Are you sure?', 'wd-fb-og'); ?>'));"><?php esc_html_e('Reload from Facebook', 'wd-fb-og'); ?></a><?php
 										} else {
-											_e('List not loaded', 'wd-fb-og');
+											esc_html_e('List not loaded', 'wd-fb-og');
 										}
 									}
 									?>
@@ -473,7 +473,7 @@ extract(webdados_fb_open_graph_load_settings());
 										$hide_home_description=false;
 										if (get_option('show_on_front')=='page') {
 											$hide_home_description=true;
-											_e('The description of your front page:', 'wd-fb-og');
+											esc_html_e('The description of your front page:', 'wd-fb-og');
 											echo ' <a href="'.get_edit_post_link(get_option('page_on_front')).'" target="_blank">'.get_the_title(get_option('page_on_front')).'</a>';
 										}; ?>
 										<div<?php if ($hide_home_description) echo ' style="display: none;"'; ?>><?php esc_html_e('Use', 'wd-fb-og');?>

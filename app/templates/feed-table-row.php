@@ -79,16 +79,16 @@ if ($ajax_add || !$ajax_edit):
         <div class="row-options">
             <?php
             if (isset($f['feed_status'])): ?>
-            <a href="#" id="edit_btn_<?php echo ($f['id']); ?>" class="edit_<?php echo ($f['id']); ?> toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Edit', 'rss-posts-importer'); ?></a> |
+            <a href="#" id="edit_btn_<?php echo ($f['id']); ?>" class="edit_<?php echo ($f['id']); ?> toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php esc_html_e('Edit', 'rss-posts-importer'); ?></a> |
             <?php
             endif;
             ?>
-            <a href="#" class="delete-row" data-target="<?php echo ($f['id']); ?>"><?php _e('Delete', 'rss-posts-importer'); ?></a>
+            <a href="#" class="delete-row" data-target="<?php echo ($f['id']); ?>"><?php esc_html_e('Delete', 'rss-posts-importer'); ?></a>
             <?php
             if (isset($f['feed_status']) && $f['feed_status'] == "active") { ?>
-            | <a href="#" class="status-row" data-action="pause" data-target="<?php echo ($f['id']); ?>"><?php _e('Pause', 'rss-posts-importer'); ?></a>
+            | <a href="#" class="status-row" data-action="pause" data-target="<?php echo ($f['id']); ?>"><?php esc_html_e('Pause', 'rss-posts-importer'); ?></a>
             <?php } elseif (isset($f['feed_status']) && $f['feed_status'] == "pause") { ?>
-            | <a href="#" class="status-row" data-action="enable" data-target="<?php echo ($f['id']); ?>"><?php _e('Enable Feed', 'rss-posts-importer'); ?></a>
+            | <a href="#" class="status-row" data-action="enable" data-target="<?php echo ($f['id']); ?>"><?php esc_html_e('Enable Feed', 'rss-posts-importer'); ?></a>
             <?php } ?>
         </div>
     </td>
@@ -107,64 +107,64 @@ if ($ajax_add || $ajax_edit):
     <td colspan="4">
         <table class="widefat edit-table">
             <tr>
-                <td><label for="<?php echo ($f['id']); ?>-name"><?php _e("Feed name", 'rss-posts-importer'); ?></label></td>
+                <td><label for="<?php echo ($f['id']); ?>-name"><?php esc_html_e("Feed name", 'rss-posts-importer'); ?></label></td>
                 <td>
                     <input type="text" class="field-name" name="<?php echo ($f['id']); ?>-name" id="<?php echo ($f['id']); ?>-name" value="<?php echo esc_attr(stripslashes($f['name'])); ?>" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo ($f['id']); ?>-url"><?php _e("Feed url", 'rss-posts-importer'); ?></label>
+                    <label for="<?php echo ($f['id']); ?>-url"><?php esc_html_e("Feed url", 'rss-posts-importer'); ?></label>
                     <p class="description">e.g. "http://news.google.com/?output=rss"</p>
                 </td>
                 <td><input type="text" class="field-url" name="<?php echo ($f['id']); ?>-url" id="<?php echo ($f['id']); ?>-url" value="<?php echo esc_attr(stripslashes($f['url'])); ?>" /></td>
             </tr>
             <tr>
-                <td><label for="<?php echo ($f['id']); ?>-max_posts"><?php _e("Max posts / import", 'rss-posts-importer'); ?></label></td>
+                <td><label for="<?php echo ($f['id']); ?>-max_posts"><?php esc_html_e("Max posts / import", 'rss-posts-importer'); ?></label></td>
                 <td><input type="number" class="field-max_posts" name="<?php echo ($f['id']); ?>-max_posts" id="<?php echo ($f['id']); ?>-max_posts" value="<?php echo ($f['max_posts']); ?>" min="1" max="1000" /></td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo ($f['id']); ?>-nofollow_outbound"><?php _e('Nofollow option for all outbound links?', "rss-posts-importer"); ?></label>
-                    <p class="description"><?php _e('Add rel="nofollow" to all outbounded links.', "rss-posts-importer"); ?></p>
+                    <label for="<?php echo ($f['id']); ?>-nofollow_outbound"><?php esc_html_e('Nofollow option for all outbound links?', "rss-posts-importer"); ?></label>
+                    <p class="description"><?php esc_html_e('Add rel="nofollow" to all outbounded links.', "rss-posts-importer"); ?></p>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-nofollow_outbound_true" name="<?php echo($f['id']); ?>-nofollow_outbound" value="true" <?php echo($f['nofollow_outbound'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-nofollow_outbound_true" name="<?php echo($f['id']); ?>-nofollow_outbound" value="true" <?php echo($f['nofollow_outbound'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-nofollow_outbound_false" name="<?php echo($f['id']); ?>-nofollow_outbound" value="false" <?php echo($f['nofollow_outbound'] == 'false' || $f['nofollow_outbound'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-nofollow_outbound_false" name="<?php echo($f['id']); ?>-nofollow_outbound" value="false" <?php echo($f['nofollow_outbound'] == 'false' || $f['nofollow_outbound'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo ($f['id']); ?>-canonical_urls"><?php _e('SEO canonical URLs ?', "rss-posts-importer"); ?></label>
+                    <label for="<?php echo ($f['id']); ?>-canonical_urls"><?php esc_html_e('SEO canonical URLs ?', "rss-posts-importer"); ?></label>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-canonical_urls_myblog" name="<?php echo($f['id']); ?>-canonical_urls" value="my_blog" <?php echo($f['canonical_urls'] == 'my_blog' || $f['canonical_urls'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('My Blog URLs', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-canonical_urls_myblog" name="<?php echo($f['id']); ?>-canonical_urls" value="my_blog" <?php echo($f['canonical_urls'] == 'my_blog' || $f['canonical_urls'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('My Blog URLs', 'rss-posts-importer'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-canonical_urls_sourceblog" name="<?php echo($f['id']); ?>-canonical_urls" value="source_blog" <?php echo($f['canonical_urls'] == 'source_blog' ? 'checked="checked"' : ''); ?> /> <?php _e('Source Blog URLs', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-canonical_urls_sourceblog" name="<?php echo($f['id']); ?>-canonical_urls" value="source_blog" <?php echo($f['canonical_urls'] == 'source_blog' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Source Blog URLs', 'rss-posts-importer'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo ($f['id']); ?>-automatic_import_author"><?php _e('Automatic import of Authors ?', "rss-posts-importer"); ?></label>
+                    <label for="<?php echo ($f['id']); ?>-automatic_import_author"><?php esc_html_e('Automatic import of Authors ?', "rss-posts-importer"); ?></label>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_author_true" name="<?php echo($f['id']); ?>-automatic_import_author" value="true" <?php echo($f['automatic_import_author'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_author_true" name="<?php echo($f['id']); ?>-automatic_import_author" value="true" <?php echo($f['automatic_import_author'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_author_false" name="<?php echo($f['id']); ?>-automatic_import_author" value="false" <?php echo($f['automatic_import_author'] == 'false' || $f['automatic_import_author'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_author_false" name="<?php echo($f['id']); ?>-automatic_import_author" value="false" <?php echo($f['automatic_import_author'] == 'false' || $f['automatic_import_author'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
                         </li>
                     </ul>
                 </td>
@@ -172,21 +172,21 @@ if ($ajax_add || $ajax_edit):
   
             <tr>
                 <td>
-                    <label for="<?php echo ($f['id']); ?>-automatic_import_categories"><?php _e('Automatic import of Categories ?', "rss-posts-importer"); ?></label>
+                    <label for="<?php echo ($f['id']); ?>-automatic_import_categories"><?php esc_html_e('Automatic import of Categories ?', "rss-posts-importer"); ?></label>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_categories_true" name="<?php echo($f['id']); ?>-automatic_import_categories" value="true" <?php echo($f['automatic_import_categories'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_categories_true" name="<?php echo($f['id']); ?>-automatic_import_categories" value="true" <?php echo($f['automatic_import_categories'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_categories_false" name="<?php echo($f['id']); ?>-automatic_import_categories" value="false" <?php echo($f['automatic_import_categories'] == 'false' || $f['automatic_import_categories'] == '' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-automatic_import_categories_false" name="<?php echo($f['id']); ?>-automatic_import_categories" value="false" <?php echo($f['automatic_import_categories'] == 'false' || $f['automatic_import_categories'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
-                <td><label for=""><?php _e("Category", 'rss-posts-importer'); ?></label></td>
+                <td><label for=""><?php esc_html_e("Category", 'rss-posts-importer'); ?></label></td>
                 <td>
                     <?php
                     $rss_post_pi_admin = new rssPIAdmin();
@@ -203,7 +203,7 @@ if ($ajax_add || $ajax_edit):
                 </td>
             </tr>
             <tr>
-                <td><label for=""><?php _e("Tags", 'rss-posts-importer'); ?></label></td>
+                <td><label for=""><?php esc_html_e("Tags", 'rss-posts-importer'); ?></label></td>
                 <td>
                     <div class="tags_container">
                         <?php
@@ -213,21 +213,21 @@ if ($ajax_add || $ajax_edit):
                 </td>
             </tr>
             <tr>
-                <td><label for=""><?php _e("Strip html tags", 'rss-posts-importer'); ?></label></td>
+                <td><label for=""><?php esc_html_e("Strip html tags", 'rss-posts-importer'); ?></label></td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-strip_html" name="<?php echo($f['id']); ?>-strip_html" value="true" <?php echo($f['strip_html'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php _e('Yes', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-strip_html" name="<?php echo($f['id']); ?>-strip_html" value="true" <?php echo($f['strip_html'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo($f['id']); ?>-strip_html" name="<?php echo($f['id']); ?>-strip_html" value="false" <?php echo($f['strip_html'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php _e('No', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo($f['id']); ?>-strip_html" name="<?php echo($f['id']); ?>-strip_html" value="false" <?php echo($f['strip_html'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
                 <td><input type="hidden" name="id" value="<?php echo($f['id']); ?>" /></td>
-                <td><a id="close-table-edit_btn_<?php echo($f['id']); ?>" class="button button-large toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php _e('Close', 'rss-posts-importer'); ?></a></td>
+                <td><a id="close-table-edit_btn_<?php echo($f['id']); ?>" class="button button-large toggle-edit" data-target="<?php echo ($f['id']); ?>"><?php esc_html_e('Close', 'rss-posts-importer'); ?></a></td>
             </tr>
         </table>
     </td>

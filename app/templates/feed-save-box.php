@@ -4,13 +4,13 @@
             <h3 class="version">V. <?php echo RSS_PI_VERSION; ?></h3>
             <ul>
                 <li>
-                    <i class="icon-calendar"></i> <?php _e("Latest import:", 'rss-posts-importer'); ?> <strong><?php echo $this->options['latest_import'] ?? 'never'; ?></strong>
+                    <i class="icon-calendar"></i> <?php esc_html_e("Latest import:", 'rss-posts-importer'); ?> <strong><?php echo $this->options['latest_import'] ?? 'never'; ?></strong>
                 </li>
-                <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php _e("View the log", 'rss-posts-importer'); ?></a></li>
+                <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php esc_html_e("View the log", 'rss-posts-importer'); ?></a></li>
             </ul>
         </div>
         <div id="major-publishing-actions">
-            <input class="button button-large right" type="submit" name="info_update" value="<?php _e('Save All', 'rss-posts-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
+            <input class="button button-large right" type="submit" name="info_update" value="<?php esc_attr_e('Save All', 'rss-posts-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
         </div>
     </div>
 </div>

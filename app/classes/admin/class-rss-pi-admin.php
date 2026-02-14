@@ -275,12 +275,12 @@ class rssPIAdmin {
 <?php
             if( isset($_GET['deleted_cache_purged']) && $_GET['deleted_cache_purged'] == 'true' ) {
 ?>
-            <p><strong><?php _e('Cache for Deleted posts was purged.') ?></strong></p>
+            <p><strong><?php esc_html_e('Cache for Deleted posts was purged.') ?></strong></p>
 <?php
             }
             if( isset($_GET['settings-updated']) && $_GET['settings-updated'] ) {
 ?>
-            <p><strong><?php _e('Settings saved.') ?></strong></p>
+            <p><strong><?php esc_html_e('Settings saved.') ?></strong></p>
 <?php
             }
 ?>
@@ -320,7 +320,7 @@ class rssPIAdmin {
                 case 2:
                 {
 ?>
-            <p><strong><?php _e('Invalid API key!', 'rss_api'); ?></strong></p>
+            <p><strong><?php esc_html_e('Invalid API key!', 'rss_api'); ?></strong></p>
 <?php
                 }
             }
@@ -332,7 +332,8 @@ class rssPIAdmin {
         global $rss_post_importer;
 
         // include the template for the ui
-        include( RSS_PI_PATH . 'app/templates/admin-ui.php');
+        //include( RSS_PI_PATH . 'app/templates/admin-ui.php');
+        include( RSS_PI_PATH . 'app/templates/rss-post-importer-admin.html');
     }
 
     /**

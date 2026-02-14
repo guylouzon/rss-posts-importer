@@ -1,10 +1,10 @@
 <table class="widefat rss_pi-table" id="rss_pi-feed-table">
 	<thead>
 		<tr>
-			<th><?php _e("Feed name", 'rss-posts-importer'); ?></th>
-			<th><?php _e("Feed url", 'rss-posts-importer'); ?></th>
-			<th><?php _e("Max posts / import", 'rss-posts-importer'); ?></th>
-			<!--<th><?php _e("Category", 'rss-posts-importer'); ?></th>-->
+			<th><?php esc_html_e("Feed name", 'rss-posts-importer'); ?></th>
+			<th><?php esc_html_e("Feed url", 'rss-posts-importer'); ?></th>
+			<th><?php esc_html_e("Max posts / import", 'rss-posts-importer'); ?></th>
+			<!--<th><?php esc_html_e("Category", 'rss-posts-importer'); ?></th>-->
 		</tr>
 	</thead>
 	<tbody class="rss-rows">
@@ -26,7 +26,7 @@
 			?>
 			<tr>
 				<td colspan="4" class="empty_table">
-					<?php _e('You haven\'t specified any feeds to import yet, why don\'t you <a href="#" class="add-row">add one now</a>?', "rss-posts-importer"); ?>
+					<?php esc_html_e('You haven\'t specified any feeds to import yet, why don\'t you <a href="#" class="add-row">add one now</a>?', "rss-posts-importer"); ?>
 				</td>
 			</tr>
 		<?php
@@ -37,7 +37,7 @@
 		<tr>
 			<td colspan="4">
 				<a href="#" class="button button-large button-primary add-row">
-					<?php _e('Add new feed', "rss-posts-importer"); ?>
+					<?php esc_html_e('Add new feed', "rss-posts-importer"); ?>
 				</a>
 				<!--<input type="hidden" name="feed_ids" id="feed_ids" value="<?php echo(implode(',',$feed_ids)); ?>" />-->
 				<input type="hidden" name="deleted_feeds" id="deleted_feeds" value="" />

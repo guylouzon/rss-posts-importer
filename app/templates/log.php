@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h2><?php _e("Rss Post Importer Log", 'rss-posts-importer'); ?></h2>
+	<h2><?php esc_html_e("Rss Post Importer Log", 'rss-posts-importer'); ?></h2>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 			<div id="postbox-container-2" class="postbox-container">
@@ -12,8 +12,8 @@
 					<li><a href="http://cronless.com" target="_blank">cronless.com</a></li>
 				</ul>
 				</p>
-				<a href="#" class="button button-large button-primary show-main-ui"><?php _e("Ok, all done", "rss-posts-importer"); ?></a> 
-				<a href="#" class="button button-large button-warning clear-log"><?php _e("Clear log", "rss-posts-importer"); ?></a> 
+				<a href="#" class="button button-large button-primary show-main-ui"><?php esc_html_e("Ok, all done", "rss-posts-importer"); ?></a> 
+				<a href="#" class="button button-large button-warning clear-log"><?php esc_html_e("Clear log", "rss-posts-importer"); ?></a> 
 				<div class="log">
 					<code><?php echo(wpautop($log, true)); ?></code>
 				</div>
