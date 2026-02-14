@@ -72,10 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Toggle edit
     on('click', 'a.toggle-edit', function (e) {
         e.preventDefault();
-        let id_val = this.getAttribute('id');
-        id_val = id_val.replace(/^close-table-/,'');
-        console.log(id_val);
-        let id = document.getElementById(id_val);
         toggleEdit(this);
     });
 

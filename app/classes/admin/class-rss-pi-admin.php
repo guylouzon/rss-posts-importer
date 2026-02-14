@@ -332,8 +332,8 @@ class rssPIAdmin {
         global $rss_post_importer;
 
         // include the template for the ui
-        //include( RSS_PI_PATH . 'app/templates/admin-ui.php');
-        include( RSS_PI_PATH . 'app/templates/rss-post-importer-admin.html');
+        include( RSS_PI_PATH . 'app/templates/admin-ui.php');
+        //include( RSS_PI_PATH . 'app/templates/rss-post-importer-admin.php');
     }
 
     /**
