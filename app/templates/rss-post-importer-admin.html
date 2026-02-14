@@ -122,6 +122,11 @@
             background: #005a87;
         }
 
+        #toggle-rsspi-settings-table {
+            display: block;
+            margin: 0 12px 0 24px !important;
+        }
+
         .button-warning {
             background: #d63638 !important;
             border-color: #833030 !important;
@@ -271,10 +276,13 @@
 
         .field-name {
             font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
         }
 
-        .toggle-edit {
-            cursor: pointer;
+        .row-options {
+            font-size: 12px;
+            margin-top: 5px;
         }
 
         .rss_pi_close {
@@ -331,6 +339,450 @@
         .ajax_content {
             margin-top: 20px;
         }
+
+        /* Responsive Grid System */
+        .table-wrapper {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .table-header {
+            display: none;
+        }
+
+        .table-row {
+            display: flex;
+            flex-direction: row;
+            border: 1px solid #ccd0d4;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .table-row.header-row {
+            display: flex;
+            flex-direction: row;
+            background: #f1f1f1;
+            border-bottom: 2px solid #ccd0d4;
+            margin-bottom: 0;
+            border-radius: 0;
+            font-weight: 600;
+        }
+
+        .table-cell {
+            padding: 12px;
+            border-right: 1px solid #eee;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .table-cell:last-child {
+            border-right: none;
+        }
+
+        .table-cell[data-label]::before {
+            display: none;
+        }
+
+        .table-row.header-row .table-cell {
+            border-right: 1px solid #ccd0d4;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table-row.header-row .table-cell:last-child {
+            border-right: none;
+        }
+
+        .table-row.header-row .table-cell[data-label]::before {
+            display: none;
+        }
+
+        .table-row.edit-row {
+            display: none;
+            flex-direction: column;
+            background: #f9f9f9;
+        }
+
+        .table-row.edit-row.show {
+            display: flex;
+        }
+
+        .table-row.data-row.hidden {
+            display: none;
+        }
+
+        .edit-table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .edit-table-row {
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .edit-table-row:last-child {
+            border-bottom: none;
+        }
+
+        .edit-table-cell {
+            flex: 1;
+        }
+
+        .edit-table-cell:first-child {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .table-row {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .table-cell {
+                display: flex;
+                flex-direction: column;
+                padding: 10px;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+
+            .table-cell:last-child {
+                border-bottom: none;
+            }
+
+            .table-cell[data-label]::before {
+                content: attr(data-label);
+                font-weight: 600;
+                display: block;
+                margin-bottom: 5px;
+                color: #23282d;
+            }
+
+            .edit-table-row {
+                flex-direction: column;
+            }
+
+            .metabox-holder {
+                flex-direction: column;
+            }
+
+            #postbox-container-1 {
+                flex: 1;
+                margin-bottom: 20px;
+            }
+
+            #postbox-container-2 {
+                flex: 1;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            textarea,
+            select {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .wrap {
+                padding: 0 10px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .button.button-large {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .row-options {
+                margin-top: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .row-options a {
+                flex: 1 0 auto;
+            }
+        }
+
+/* ==========================================
+   VISUAL SYSTEM
+========================================== */
+
+:root {
+    --primary: #2271b1;
+    --primary-dark: #135e96;
+    --danger: #d63638;
+    --danger-dark: #a01d1d;
+    --success: #2ea043;
+    --warning: #dba617;
+
+    --border: #e2e4e7;
+    --soft-bg: #f6f7f8;
+    --card-bg: #ffffff;
+    --text-muted: #6b7280;
+}
+
+/* Better page spacing */
+.wrap {
+    margin-top: 30px;
+}
+
+/* ==========================================
+   FEEDS SECTION
+========================================== */
+
+.postbox h3 {
+    background: transparent;
+    border-bottom: none;
+    font-size: 16px;
+    padding: 16px 16px 0 16px;
+}
+
+/* Feed row = modern card */
+.table-row {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card-bg);
+    margin-bottom: 16px;
+    padding: 0;
+    transition: all 0.15s ease;
+}
+
+.table-row:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-color: #d0d7de;
+}
+
+/* Header row cleaner */
+.table-row.header-row {
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px 6px 4px;
+}
+
+/* Cells aligned better */
+.table-cell {
+    padding: 16px;
+    align-items: flex-start;
+}
+
+.rss_pi-feed_name {
+    flex: 1.2;
+}
+
+.rss_pi-feed_url {
+    flex: 1.8;
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.rss_pi_feed_max_posts {
+    flex: 0.6;
+    font-weight: 600;
+}
+
+/* Feed name stronger */
+.field-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Row actions styled */
+.row-options {
+    margin-top: 8px;
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.row-options a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.row-options a.delete-row {
+    color: var(--danger);
+}
+
+.row-options a:hover {
+    text-decoration: underline;
+}
+
+/* Feed status badge */
+.feed-status-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.feed-status-active {
+    background: #e6f4ea;
+    color: var(--success);
+}
+
+.feed-status-paused {
+    background: #fff4e5;
+    color: var(--warning);
+}
+
+/* ==========================================
+   EDIT PANEL
+========================================== */
+
+.edit-row {
+    background: var(--soft-bg);
+    border-top: none;
+    padding: 12px 16px 20px 16px;
+    border-radius: 0 0 8px 8px;
+}
+
+.edit-table-row {
+    border-bottom: none;
+    padding: 12px 0;
+}
+
+.edit-table-cell:first-child {
+    font-size: 13px;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.edit-table-cell .description {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* Inputs feel modern */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 10px;
+    font-size: 14px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(34,113,177,0.15);
+}
+
+/* Radios cleaner */
+.radiolist {
+    display: flex;
+    gap: 20px;
+}
+
+.radiolist li {
+    margin: 0;
+}
+
+/* Close button alignment */
+.edit-table-row:last-child {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* ==========================================
+   SETTINGS SECTION
+========================================== */
+
+#toggle-rsspi-settings-table {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+/* Settings container becomes card */
+#rsspi-settings-table .inside {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 12px;
+}
+
+/* Remove old WP table look */
+#rsspi-settings-table table {
+    border: none;
+}
+
+#rsspi-settings-table td {
+    border: none;
+    padding: 14px 10px;
+    vertical-align: top;
+}
+
+#rsspi-settings-table tr {
+    border-bottom: 1px solid var(--border);
+}
+
+#rsspi-settings-table tr:last-child {
+    border-bottom: none;
+}
+
+/* ==========================================
+   PRIMARY ACTION IMPROVEMENTS
+========================================== */
+
+.button.button-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    border-radius: 6px;
+}
+
+.button.button-primary:hover {
+    background: var(--primary-dark);
+}
+
+.button-warning {
+    background: var(--danger) !important;
+    border-color: var(--danger-dark) !important;
+}
+
+/* Save button bigger presence */
+#save-all-btn {
+    width: 100%;
+    font-weight: 600;
+}
+
+/* ==========================================
+   UNSAVED STATE
+========================================== */
+
+.unsaved-indicator {
+    background: var(--danger);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
     </style>
 </head>
 <body>
@@ -370,28 +822,24 @@
                             <div class="postbox">
                                 <h3>Feeds</h3>
                                 <div class="inside">
-                                    <table class="widefat rss_pi-table" id="rss_pi-feed-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Feed name</th>
-                                                <th>Feed url</th>
-                                                <th>Max posts / import</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="rss-rows" id="feeds-tbody">
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="4">
-                                                    <button type="button" class="button button-large button-primary" id="add-feed-btn">Add new feed</button>
-                                                    <input type="hidden" name="deleted_feeds" id="deleted_feeds" value="">
-                                                    <input type="hidden" name="modified_feeds" id="modified_feeds" value="">
-                                                    <input type="hidden" name="new_feeds" id="new_feeds" value="">
-                                                    <input type="hidden" id="paused_feeds" name="paused_feeds" value="">
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                    <div class="table-wrapper" id="rss_pi-feed-table">
+                                        <!-- Header Row -->
+                                        <div class="table-row header-row">
+                                            <div class="table-cell">Feed name</div>
+                                            <div class="table-cell">Feed url</div>
+                                            <div class="table-cell">Max posts / import</div>
+                                        </div>
+                                        <!-- Data rows will be inserted here -->
+                                        <div id="feeds-tbody"></div>
+                                    </div>
+
+                                    <div style="padding: 12px; border-top: 1px solid #eee;">
+                                        <button type="button" class="button button-large button-primary" id="add-feed-btn">Add new feed</button>
+                                        <input type="hidden" name="deleted_feeds" id="deleted_feeds" value="">
+                                        <input type="hidden" name="modified_feeds" id="modified_feeds" value="">
+                                        <input type="hidden" name="new_feeds" id="new_feeds" value="">
+                                        <input type="hidden" id="paused_feeds" name="paused_feeds" value="">
+                                    </div>
                                 </div>
                             </div>
 
@@ -536,6 +984,7 @@
                 this.newFeeds.add(newFeed.id);
                 this.markUnsavedChanges();
                 this.renderFeeds();
+                this.toggleEditRow(newFeed.id);
             }
 
             deleteFeed(feedId) {
@@ -658,91 +1107,96 @@
                 }
 
                 this.feeds.forEach(feed => {
-                    const dataRow = document.createElement('tr');
+                    const dataRow = document.createElement('div');
                     dataRow.id = `display_${feed.id}`;
-                    dataRow.className = 'data-row show';
+                    dataRow.className = 'data-row show table-row';
                     dataRow.innerHTML = `
-                        <td class="rss_pi-feed_name">
-                            <strong><a href="#" class="toggle-edit" data-target="${feed.id}"><span class="field-name">${feed.name}</span></a></strong>
+                        <div class="table-cell rss_pi-feed_name" data-label="Feed name">
+                            <strong>
+                                <a href="#" class="toggle-edit" data-target="${feed.id}">
+                                    <span class="field-name">${feed.name}</span>
+                                </a>
+                                <span class="feed-status-badge ${feed.feed_status === 'active' ? 'feed-status-active' : 'feed-status-paused'}">
+                                    ${feed.feed_status === 'active' ? 'Active' : 'Paused'}
+                                </span>
+                                </strong>
                             <div class="row-options">
                                 <a href="#" class="toggle-edit" data-target="${feed.id}">Edit</a> |
                                 <a href="#" class="delete-row" data-target="${feed.id}">Delete</a>
                                 ${feed.feed_status === 'active' ? `| <a href="#" class="status-row" data-action="pause" data-target="${feed.id}">Pause</a>` : `| <a href="#" class="status-row" data-action="enable" data-target="${feed.id}">Enable Feed</a>`}
                             </div>
-                        </td>
-                        <td class="rss_pi-feed_url"><span class="field-url">${feed.url}</span></td>
-                        <td class="rss_pi_feed_max_posts"><span class="field-max_posts">${feed.max_posts}</span></td>
+                        </div>
+                        <div class="table-cell rss_pi-feed_url" data-label="Feed url"><span class="field-url">${feed.url}</span></div>
+                        <div class="table-cell rss_pi_feed_max_posts" data-label="Max posts / import"><span class="field-max_posts">${feed.max_posts}</span></div>
                     `;
 
-                    const editRow = document.createElement('tr');
+                    const editRow = document.createElement('div');
                     editRow.id = `edit_${feed.id}`;
-                    editRow.className = 'edit-row';
+                    editRow.className = 'edit-row table-row';
                     editRow.innerHTML = `
-                        <td colspan="3">
-                            <table class="widefat edit-table">
-                                <tr>
-                                    <td><label for="${feed.id}-name">Feed name</label></td>
-                                    <td><input type="text" class="field-name" name="${feed.id}-name" id="${feed.id}-name" value="${feed.name}"></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-url">Feed url</label><p class="description">e.g. "http://news.google.com/?output=rss"</p></td>
-                                    <td><input type="text" class="field-url" name="${feed.id}-url" id="${feed.id}-url" value="${feed.url}"></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-max_posts">Max posts / import</label></td>
-                                    <td><input type="number" class="field-max_posts" name="${feed.id}-max_posts" id="${feed.id}-max_posts" value="${feed.max_posts}" min="1" max="1000"></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-nofollow_outbound">Nofollow option for all outbound links?</label><p class="description">Add rel="nofollow" to all outbounded links.</p></td>
-                                    <td>
-                                        <ul class="radiolist">
-                                            <li><label><input type="radio" name="${feed.id}-nofollow_outbound" value="true" ${feed.nofollow_outbound === 'true' ? 'checked' : ''}>Yes</label></li>
-                                            <li><label><input type="radio" name="${feed.id}-nofollow_outbound" value="false" ${feed.nofollow_outbound === 'false' ? 'checked' : ''}>No</label></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-canonical_urls">SEO canonical URLs?</label></td>
-                                    <td>
-                                        <ul class="radiolist">
-                                            <li><label><input type="radio" name="${feed.id}-canonical_urls" value="my_blog" ${feed.canonical_urls === 'my_blog' ? 'checked' : ''}>My Blog URLs</label></li>
-                                            <li><label><input type="radio" name="${feed.id}-canonical_urls" value="source_blog" ${feed.canonical_urls === 'source_blog' ? 'checked' : ''}>Source Blog URLs</label></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-automatic_import_author">Automatic import of Authors?</label></td>
-                                    <td>
-                                        <ul class="radiolist">
-                                            <li><label><input type="radio" name="${feed.id}-automatic_import_author" value="true" ${feed.automatic_import_author === 'true' ? 'checked' : ''}>Yes</label></li>
-                                            <li><label><input type="radio" name="${feed.id}-automatic_import_author" value="false" ${feed.automatic_import_author === 'false' ? 'checked' : ''}>No</label></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-automatic_import_categories">Automatic import of Categories?</label></td>
-                                    <td>
-                                        <ul class="radiolist">
-                                            <li><label><input type="radio" name="${feed.id}-automatic_import_categories" value="true" ${feed.automatic_import_categories === 'true' ? 'checked' : ''}>Yes</label></li>
-                                            <li><label><input type="radio" name="${feed.id}-automatic_import_categories" value="false" ${feed.automatic_import_categories === 'false' ? 'checked' : ''}>No</label></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="${feed.id}-strip_html">Strip html tags</label></td>
-                                    <td>
-                                        <ul class="radiolist">
-                                            <li><label><input type="radio" name="${feed.id}-strip_html" value="true" ${feed.strip_html === 'true' ? 'checked' : ''}>Yes</label></li>
-                                            <li><label><input type="radio" name="${feed.id}-strip_html" value="false" ${feed.strip_html === 'false' ? 'checked' : ''}>No</label></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="hidden" name="id" value="${feed.id}"></td>
-                                    <td><button type="button" class="button button-large toggle-edit" data-target="${feed.id}">Close</button></td>
-                                </tr>
-                            </table>
-                        </td>
+                        <div class="edit-table">
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-name">Feed name</label></div>
+                                <div class="edit-table-cell"><input type="text" class="field-name" name="${feed.id}-name" id="${feed.id}-name" value="${feed.name}"></div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-url">Feed url</label><p class="description">e.g. "http://news.google.com/?output=rss"</p></div>
+                                <div class="edit-table-cell"><input type="text" class="field-url" name="${feed.id}-url" id="${feed.id}-url" value="${feed.url}"></div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-max_posts">Max posts / import</label></div>
+                                <div class="edit-table-cell"><input type="number" class="field-max_posts" name="${feed.id}-max_posts" id="${feed.id}-max_posts" value="${feed.max_posts}" min="1" max="1000"></div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-nofollow_outbound">Nofollow option for all outbound links?</label><p class="description">Add rel="nofollow" to all outbounded links.</p></div>
+                                <div class="edit-table-cell">
+                                    <ul class="radiolist">
+                                        <li><label><input type="radio" name="${feed.id}-nofollow_outbound" value="true" ${feed.nofollow_outbound === 'true' ? 'checked' : ''}>Yes</label></li>
+                                        <li><label><input type="radio" name="${feed.id}-nofollow_outbound" value="false" ${feed.nofollow_outbound === 'false' ? 'checked' : ''}>No</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-canonical_urls">SEO canonical URLs?</label></div>
+                                <div class="edit-table-cell">
+                                    <ul class="radiolist">
+                                        <li><label><input type="radio" name="${feed.id}-canonical_urls" value="my_blog" ${feed.canonical_urls === 'my_blog' ? 'checked' : ''}>My Blog URLs</label></li>
+                                        <li><label><input type="radio" name="${feed.id}-canonical_urls" value="source_blog" ${feed.canonical_urls === 'source_blog' ? 'checked' : ''}>Source Blog URLs</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-automatic_import_author">Automatic import of Authors?</label></div>
+                                <div class="edit-table-cell">
+                                    <ul class="radiolist">
+                                        <li><label><input type="radio" name="${feed.id}-automatic_import_author" value="true" ${feed.automatic_import_author === 'true' ? 'checked' : ''}>Yes</label></li>
+                                        <li><label><input type="radio" name="${feed.id}-automatic_import_author" value="false" ${feed.automatic_import_author === 'false' ? 'checked' : ''}>No</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-automatic_import_categories">Automatic import of Categories?</label></div>
+                                <div class="edit-table-cell">
+                                    <ul class="radiolist">
+                                        <li><label><input type="radio" name="${feed.id}-automatic_import_categories" value="true" ${feed.automatic_import_categories === 'true' ? 'checked' : ''}>Yes</label></li>
+                                        <li><label><input type="radio" name="${feed.id}-automatic_import_categories" value="false" ${feed.automatic_import_categories === 'false' ? 'checked' : ''}>No</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><label for="${feed.id}-strip_html">Strip html tags</label></div>
+                                <div class="edit-table-cell">
+                                    <ul class="radiolist">
+                                        <li><label><input type="radio" name="${feed.id}-strip_html" value="true" ${feed.strip_html === 'true' ? 'checked' : ''}>Yes</label></li>
+                                        <li><label><input type="radio" name="${feed.id}-strip_html" value="false" ${feed.strip_html === 'false' ? 'checked' : ''}>No</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="edit-table-row">
+                                <div class="edit-table-cell"><input type="hidden" name="id" value="${feed.id}"></div>
+                                <div class="edit-table-cell"><button type="button" class="button button-large toggle-edit" data-target="${feed.id}">Close</button></div>
+                            </div>
+                        </div>
                     `;
 
                     // Track changes for this feed
