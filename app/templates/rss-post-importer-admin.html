@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- claude code -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -142,65 +143,6 @@
             margin-left: 10px;
         }
 
-        .widefat {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .widefat thead {
-            background: #f1f1f1;
-        }
-
-        .widefat th {
-            padding: 10px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 1px solid #ccd0d4;
-            font-size: 13px;
-        }
-
-        .widefat td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .widefat tbody tr:hover {
-            background: #f9f9f9;
-        }
-
-        .data-row {
-            display: table-row;
-        }
-
-        .data-row.hidden {
-            display: none;
-        }
-
-        .edit-row {
-            display: none;
-        }
-
-        .edit-row.show {
-            display: table-row;
-        }
-
-        .edit-table {
-            width: 100%;
-            border: none;
-        }
-
-        .edit-table tr td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .edit-table tr td:first-child {
-            width: 250px;
-            font-weight: 600;
-            vertical-align: top;
-        }
-
         input[type="text"],
         input[type="number"],
         textarea,
@@ -280,11 +222,6 @@
             margin-bottom: 8px;
         }
 
-        .row-options {
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
         .rss_pi_close {
             display: none;
         }
@@ -340,77 +277,205 @@
             margin-top: 20px;
         }
 
-        /* Responsive Grid System */
+        /* ==========================================
+           VISUAL SYSTEM
+        ========================================== */
+
+        :root {
+            --primary: #2271b1;
+            --primary-dark: #135e96;
+            --danger: #d63638;
+            --danger-dark: #a01d1d;
+            --success: #2ea043;
+            --warning: #dba617;
+
+            --border: #e2e4e7;
+            --soft-bg: #f6f7f8;
+            --card-bg: #ffffff;
+            --text-muted: #6b7280;
+        }
+
+        /* Better page spacing */
+        .wrap {
+            margin-top: 30px;
+        }
+
+        /* ==========================================
+           FEEDS SECTION - FIXED ALIGNMENT
+        ========================================== */
+
+        .postbox h3 {
+            background: transparent;
+            border-bottom: none;
+            font-size: 16px;
+            padding: 16px 16px 0 16px;
+        }
+
+        /* Table wrapper for proper structure */
         .table-wrapper {
             width: 100%;
             margin-bottom: 20px;
         }
 
-        .table-header {
-            display: none;
-        }
-
-        .table-row {
-            display: flex;
-            flex-direction: row;
-            border: 1px solid #ccd0d4;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            background: #fff;
-        }
-
+        /* Header row - grid layout */
         .table-row.header-row {
-            display: flex;
-            flex-direction: row;
-            background: #f1f1f1;
-            border-bottom: 2px solid #ccd0d4;
-            margin-bottom: 0;
-            border-radius: 0;
+            display: grid;
+            grid-template-columns: 2fr 3fr 1fr;
+            gap: 16px;
+            background: transparent;
+            border: none;
+            font-size: 13px;
+            color: var(--text-muted);
             font-weight: 600;
-        }
-
-        .table-cell {
-            padding: 12px;
-            border-right: 1px solid #eee;
-            flex: 1;
-            display: flex;
-            align-items: center;
-        }
-
-        .table-cell:last-child {
-            border-right: none;
-        }
-
-        .table-cell[data-label]::before {
-            display: none;
+            padding: 0 16px 8px 16px;
+            margin-bottom: 0;
         }
 
         .table-row.header-row .table-cell {
-            border-right: 1px solid #ccd0d4;
-            padding: 10px;
-            text-align: left;
+            padding: 0;
+            border: none;
         }
 
-        .table-row.header-row .table-cell:last-child {
-            border-right: none;
+        /* Data rows - matching grid layout */
+        .table-row.data-row {
+            display: grid;
+            grid-template-columns: 2fr 3fr 1fr;
+            gap: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            margin-bottom: 16px;
+            padding: 16px;
+            transition: all 0.15s ease;
+            align-items: start;
         }
 
-        .table-row.header-row .table-cell[data-label]::before {
-            display: none;
-        }
-
-        .table-row.edit-row {
-            display: none;
-            flex-direction: column;
-            background: #f9f9f9;
-        }
-
-        .table-row.edit-row.show {
-            display: flex;
+        .table-row.data-row:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border-color: #d0d7de;
         }
 
         .table-row.data-row.hidden {
             display: none;
+        }
+
+        /* Cell styling */
+        .table-cell {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 0;
+            border: none;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* Feed name column */
+        .table-cell.rss_pi-feed_name {
+            min-width: 0;
+        }
+
+        .table-cell.rss_pi-feed_name strong {
+            display: block;
+            width: 100%;
+        }
+
+        .table-cell.rss_pi-feed_name .toggle-edit {
+            text-decoration: none;
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Feed URL column */
+        .table-cell.rss_pi-feed_url {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .field-url {
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+
+        /* Max posts column - center aligned */
+        .table-cell.rss_pi_feed_max_posts {
+            font-weight: 600;
+            font-size: 15px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Feed name stronger */
+        .field-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        /* Row actions styled */
+        .row-options {
+            margin-top: 8px;
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            flex-wrap: wrap;
+        }
+
+        .row-options a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .row-options a.delete-row {
+            color: var(--danger);
+        }
+
+        .row-options a:hover {
+            text-decoration: underline;
+        }
+
+        /* Feed status badge */
+        .feed-status-badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        .feed-status-active {
+            background: #e6f4ea;
+            color: var(--success);
+        }
+
+        .feed-status-paused {
+            background: #fff4e5;
+            color: var(--warning);
+        }
+
+        /* ==========================================
+           EDIT PANEL
+        ========================================== */
+
+        .edit-row {
+            display: none;
+            background: var(--soft-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .edit-row.show {
+            display: block;
         }
 
         .edit-table {
@@ -422,12 +487,15 @@
         .edit-table-row {
             display: flex;
             flex-direction: column;
-            padding: 12px;
-            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .edit-table-row:last-child {
             border-bottom: none;
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
         }
 
         .edit-table-cell {
@@ -435,41 +503,144 @@
         }
 
         .edit-table-cell:first-child {
-            margin-bottom: 10px;
+            margin-bottom: 6px;
+        }
+
+        .edit-table-cell label {
+            font-size: 13px;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .edit-table-cell .description {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Inputs feel modern */
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(34,113,177,0.15);
+        }
+
+        /* Radios cleaner */
+        .radiolist {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .radiolist li {
+            margin: 0;
+        }
+
+        /* ==========================================
+           SETTINGS SECTION
+        ========================================== */
+
+        #toggle-rsspi-settings-table {
+            width: 100%;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
+        }
+
+        /* Settings container becomes card */
+        #rsspi-settings-table .inside {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 12px;
+        }
+
+        /* Remove old WP table look */
+        #rsspi-settings-table table {
+            border: none;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #rsspi-settings-table td {
+            border: none;
+            padding: 14px 10px;
+            vertical-align: top;
+        }
+
+        #rsspi-settings-table tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        #rsspi-settings-table tr:last-child {
+            border-bottom: none;
+        }
+
+        #rsspi-settings-table table tr td:first-child {
+            width: 300px;
+            padding-right: 20px;
+        }
+
+        /* ==========================================
+           PRIMARY ACTION IMPROVEMENTS
+        ========================================== */
+
+        .button.button-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            border-radius: 6px;
+        }
+
+        .button.button-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .button-warning {
+            background: var(--danger) !important;
+            border-color: var(--danger-dark) !important;
+        }
+
+        /* Save button bigger presence */
+        #save-all-btn {
+            width: 100%;
             font-weight: 600;
         }
 
-        /* Mobile Responsive */
+        /* ==========================================
+           UNSAVED STATE
+        ========================================== */
+
+        .unsaved-indicator {
+            background: var(--danger);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        /* ==========================================
+           RESPONSIVE DESIGN
+        ========================================== */
+
+        @media (max-width: 1024px) {
+            .table-row.header-row,
+            .table-row.data-row {
+                grid-template-columns: 2fr 2.5fr 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
-            .table-row {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .table-cell {
-                display: flex;
-                flex-direction: column;
-                padding: 10px;
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-
-            .table-cell:last-child {
-                border-bottom: none;
-            }
-
-            .table-cell[data-label]::before {
-                content: attr(data-label);
-                font-weight: 600;
-                display: block;
-                margin-bottom: 5px;
-                color: #23282d;
-            }
-
-            .edit-table-row {
-                flex-direction: column;
-            }
-
             .metabox-holder {
                 flex-direction: column;
             }
@@ -483,11 +654,41 @@
                 flex: 1;
             }
 
+            /* Stack feed rows on mobile */
+            .table-row.header-row {
+                display: none;
+            }
+
+            .table-row.data-row {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .table-cell[data-label]::before {
+                content: attr(data-label);
+                font-weight: 600;
+                display: block;
+                margin-bottom: 5px;
+                color: #23282d;
+                font-size: 12px;
+            }
+
+            .table-cell.rss_pi_feed_max_posts {
+                text-align: left;
+                align-items: flex-start;
+            }
+
             input[type="text"],
             input[type="number"],
             textarea,
             select {
                 font-size: 16px;
+            }
+
+            #rsspi-settings-table table tr td:first-child {
+                width: 100%;
+                padding-right: 10px;
             }
         }
 
@@ -515,274 +716,50 @@
             .row-options a {
                 flex: 1 0 auto;
             }
+
+            .radiolist {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
 
-/* ==========================================
-   VISUAL SYSTEM
-========================================== */
+        /* Empty table state */
+        .empty_table {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
 
-:root {
-    --primary: #2271b1;
-    --primary-dark: #135e96;
-    --danger: #d63638;
-    --danger-dark: #a01d1d;
-    --success: #2ea043;
-    --warning: #dba617;
+        .empty_table a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
 
-    --border: #e2e4e7;
-    --soft-bg: #f6f7f8;
-    --card-bg: #ffffff;
-    --text-muted: #6b7280;
-}
+        .empty_table a:hover {
+            text-decoration: underline;
+        }
 
-/* Better page spacing */
-.wrap {
-    margin-top: 30px;
-}
+        /* Settings table improvements */
+        .widefat {
+            width: 100%;
+        }
 
-/* ==========================================
-   FEEDS SECTION
-========================================== */
+        .widefat tbody {
+            width: 100%;
+        }
 
-.postbox h3 {
-    background: transparent;
-    border-bottom: none;
-    font-size: 16px;
-    padding: 16px 16px 0 16px;
-}
+        .widefat tr {
+            display: table-row;
+        }
 
-/* Feed row = modern card */
-.table-row {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--card-bg);
-    margin-bottom: 16px;
-    padding: 0;
-    transition: all 0.15s ease;
-}
-
-.table-row:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    border-color: #d0d7de;
-}
-
-/* Header row cleaner */
-.table-row.header-row {
-    background: transparent;
-    border: none;
-    font-size: 13px;
-    color: var(--text-muted);
-    font-weight: 600;
-    padding: 0 4px 6px 4px;
-}
-
-/* Cells aligned better */
-.table-cell {
-    padding: 16px;
-    align-items: flex-start;
-}
-
-.rss_pi-feed_name {
-    flex: 1.2;
-}
-
-.rss_pi-feed_url {
-    flex: 1.8;
-    color: var(--text-muted);
-    word-break: break-all;
-}
-
-.rss_pi_feed_max_posts {
-    flex: 0.6;
-    font-weight: 600;
-}
-
-/* Feed name stronger */
-.field-name {
-    font-size: 15px;
-    font-weight: 600;
-}
-
-/* Row actions styled */
-.row-options {
-    margin-top: 8px;
-    display: flex;
-    gap: 12px;
-    font-size: 12px;
-}
-
-.row-options a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.row-options a.delete-row {
-    color: var(--danger);
-}
-
-.row-options a:hover {
-    text-decoration: underline;
-}
-
-/* Feed status badge */
-.feed-status-badge {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-weight: 600;
-    display: inline-block;
-    margin-left: 8px;
-}
-
-.feed-status-active {
-    background: #e6f4ea;
-    color: var(--success);
-}
-
-.feed-status-paused {
-    background: #fff4e5;
-    color: var(--warning);
-}
-
-/* ==========================================
-   EDIT PANEL
-========================================== */
-
-.edit-row {
-    background: var(--soft-bg);
-    border-top: none;
-    padding: 12px 16px 20px 16px;
-    border-radius: 0 0 8px 8px;
-}
-
-.edit-table-row {
-    border-bottom: none;
-    padding: 12px 0;
-}
-
-.edit-table-cell:first-child {
-    font-size: 13px;
-    color: #111827;
-    margin-bottom: 6px;
-}
-
-.edit-table-cell .description {
-    color: var(--text-muted);
-    font-size: 12px;
-}
-
-/* Inputs feel modern */
-input[type="text"],
-input[type="number"],
-textarea,
-select {
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    padding: 10px;
-    font-size: 14px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(34,113,177,0.15);
-}
-
-/* Radios cleaner */
-.radiolist {
-    display: flex;
-    gap: 20px;
-}
-
-.radiolist li {
-    margin: 0;
-}
-
-/* Close button alignment */
-.edit-table-row:last-child {
-    margin-top: 12px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-/* ==========================================
-   SETTINGS SECTION
-========================================== */
-
-#toggle-rsspi-settings-table {
-    width: 100%;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-radius: 8px;
-}
-
-/* Settings container becomes card */
-#rsspi-settings-table .inside {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 12px;
-}
-
-/* Remove old WP table look */
-#rsspi-settings-table table {
-    border: none;
-}
-
-#rsspi-settings-table td {
-    border: none;
-    padding: 14px 10px;
-    vertical-align: top;
-}
-
-#rsspi-settings-table tr {
-    border-bottom: 1px solid var(--border);
-}
-
-#rsspi-settings-table tr:last-child {
-    border-bottom: none;
-}
-
-/* ==========================================
-   PRIMARY ACTION IMPROVEMENTS
-========================================== */
-
-.button.button-primary {
-    background: var(--primary);
-    border-color: var(--primary);
-    border-radius: 6px;
-}
-
-.button.button-primary:hover {
-    background: var(--primary-dark);
-}
-
-.button-warning {
-    background: var(--danger) !important;
-    border-color: var(--danger-dark) !important;
-}
-
-/* Save button bigger presence */
-#save-all-btn {
-    width: 100%;
-    font-weight: 600;
-}
-
-/* ==========================================
-   UNSAVED STATE
-========================================== */
-
-.unsaved-indicator {
-    background: var(--danger);
-    color: white;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
+        .widefat td {
+            display: table-cell;
+        }
     </style>
 </head>
 <body>
@@ -1096,13 +1073,10 @@ select:focus {
                 tbody.innerHTML = '';
 
                 if (this.feeds.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="3" class="empty_table">
-                                You haven't specified any feeds to import yet, why don't you <a href="#" class="add-row">add one now</a>?
-                            </td>
-                        </tr>
-                    `;
+                    const emptyRow = document.createElement('div');
+                    emptyRow.className = 'empty_table';
+                    emptyRow.innerHTML = `You haven't specified any feeds to import yet, why don't you <a href="#" class="add-row">add one now</a>?`;
+                    tbody.appendChild(emptyRow);
                     return;
                 }
 
@@ -1119,20 +1093,24 @@ select:focus {
                                 <span class="feed-status-badge ${feed.feed_status === 'active' ? 'feed-status-active' : 'feed-status-paused'}">
                                     ${feed.feed_status === 'active' ? 'Active' : 'Paused'}
                                 </span>
-                                </strong>
+                            </strong>
                             <div class="row-options">
-                                <a href="#" class="toggle-edit" data-target="${feed.id}">Edit</a> |
+                                <a href="#" class="toggle-edit" data-target="${feed.id}">Edit</a>
                                 <a href="#" class="delete-row" data-target="${feed.id}">Delete</a>
-                                ${feed.feed_status === 'active' ? `| <a href="#" class="status-row" data-action="pause" data-target="${feed.id}">Pause</a>` : `| <a href="#" class="status-row" data-action="enable" data-target="${feed.id}">Enable Feed</a>`}
+                                ${feed.feed_status === 'active' ? `<a href="#" class="status-row" data-action="pause" data-target="${feed.id}">Pause</a>` : `<a href="#" class="status-row" data-action="enable" data-target="${feed.id}">Enable Feed</a>`}
                             </div>
                         </div>
-                        <div class="table-cell rss_pi-feed_url" data-label="Feed url"><span class="field-url">${feed.url}</span></div>
-                        <div class="table-cell rss_pi_feed_max_posts" data-label="Max posts / import"><span class="field-max_posts">${feed.max_posts}</span></div>
+                        <div class="table-cell rss_pi-feed_url" data-label="Feed url">
+                            <span class="field-url">${feed.url || '<em>No URL specified</em>'}</span>
+                        </div>
+                        <div class="table-cell rss_pi_feed_max_posts" data-label="Max posts / import">
+                            <span class="field-max_posts">${feed.max_posts}</span>
+                        </div>
                     `;
 
                     const editRow = document.createElement('div');
                     editRow.id = `edit_${feed.id}`;
-                    editRow.className = 'edit-row table-row';
+                    editRow.className = 'edit-row';
                     editRow.innerHTML = `
                         <div class="edit-table">
                             <div class="edit-table-row">
