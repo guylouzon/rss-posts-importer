@@ -598,7 +598,7 @@ class rssPIAdmin {
                             </label></li>';
             endforeach;
             $checkboxes .= "</ul>";
-            print esc_html($checkboxes);
+            print $checkboxes;
         }
     }
 
