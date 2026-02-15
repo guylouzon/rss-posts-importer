@@ -346,7 +346,7 @@ class rssPIAdmin {
 
         $class = ($inline) ? 'rss-pi-error' : 'error';
 
-        echo '<div class="' . $class . '"><p>' . $error . '</p></div>';
+        echo '<div class="' . esc_html($class) . '"><p>' . esc_html($error) . '</p></div>';
     }
 
     /**
@@ -565,7 +565,7 @@ class rssPIAdmin {
 
         if ($tags = get_tags(['orderby' => 'name', 'hide_empty' => false])) {
 
-            echo '<select name="' . $fid . '-tags_id[]" id="tag" class="postform">';
+            echo '<select name="' . esc_html($fid) . '-tags_id[]" id="tag" class="postform">';
 
             foreach ($tags as $tag) {
                 $strsel = "";
@@ -575,7 +575,7 @@ class rssPIAdmin {
                         $strsel = "selected='selected'";
                     }
                 }
-                echo '<option value="' . $tag->term_id . '" ' . $strsel . '>' . $tag->name . '</option>';
+                echo '<option value="' . esc_html($tag->term_id) . '" ' . esc_html($strsel) . '>' . esc_html($tag->name) . '</option>';
             }
             echo '</select> ';
         }
@@ -598,7 +598,7 @@ class rssPIAdmin {
                             </label></li>';
             endforeach;
             $checkboxes .= "</ul>";
-            print $checkboxes;
+            print esc_html($checkboxes);
         }
     }
 

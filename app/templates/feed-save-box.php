@@ -16,7 +16,7 @@
 </div>
 <?php if (($this->options['imports'] ?? 0) > 10) : ?>
     <div class="rate-box">
-        <h4><?php printf(__('%d posts imported and counting!', "rss-posts-importer"), $this->options['imports']); ?></h4>
+       <h4><?php echo esc_html(sprintf(_n('%d post imported and counting!','%d posts imported and counting!',$this->options['imports'],'rss-posts-importer'),number_format_i18n($this->options['imports'] ))); ?></h4>
         <i class="icon-star"></i>
         <i class="icon-star"></i>
         <i class="icon-star"></i>

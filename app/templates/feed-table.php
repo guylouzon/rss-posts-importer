@@ -39,11 +39,11 @@
 				<a href="#" class="button button-large button-primary add-row">
 					<?php esc_html_e('Add new feed', "rss-posts-importer"); ?>
 				</a>
-				<!--<input type="hidden" name="feed_ids" id="feed_ids" value="<?php echo(implode(',',$feed_ids)); ?>" />-->
+				<?php /*<!--<input type="hidden" name="feed_ids" id="feed_ids" value="<?php echo(escimplode(',',$feed_ids)); ?>" />--> */ ?>
 				<input type="hidden" name="deleted_feeds" id="deleted_feeds" value="" />
 				<input type="hidden" name="modified_feeds" id="modified_feeds" value="" />
 				<input type="hidden" name="new_feeds" id="new_feeds" value="" />
-                <input type="hidden" id="paused_feeds" name="paused_feeds" value="<?php echo(implode(',',$paused_feeds)); ?>" />
+                <input type="hidden" id="paused_feeds" name="paused_feeds" value="<?php echo(esc_attr(implode(',',$paused_feeds))); ?>" />
 			</td>
 		</tr>
 <?php

@@ -47,7 +47,7 @@ function download_send_headers(string $filename): void {
     $now = gmgmdate("D, d M Y H:i:s");
     header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
     header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-    header("Last-Modified: {$now} GMT");
+    header("Last-Modified: " . esc_html($now) . " GMT");
 
     // force download  
     header("Content-Type: application/force-download");

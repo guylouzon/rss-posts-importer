@@ -196,7 +196,7 @@ if ($ajax_add || $ajax_edit):
                                 <?php
                                 $allcats = $rss_post_pi_admin->wp_category_checklist_rss_pi(0, false, $f['category_id']);
                                 $allcats = str_replace('name="post_category[]"', 'name="' . $f['id'] . '-category_id[]"', $allcats);
-                                echo esc_html($allcats);
+                                echo $allcats;
                                 ?>
                             </ul>
                         </div>
@@ -207,7 +207,7 @@ if ($ajax_add || $ajax_edit):
                 <td>
                     <div class="tags_container">
                         <?php
-                        echo esc_html($rss_post_pi_admin->rss_pi_tags_checkboxes($f['id'], $f['tags_id']));
+                        echo $rss_post_pi_admin->rss_pi_tags_checkboxes($f['id'], $f['tags_id']);
                         ?>
                     </div>
                 </td>
@@ -217,10 +217,10 @@ if ($ajax_add || $ajax_edit):
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-strip_html" name="<?php echo esc_html( $f['id'] ); ?>-strip_html" value="true" <?php echo($f['strip_html'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_attr( $f['id'] ); ?>-strip_html" name="<?php echo esc_attr( $f['id'] ); ?>-strip_html" value="true" <?php echo($f['strip_html'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-posts-importer'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-strip_html" name="<?php echo esc_html( $f['id'] ); ?>-strip_html" value="false" <?php echo($f['strip_html'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_attr( $f['id'] ); ?>-strip_html" name="<?php echo esc_attr( $f['id'] ); ?>-strip_html" value="false" <?php echo($f['strip_html'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-posts-importer'); ?></label>
                         </li>
                     </ul>
                 </td>

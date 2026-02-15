@@ -84,7 +84,7 @@ extract(webdados_fb_open_graph_load_settings());
 	<div class="wrap">
 		
 	<?php screen_icon(); ?>
-	<h2><?php echo $webdados_fb_open_graph_plugin_name; ?> (<?php echo $webdados_fb_open_graph_plugin_version; ?>)</h2>
+	<h2><?php echo esc_html($webdados_fb_open_graph_plugin_name); ?> - <?php echo esc_html($webdados_fb_open_graph_plugin_name); ?> (<?php echo esc_html($webdados_fb_open_graph_plugin_version); ?>)</h2>
 	<br class="clear"/>
 	<p><?php esc_html_e('Please set some default values and which tags should, or should not, be included. It may be necessary to exclude some tags if other plugins are already including them.', 'rss-posts-importer'); ?></p>
 	
@@ -109,7 +109,7 @@ extract(webdados_fb_open_graph_load_settings());
 							<tr class="fb_app_id_options">
 								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Facebook Platform App ID', 'rss-posts-importer'); ?>:</th>
 								<td>
-									<input type="text" name="fb_app_id" id="fb_app_id" size="30" value="<?php echo trim(esc_attr($fb_app_id)); ?>"/>
+									<input type="text" name="fb_app_id" id="fb_app_id" size="30" value="<?php echo (esc_attr(trim($fb_app_id))); ?>"/>
 								</td>
 							</tr>
 							<tr>
@@ -124,7 +124,7 @@ extract(webdados_fb_open_graph_load_settings());
 							<tr class="fb_admin_id_options">
 								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Facebook Admin(s) ID', 'rss-posts-importer'); ?>:</th>
 								<td>
-									<input type="text" name="fb_admin_id" id="fb_admin_id" size="30" value="<?php echo trim(esc_attr($fb_admin_id)); ?>"/>
+									<input type="text" name="fb_admin_id" id="fb_admin_id" size="30" value="<?php echo (esc_attr(trim($fb_admin_id))); ?>"/>
 									<br/>
 									<?php esc_html_e('Comma separated if more than one', 'rss-posts-importer'); ?>
 								</td>
@@ -142,7 +142,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Locale', 'rss-posts-importer'); ?>:</th>
 								<td>
 									<select name="fb_locale" id="fb_locale">
-										<option value=""<?php if (trim($fb_locale)=='') echo ' selected="selected"'; ?>><?php esc_html_e('WordPress current locale/language', 'rss-posts-importer'); ?> (<?php echo get_locale(); ?>)&nbsp;</option>
+										<option value=""<?php if (trim($fb_locale)=='') echo ' selected="selected"'; ?>><?php esc_html_e('WordPress current locale/language', 'rss-posts-importer'); ?> (<?php echo esc_html(get_locale()); ?>)&nbsp;</option>
 										<?php
 											$listLocales=false;
 											$loadedOnline=false;
@@ -184,7 +184,7 @@ extract(webdados_fb_open_graph_load_settings());
 												$locales = json_decode($json,TRUE);
 												if (is_array($locales['locale'])) {
 													foreach ($locales['locale'] as $locale) {
-														?><option value="<?php echo $locale['codes']['code']['standard']['representation']; ?>"<?php if (trim($fb_locale)==trim($locale['codes']['code']['standard']['representation'])) echo ' selected="selected"'; ?>><?php echo $locale['englishName']; ?> (<?php echo $locale['codes']['code']['standard']['representation']; ?>)</option><?php
+														?><option value="<?php echo esc_attr($locale['codes']['code']['standard']['representation']); ?>"<?php if (trim($fb_locale)==trim($locale['codes']['code']['standard']['representation'])) echo ' selected="selected"'; ?>><?php echo esc_html($locale['englishName']); ?> (<?php echo esc_html($locale['codes']['code']['standard']['representation']); ?>)</option><?php
 													}
 												}
 											}
@@ -262,7 +262,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<td>
 									<input type="checkbox" name="fb_url_add_trailing" id="fb_url_add_trailing" value="1" <?php echo (intval($fb_url_add_trailing)==1 ? ' checked="checked"' : ''); ?> onclick="showUrlTrail();"/>
 									<br/>
-									<?php esc_html_e('On the homepage will be', 'rss-posts-importer');?>: <i><?php echo get_option('siteurl'); ?><span id="fb_url_add_trailing_example">/</span></i>
+									<?php esc_html_e('On the homepage will be', 'rss-posts-importer');?>: <i><?php echo esc_html(get_option('siteurl')); ?><span id="fb_url_add_trailing_example">/</span></i>
 								</td>
 							</tr>
 							<tr class="fb_url_options">
@@ -281,7 +281,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<td>
 									<input type="checkbox" name="fb_type_show" id="fb_type_show" value="1" <?php echo (intval($fb_type_show)==1 ? ' checked="checked"' : ''); ?> onclick="showTypeOptions();"/>
 									<br/>
-									<?php printf( __('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'wd-fb-og'), 'article', 'website', 'blog' );?>
+									<?php printf( esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'wd-fb-og'), 'article', 'website', 'blog' );?>
 								</td>
 							</tr>
 							<tr class="fb_type_options">
@@ -330,7 +330,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<tr class="fb_publisher_options">
 									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Website\'s Facebook Page', 'rss-posts-importer');?>:</th>
 									<td>
-										<input type="text" name="fb_publisher" id="fb_publisher" size="50" value="<?php echo trim(esc_attr($fb_publisher)); ?>"/>
+										<input type="text" name="fb_publisher" id="fb_publisher" size="50" value="<?php echo esc_attr(trim($fb_publisher)); ?>"/>
 										<br/>
 										<?php esc_html_e('Full URL with http://', 'rss-posts-importer');?>
 									</td>
@@ -347,7 +347,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<tr class="fb_publisher_schema_options">
 									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Website\'s Google+ Page', 'rss-posts-importer');?>:</th>
 									<td>
-										<input type="text" name="fb_publisher_schema" id="fb_publisher_schema" size="50" value="<?php echo trim(esc_attr($fb_publisher_schema)); ?>"/>
+										<input type="text" name="fb_publisher_schema" id="fb_publisher_schema" size="50" value="<?php echo esc_attr(trim($fb_publisher_schema)); ?>"/>
 										<br/>
 										<?php esc_html_e('Full URL with http://', 'rss-posts-importer');?>
 									</td>
@@ -363,7 +363,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<tr class="fb_publisher_twitter_options">
 									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Website\'s Twitter Username', 'rss-posts-importer');?>:</th>
 									<td>
-										<input type="text" name="fb_publisher_twitteruser" id="fb_publisher_twitteruser" size="20" value="<?php echo trim(esc_attr($fb_publisher_twitteruser)); ?>"/>
+										<input type="text" name="fb_publisher_twitteruser" id="fb_publisher_twitteruser" size="20" value="<?php echo esc_attr(trim($fb_publisher_twitteruser)); ?>"/>
 										<br/>
 										<?php esc_html_e('Twitter username (without @)', 'rss-posts-importer');?>
 									</td>
@@ -474,7 +474,7 @@ extract(webdados_fb_open_graph_load_settings());
 										if (get_option('show_on_front')=='page') {
 											$hide_home_description=true;
 											esc_html_e('The description of your front page:', 'rss-posts-importer');
-											echo ' <a href="'.get_edit_post_link(get_option('page_on_front')).'" target="_blank">'.get_the_title(get_option('page_on_front')).'</a>';
+											echo ' <a href="'. esc_url(get_edit_post_link(get_option('page_on_front'))).'" target="_blank">'. esc_html(get_the_title(get_option('page_on_front'))).'</a>';
 										}; ?>
 										<div<?php if ($hide_home_description) echo ' style="display: none;"'; ?>><?php esc_html_e('Use', 'rss-posts-importer');?>
 											<select name="fb_desc_homepage" id="fb_desc_homepage" onchange="showDescriptionCustomText();">
@@ -482,14 +482,14 @@ extract(webdados_fb_open_graph_load_settings());
 												<option value="custom"<?php if (trim($fb_desc_homepage)=='custom') echo ' selected="selected"'; ?>><?php esc_html_e('Custom text', 'rss-posts-importer');?>&nbsp;</option>
 											</select>
 											<div id="fb_desc_homepage_customtext_div">
-												<textarea name="fb_desc_homepage_customtext" id="fb_desc_homepage_customtext" rows="3" cols="50"><?php echo trim(esc_attr($fb_desc_homepage_customtext)); ?></textarea>
+												<textarea name="fb_desc_homepage_customtext" id="fb_desc_homepage_customtext" rows="3" cols="50"><?php echo esc_attr(trim($fb_desc_homepage_customtext)); ?></textarea>
 												<?php
 												if (function_exists('icl_object_id') && function_exists('icl_register_string')) {
 													?>
 													<br/>
 													<?php
 													printf(
-														__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'wd-fb-og'),
+														esc_html__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'wd-fb-og'),
 														'admin.php?page=wpml-string-translation/menu/string-translation.php&amp;context=wd-fb-og'
 													); 
 												}
@@ -540,7 +540,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<tr class="fb_image_options">
 									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Default image', 'rss-posts-importer');?>:</th>
 									<td>
-										<input type="text" name="fb_image" id="fb_image" size="50" value="<?php echo trim(esc_attr($fb_image)); ?>"/>
+										<input type="text" name="fb_image" id="fb_image" size="50" value="<?php echo esc_attr(trim($fb_image)); ?>"/>
 										<input id="fb_image_button" class="button" type="button" value="Upload/Choose image" />
 										<br/>
 										<?php esc_html_e('Full URL with http://', 'rss-posts-importer');?>
@@ -752,7 +752,7 @@ extract(webdados_fb_open_graph_load_settings());
 				<div class="inside">
 					<ul>
 						<?php foreach($links as $link) { ?>
-							<li>- <a href="<?php echo $link['url']; ?>" target="_blank"><?php echo $link['text']; ?></a></li>
+							<li>- <a href="<?php echo esc_attr($link['url']); ?>" target="_blank"><?php echo esc_html($link['text']); ?></a></li>
 						<?php } ?>
 					</ul>
 				</div>
@@ -782,7 +782,7 @@ extract(webdados_fb_open_graph_load_settings());
 	</div>
 	
 	<div class="clear">
-		<p><br/>&copy 2011<?php if(date('Y')>2011) echo '-'.date('Y'); ?> <a href="http://www.webdados.pt/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Webdados</a> &amp; <a href="http://wonderm00n.com/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Marco Almeida (Wonderm00n)</a></p>
+		<p><br/>&copy 2011<?php if(date('Y')>2011) echo esc_html('-'.date('Y')); ?> <a href="http://www.webdados.pt/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Webdados</a> &amp; <a href="http://wonderm00n.com/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Marco Almeida (Wonderm00n)</a></p>
 	</div>
 		
 	</div>
