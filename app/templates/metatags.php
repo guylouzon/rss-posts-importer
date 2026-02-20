@@ -11,7 +11,10 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 // First we save!
 if (isset($_POST['action'])) {
-    if (trim($_POST['action']) === 'save') {
+    // Nonce verification
+    check_admin_referer('wonderm00n_open_graph_settings_save', 'wonderm00n_open_graph_nonce');
+
+    if (trim(sanitize_text_field(wp_unslash($_POST['action']))) === 'save') {
         $usersettings = [
             'fb_app_id_show' => intval(webdados_fb_open_graph_post('fb_app_id_show')),
             'fb_app_id' => trim(webdados_fb_open_graph_post('fb_app_id')),
@@ -83,7 +86,6 @@ extract(webdados_fb_open_graph_load_settings());
 ?>
 	<div class="wrap">
 		
-	<?php screen_icon(); ?>
 	<h2><?php echo esc_html($webdados_fb_open_graph_plugin_name); ?> - <?php echo esc_html($webdados_fb_open_graph_plugin_name); ?> (<?php echo esc_html($webdados_fb_open_graph_plugin_version); ?>)</h2>
 	<br class="clear"/>
 	<p><?php esc_html_e('Please set some default values and which tags should, or should not, be included. It may be necessary to exclude some tags if other plugins are already including them.', 'rss-posts-importer'); ?></p>
@@ -95,6 +97,7 @@ extract(webdados_fb_open_graph_load_settings());
 	<div class="postbox-container og_left_col">
 		<div id="poststuff">
 			<form name="form1" method="post">
+				<?php wp_nonce_field('wonderm00n_open_graph_settings_save', 'wonderm00n_open_graph_nonce'); ?>
 				
 				<div id="webdados_fb_open_graph-settings" class="postbox">
 					<h3 id="settings"><?php esc_html_e('Settings'); ?></h3>
@@ -148,33 +151,41 @@ extract(webdados_fb_open_graph_load_settings());
 											$loadedOnline=false;
 											$loadedOffline=false;
 											//Online
-											if (!empty($_GET['localeOnline'])) {
-												if (intval($_GET['localeOnline'])==1) {
-													if ($ch = curl_init('http://www.facebook.com/translations/FacebookLocales.xml')) {
-														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-														$fb_locales=curl_exec($ch);
-														if (curl_errno($ch)) {
-															//echo curl_error($ch);
-														} else {
-															$info = curl_getinfo($ch);
-															if (intval($info['http_code'])==200) {
-																//Save the file locally
-																$fh = fopen(RSS_PL_PATH .'wonderm00ns-simple-facebook-open-graph-tags/includes/FacebookLocales.xml', 'w') or die("Can't open file");
-																fwrite($fh, $fb_locales);
-																fclose($fh);
-																$listLocales=true;
-																$loadedOnline=true;
+											if (!empty($_GET['localeOnline'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+												if (intval($_GET['localeOnline'])==1) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+													$response = wp_remote_get('http://www.facebook.com/translations/FacebookLocales.xml');
+													if (!is_wp_error($response)) {
+														$http_code = wp_remote_retrieve_response_code($response);
+														if (intval($http_code) === 200) {
+															$fb_locales = wp_remote_retrieve_body($response);
+															// Save the file locally using WP_Filesystem
+															global $wp_filesystem;
+															if (empty($wp_filesystem)) {
+																require_once ABSPATH . '/wp-admin/includes/file.php';
+																WP_Filesystem();
 															}
+															$locale_file = RSS_PL_PATH . 'wonderm00ns-simple-facebook-open-graph-tags/includes/FacebookLocales.xml';
+															$wp_filesystem->put_contents($locale_file, $fb_locales, FS_CHMOD_FILE);
+															$listLocales = true;
+															$loadedOnline = true;
 														}
-														curl_close($ch);
 													}
 												}
 											}
 											//Offline
 											if (!$listLocales) {
-												if ($fb_locales=file_get_contents(RSS_PL_PATH .'wonderm00ns-simple-facebook-open-graph-tags/includes/FacebookLocales.xml')) {
-													$listLocales=true;
-													$loadedOffline=true;
+												$locale_file = RSS_PL_PATH . 'wonderm00ns-simple-facebook-open-graph-tags/includes/FacebookLocales.xml';
+												global $wp_filesystem;
+												if (empty($wp_filesystem)) {
+													require_once ABSPATH . '/wp-admin/includes/file.php';
+													WP_Filesystem();
+												}
+												if ($wp_filesystem->exists($locale_file)) {
+													$fb_locales = $wp_filesystem->get_contents($locale_file);
+													if ($fb_locales) {
+														$listLocales = true;
+														$loadedOffline = true;
+													}
 												}
 											}
 											//OK
@@ -281,7 +292,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<td>
 									<input type="checkbox" name="fb_type_show" id="fb_type_show" value="1" <?php echo (intval($fb_type_show)==1 ? ' checked="checked"' : ''); ?> onclick="showTypeOptions();"/>
 									<br/>
-									<?php printf( esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'wd-fb-og'), 'article', 'website', 'blog' );?>
+									<?php printf( esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'rss-posts-importer'), 'article', 'website', 'blog' );?>
 								</td>
 							</tr>
 							<tr class="fb_type_options">
@@ -489,7 +500,7 @@ extract(webdados_fb_open_graph_load_settings());
 													<br/>
 													<?php
 													printf(
-														esc_html__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'wd-fb-og'),
+														esc_html__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'rss-posts-importer'),
 														'admin.php?page=wpml-string-translation/menu/string-translation.php&amp;context=wd-fb-og'
 													); 
 												}
@@ -782,7 +793,7 @@ extract(webdados_fb_open_graph_load_settings());
 	</div>
 	
 	<div class="clear">
-		<p><br/>&copy 2011<?php if(date('Y')>2011) echo esc_html('-'.date('Y')); ?> <a href="http://www.webdados.pt/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Webdados</a> &amp; <a href="http://wonderm00n.com/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Marco Almeida (Wonderm00n)</a></p>
+		<p><br/>&copy 2011<?php if(gmdate('Y')>2011) echo esc_html('-'.gmdate('Y')); ?> <a href="http://www.webdados.pt/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Webdados</a> &amp; <a href="http://wonderm00n.com/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin" target="_blank">Marco Almeida (Wonderm00n)</a></p>
 	</div>
 		
 	</div>
@@ -887,13 +898,6 @@ extract(webdados_fb_open_graph_load_settings());
 				jQuery('.fb_publisher_schema_options').hide();
 			}
 		}
-		function showTypeOptions() {
-			if (jQuery('#fb_author_show').is(':checked')) {
-				jQuery('.fb_author_options').show();
-			} else {
-				jQuery('.fb_author_options').hide();
-			}
-		}
 		function showDescriptionOptions() {
 			/*if (jQuery('#fb_desc_show').is(':checked')) {
 				jQuery('.fb_description_options').show();
@@ -983,7 +987,3 @@ extract(webdados_fb_open_graph_load_settings());
 			color: #666;
 		}
 	</style>
-
-
-
-
