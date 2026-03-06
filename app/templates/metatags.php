@@ -100,7 +100,7 @@ extract(webdados_fb_open_graph_load_settings());
 				<?php wp_nonce_field('wonderm00n_open_graph_settings_save', 'wonderm00n_open_graph_nonce'); ?>
 				
 				<div id="webdados_fb_open_graph-settings" class="postbox">
-					<h3 id="settings"><?php esc_html_e('Settings'); ?></h3>
+					<h3 id="settings"><?php esc_html_e('Settings','rss-posts-importer'); ?></h3>
 					<div class="inside">
 						<table width="100%" class="form-table">
 							<tr>
@@ -292,7 +292,10 @@ extract(webdados_fb_open_graph_load_settings());
 								<td>
 									<input type="checkbox" name="fb_type_show" id="fb_type_show" value="1" <?php echo (intval($fb_type_show)==1 ? ' checked="checked"' : ''); ?> onclick="showTypeOptions();"/>
 									<br/>
-									<?php printf( esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'rss-posts-importer'), 'article', 'website', 'blog' );?>
+									<?php printf(
+										/* translators: 1: The schema type for posts (article), 2: Schema type for homepage (website), 3: Alternative schema type (blog). */
+										esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'rss-posts-importer'), 'article', 'website', 'blog');
+									?>
 								</td>
 							</tr>
 							<tr class="fb_type_options">
@@ -500,6 +503,7 @@ extract(webdados_fb_open_graph_load_settings());
 													<br/>
 													<?php
 													printf(
+														/* translators: 1: Link to WPML String translation page. */
 														esc_html__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'rss-posts-importer'),
 														'admin.php?page=wpml-string-translation/menu/string-translation.php&amp;context=wd-fb-og'
 													); 
@@ -711,7 +715,7 @@ extract(webdados_fb_open_graph_load_settings());
 				
 				<p class="submit">
 					<input type="hidden" name="action" value="save"/>
-					<input type="submit" class="button-primary" value="<?php esc_html_e('Save Changes') ?>" />
+					<input type="submit" class="button-primary" value="<?php esc_html_e('Save Changes','rss-posts-importer'); ?>" />
 				</p>
 
 			</form>
