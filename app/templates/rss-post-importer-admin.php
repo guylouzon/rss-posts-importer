@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- claude code -->
+<!-- New HTML based version -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -770,9 +770,10 @@
             <div id="rss_pi_progressbar"></div>
             <div id="rss_pi_progressbar_label"></div>
 
-            <form method="post" id="rss_pi-settings-form" enctype="multipart/form-data">
+            <form method="post" id="rss_pi-settings-form" enctype="multipart/form-data" action="<?php echo esc_url($rss_post_importer->page_link); ?>">
                 <input type="hidden" name="save_to_db" id="save_to_db">
                 <input type="hidden" name="import_now" id="import_now" value="false">
+                <?php wp_nonce_field('settings_page', 'rss_pi_nonce'); ?>
 
                 <div id="poststuff">
                     <div id="post-body" class="metabox-holder">

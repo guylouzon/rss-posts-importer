@@ -42,7 +42,7 @@ class rssPIParser {
 
         // strip html, if needed
         if ($strip_html === 'true') {
-            $parsed_content = strip_tags($parsed_content);
+            $parsed_content = wp_strip_all_tags($parsed_content);
         }
 
         $parsed_content = preg_replace(
@@ -84,7 +84,7 @@ class rssPIParser {
         if ($e_size) {
             $trimmed_c = preg_replace('/<!--(.|\s)*?-->/', '', $c);
             // compulsorily strip html otherwise there'll be broken html all over
-            $stripped_c = strip_tags($trimmed_c);
+            $stripped_c = wp_strip_all_tags($trimmed_c);
             $content = preg_replace('/\{\$excerpt\:\d+\}/i', wp_trim_words($stripped_c, $e_size), $content);
         }
 

@@ -109,7 +109,7 @@ class rssPIFeaturedImage {
         }
         
         // Try to parse the image URL to see if it has a host
-        $img_parsed = parse_url($img_url);
+        $img_parsed = wp_parse_url($img_url);
         if ($img_parsed === false) {
             error_log("RSS PI Featured Image: Could not parse image URL: {$img_url}");
             return false;
@@ -127,7 +127,7 @@ class rssPIFeaturedImage {
         }
         
         // Parse base reference
-        $base_parsed = parse_url($baseref);
+        $base_parsed = wp_parse_url($baseref);
         if ($base_parsed === false || empty($base_parsed['host'])) {
             error_log("RSS PI Featured Image: Invalid base reference URL: {$baseref}");
             return false;
@@ -237,7 +237,7 @@ class rssPIFeaturedImage {
 
             // If error storing temporarily, return the error.
             if (is_wp_error($file_array['tmp_name'])) {
-                @unlink($file_array['tmp_name']);
+                @wp_delete_file($file_array['tmp_name']);
                 $file_array['tmp_name'] = '';
                 return $file_array['tmp_name'];
             }
@@ -247,7 +247,7 @@ class rssPIFeaturedImage {
 
             // If error storing permanently, unlink.
             if (is_wp_error($id)) {
-                @unlink($file_array['tmp_name']);
+                @wp_delete_file($file_array['tmp_name']);
                 return $id;
             }
         }

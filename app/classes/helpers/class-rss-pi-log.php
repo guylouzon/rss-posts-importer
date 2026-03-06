@@ -71,7 +71,7 @@ class rssPILog {
         }
 
         // prepare the log entry
-        $log = date("Y-m-d H:i:s") . "\t Imported " . $post_count . " new posts. \n";
+        $log = gmdate("Y-m-d H:i:s") . "\t Imported " . $post_count . " new posts. \n";
 
         $log_file = RSS_PI_LOG_PATH . 'log.txt';
 

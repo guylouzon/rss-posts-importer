@@ -47,7 +47,7 @@ if (!class_exists("Rss_pi_opml")) {
                 $filename = "rss_pi_export_" . date("Y-m-d") . ".opml";
                 $this->_send_headers($filename);
                 echo "\xEF\xBB\xBF";
-                print($output);
+                print(esc_html($output));
                 die();
 
             }

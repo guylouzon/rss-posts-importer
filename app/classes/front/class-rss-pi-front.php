@@ -107,7 +107,7 @@ class rssPIFront {
             if (!empty($meta_rss_pi_canonical_url) && $meta_rss_pi_canonical_url[0] === "source_blog") {
                 $meta_values_source = get_post_meta($current_post_id, 'rss_pi_source_url', false);
                 if (!empty($meta_values_source)) {
-                    $pieces = parse_url($meta_values_source[0]);
+                    $pieces = wp_parse_url($meta_values_source[0]);
                     $domain = $pieces['host'] ?? '';
                     if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
                         $domain = $regs['domain'];
@@ -186,7 +186,7 @@ class rssPIFront {
                 $tc_title = get_the_title();
                 $excerpt = '';
                 if ($post && $post->post_content) {
-                    $excerpt = strip_tags($post->post_content);
+                    $excerpt = wp_strip_all_tags($post->post_content);
                     $excerpt = str_replace("", "'", $excerpt);
                 }
                 $tc_description = trim(substr($excerpt, 0, 150));
@@ -220,7 +220,7 @@ class rssPIFront {
 
                 $excerpt = '';
                 if ($post && $post->post_content) {
-                    $excerpt = strip_tags($post->post_content);
+                    $excerpt = wp_strip_all_tags($post->post_content);
                     $excerpt = str_replace("", "'", $excerpt);
                 }
                 $rest = trim(substr($excerpt, 0, 150));
@@ -248,7 +248,7 @@ class rssPIFront {
 
                 $excerpt = '';
                 if ($post && $post->post_content) {
-                    $excerpt = strip_tags($post->post_content);
+                    $excerpt = wp_strip_all_tags($post->post_content);
                     $excerpt = str_replace("", "'", $excerpt);
                 }
                 $rest = trim(substr($excerpt, 0, 150));

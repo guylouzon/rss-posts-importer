@@ -65,6 +65,7 @@ class rssPIAdmin {
     }
 
     public function init_properties() {
+        /* translators: 1: Prefix or empty space, 2: URL to get the Full Text RSS Key */
         $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'rss-posts-importer');
     }
 
@@ -275,12 +276,12 @@ class rssPIAdmin {
 <?php
             if( isset($_GET['deleted_cache_purged']) && $_GET['deleted_cache_purged'] == 'true' ) {
 ?>
-            <p><strong><?php esc_html_e('Cache for Deleted posts was purged.') ?></strong></p>
+            <p><strong><?php esc_html_e('Cache for Deleted posts was purged.', 'rss-posts-importer') ?></strong></p>
 <?php
             }
             if( isset($_GET['settings-updated']) && $_GET['settings-updated'] ) {
 ?>
-            <p><strong><?php esc_html_e('Settings saved.') ?></strong></p>
+            <p><strong><?php esc_html_e('Settings saved.', 'rss-posts-importer') ?></strong></p>
 <?php
             }
 ?>
@@ -320,7 +321,7 @@ class rssPIAdmin {
                 case 2:
                 {
 ?>
-            <p><strong><?php esc_html_e('Invalid API key!', 'rss_api'); ?></strong></p>
+            <p><strong><?php esc_html_e('Invalid API key!', 'rss-posts-importer'); ?></strong></p>
 <?php
                 }
             }
@@ -332,8 +333,8 @@ class rssPIAdmin {
         global $rss_post_importer;
 
         // include the template for the ui
-        //include( RSS_PI_PATH . 'app/templates/admin-ui.php');
-        include( RSS_PI_PATH . 'app/templates/rss-post-importer-admin.html');
+        include( RSS_PI_PATH . 'app/templates/admin-ui.php');
+        //include( RSS_PI_PATH . 'app/templates/rss-post-importer-admin.php');
     }
 
     /**
@@ -346,7 +347,7 @@ class rssPIAdmin {
 
         $class = ($inline) ? 'rss-pi-error' : 'error';
 
-        echo '<div class="' . $class . '"><p>' . $error . '</p></div>';
+        echo '<div class="' . esc_html($class) . '"><p>' . esc_html($error) . '</p></div>';
     }
 
     /**
@@ -460,7 +461,7 @@ class rssPIAdmin {
         $new_options = [
             'feeds' => $this->options['feeds'],
             'settings' => $this->options['settings'],
-            'latest_import' => date("Y-m-d H:i:s"),
+            'latest_import' => gmdate("Y-m-d H:i:s"),
             'imports' => $imports,
             'upgraded' => $this->options['upgraded'] ?? null
         ];
@@ -565,7 +566,7 @@ class rssPIAdmin {
 
         if ($tags = get_tags(['orderby' => 'name', 'hide_empty' => false])) {
 
-            echo '<select name="' . $fid . '-tags_id[]" id="tag" class="postform">';
+            echo '<select name="' . esc_html($fid) . '-tags_id[]" id="tag" class="postform">';
 
             foreach ($tags as $tag) {
                 $strsel = "";
@@ -575,7 +576,7 @@ class rssPIAdmin {
                         $strsel = "selected='selected'";
                     }
                 }
-                echo '<option value="' . $tag->term_id . '" ' . $strsel . '>' . $tag->name . '</option>';
+                echo '<option value="' . esc_html($tag->term_id) . '" ' . esc_html($strsel) . '>' . esc_html($tag->name) . '</option>';
             }
             echo '</select> ';
         }
@@ -585,20 +586,43 @@ class rssPIAdmin {
 
         $tags = get_tags(['hide_empty' => false]);
         if ($tags) {
+            $allowed_html = array(
+                'li'    => array(),
+                'label' => array(
+                    'for' => array(),
+                ),
+                'input' => array(
+                    'type'    => array(),
+                    'name'    => array(),
+                    'value'   => array(),
+                    'id'      => array(),
+                    'checked' => array(),
+                ),
+            );
             $checkboxes = "<ul>";
 
-            foreach ($tags as $tag) :
-                $strsel = "";
-                if (in_array($tag->term_id, $seleced_tags))
-                    $strsel = "checked='checked'";
+            foreach ( $tags as $tag ) :
+                // Use checked() helper function for cleaner logic
+                $checked = checked( in_array( $tag->term_id, $seleced_tags ), true, false );
 
-                $checkboxes .=
-                        '<li><label for="tag-' . $tag->term_id . '">
-                                <input type="checkbox" name="' . $fid . '-tags_id[]" value="' . $tag->term_id . '" id="tag-' . $tag->term_id . '" ' . $strsel . ' />' . $tag->name . '
-                            </label></li>';
+                $checkboxes .= sprintf(
+                    '<li>
+                        <label for="tag-%1$s">
+                            <input type="checkbox" name="%2$s-tags_id[]" value="%1$s" id="tag-%1$s" %3$s />
+                            %4$s
+                        </label>
+                    </li>',
+                    esc_attr( $tag->term_id ),             // %1$s
+                    esc_attr( $fid ),                      // %2$s
+                    $checked,                              // %3$s (checked() handles escaping)
+                    esc_html( $tag->name )                 // %4$s
+                );
             endforeach;
-            $checkboxes .= "</ul>";
-            print $checkboxes;
+
+            $checkboxes .= '</ul>';
+
+            echo wp_kses( $checkboxes, $allowed_html );
+            
         }
     }
 
