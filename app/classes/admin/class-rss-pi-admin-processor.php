@@ -26,11 +26,16 @@ class rssPIAdminProcessor {
         // bail if there's nothing to process or the data is invalid
         if (
             !isset($_POST['info_update']) ||
-            !isset($_POST['rss_pi_nonce']) ||
-            !wp_verify_nonce($_POST['rss_pi_nonce'], 'settings_page')
+            !isset($_POST['rss_pi_nonce_field']) ||
+            !wp_verify_nonce($_POST['rss_pi_nonce_field'], 'rss_pi_save_settings_action')
         ) {
             return;
         }
+
+        // Sanitize POST data
+        $_POST['info_update'] = sanitize_text_field($_POST['info_update']);
+        $_POST['save_to_db'] = isset($_POST['save_to_db']) ? sanitize_text_field($_POST['save_to_db']) : 'false';
+        $_POST['import_now'] = isset($_POST['import_now']) ? sanitize_text_field($_POST['import_now']) : 'false';
 
         // formulate the settings array
         $settings = $this->process_settings();
@@ -94,7 +99,11 @@ class rssPIAdminProcessor {
      * @return void
      */
     public function purge_deleted_posts_cache(): void {
-        if (!isset($_POST['purge_deleted_cache'])) return;
+        if (!isset($_POST['purge_deleted_cache']) || !isset($_POST['rss_pi_nonce_field']) || !wp_verify_nonce($_POST['rss_pi_nonce_field'], 'rss_pi_save_settings_action')) {
+            return;
+        }
+
+        $_POST['purge_deleted_cache'] = sanitize_text_field($_POST['purge_deleted_cache']);
 
         delete_option('rss_pi_deleted_posts');
         delete_option('rss_pi_imported_posts');

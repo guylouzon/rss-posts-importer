@@ -181,10 +181,11 @@ class rssPIAdmin {
         wp_enqueue_script('phpjs-uniqid', RSS_PI_URL . 'app/assets/js/uniqid.js', [], RSS_PI_VERSION, true);
         wp_enqueue_script('rss-pi', RSS_PI_URL . 'app/assets/js/main.js', ['jquery'], RSS_PI_VERSION, true);
 
-        // localise ajaxuel for use
+        // localise ajaxurl and nonce for use
         $localise_args = [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'pluginurl' => RSS_PI_URL,
+            'nonce' => wp_create_nonce('rss_pi_ajax_nonce_action'),
             'l18n' => [
                 'unsaved' => __( 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?', 'rss-posts-importer' )
             ]
@@ -354,9 +355,11 @@ class rssPIAdmin {
      * Add a new row for a new feed
      */
     public function add_row(): void {
-        if (! isset($_POST['feed_id'])) {
-            die();
+        if (! isset($_POST['feed_id']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+            wp_send_json_error(['message' => 'Invalid request']);
         }
+
+        $_POST['feed_id'] = sanitize_text_field($_POST['feed_id']);
 
         $ajax_add = true;
         $ajax_feed_id = $_POST['feed_id'];
@@ -365,9 +368,11 @@ class rssPIAdmin {
     }
 
     public function edit_row(): void {
-        if (! isset($_POST['feed_id'])) {
-            die();
+        if (! isset($_POST['feed_id']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+            wp_send_json_error(['message' => 'Invalid request']);
         }
+
+        $_POST['feed_id'] = sanitize_text_field($_POST['feed_id']);
 
         foreach ($this->options['feeds'] as $f) {
             if ($f['id'] == $_POST['feed_id']) {
@@ -382,6 +387,15 @@ class rssPIAdmin {
      * Generate stats data and return
      */
     public function ajax_stats(): void {
+        if (! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+            wp_send_json_error(['message' => 'Invalid request']);
+        }
+
+        // Sanitize date parameters
+        $_POST['rss_from_date'] = isset($_POST['rss_from_date']) ? sanitize_text_field($_POST['rss_from_date']) : '';
+        $_POST['rss_till_date'] = isset($_POST['rss_till_date']) ? sanitize_text_field($_POST['rss_till_date']) : '';
+        $_POST['rss_filter_stats'] = isset($_POST['rss_filter_stats']) ? sanitize_text_field($_POST['rss_filter_stats']) : '';
+
         include( RSS_PI_PATH . 'app/templates/stats.php');
         die();
     }
@@ -395,9 +409,11 @@ class rssPIAdmin {
         $this->load_options();
 
         // if there's nothing for processing or invalid data, bail
-        if ( ! isset($_POST['feed']) ) {
-            wp_send_json_error(['message'=>'no feed provided']);
+        if ( ! isset($_POST['feed']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action') ) {
+            wp_send_json_error(['message'=>'Invalid request']);
         }
+
+        $_POST['feed'] = sanitize_text_field($_POST['feed']);
 
         $_found = false;
         foreach ( $this->options['feeds'] as $id => $f ) {

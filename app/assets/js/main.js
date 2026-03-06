@@ -58,7 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
             url: rss_pi.ajaxurl,
             data: {
                 action: 'rss_pi_edit_row',
-                feed_id: target
+                feed_id: target,
+                rss_pi_ajax_nonce: rss_pi.nonce
             },
             success: function (data) {
                 displayRow.insertAdjacentHTML('afterend', data);
@@ -169,7 +170,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: rss_pi.ajaxurl,
                 data: {
                     action: 'rss_pi_add_row',
-                    feed_id: target
+                    feed_id: target,
+                    rss_pi_ajax_nonce: rss_pi.nonce
                 },
                 success: function (data) {
                     $('.rss-rows').insertAdjacentHTML('beforeend', data);
@@ -228,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ajax({
                 type: 'POST',
                 url: rss_pi.ajaxurl,
-                data: { action: 'rss_pi_load_log' },
+                data: { action: 'rss_pi_load_log', rss_pi_ajax_nonce: rss_pi.nonce },
                 success: function (data) {
                     $('.ajax_content').innerHTML = data;
                 }
@@ -249,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ajax({
             type: 'POST',
             url: rss_pi.ajaxurl,
-            data: { action: 'rss_pi_clear_log' },
+            data: { action: 'rss_pi_clear_log', rss_pi_ajax_nonce: rss_pi.nonce },
             success: function (data) {
                 $('.log').innerHTML = data;
             }
@@ -266,7 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = {
                 action: "rss_pi_stats",
                 rss_from_date: $('#from_date') ? $('#from_date').value : "",
-                rss_till_date: $('#till_date') ? $('#till_date').value : ""
+                rss_till_date: $('#till_date') ? $('#till_date').value : "",
+                rss_pi_ajax_nonce: rss_pi.nonce
             };
             let loading = false;
             if (form && $('#submit-rss_filter_stats')) {
@@ -309,7 +312,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: rss_pi.ajaxurl,
                 data: {
                     action: 'rss_pi_import',
-                    feed: id
+                    feed: id,
+                    rss_pi_ajax_nonce: rss_pi.nonce
                 },
                 success: function (resp) {
                     let data;
