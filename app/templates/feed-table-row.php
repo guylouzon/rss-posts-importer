@@ -219,7 +219,7 @@ if ($ajax_add || $ajax_edit):
                 <td>
                     <div class="tags_container">
                         <?php
-                        echo $rss_post_pi_admin->rss_pi_tags_checkboxes($f['id'], $f['tags_id']);
+                        echo wp_kses_post($rss_post_pi_admin->rss_pi_tags_checkboxes($f['id'], $f['tags_id']));
                         ?>
                     </div>
                 </td>

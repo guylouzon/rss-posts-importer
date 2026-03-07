@@ -28,12 +28,12 @@ class rssPIFeaturedImage {
         try {
             // Validate input parameters
             if (!$item || !is_object($item)) {
-                error_log("RSS PI Featured Image: Invalid item object provided");
+                $this->err_log("RSS PI Featured Image: Invalid item object provided");
                 return false;
             }
             
             if ($post_id <= 0) {
-                error_log("RSS PI Featured Image: Invalid post ID provided: {$post_id}");
+                $this->err_log("RSS PI Featured Image: Invalid post ID provided: {$post_id}");
                 return false;
             }
             
@@ -45,12 +45,12 @@ class rssPIFeaturedImage {
 
                         
             } catch (Exception $e) {
-                error_log("RSS PI Featured Image: Error getting item content: " . $e->getMessage());
+                $this->err_log("RSS PI Featured Image: Error getting item content: " . $e->getMessage());
                 return false;
             }
             
             if (empty($content) || !is_string($content)) {
-                error_log("RSS PI Featured Image: No content available from feed item");
+                $this->err_log("RSS PI Featured Image: No content available from feed item");
                 return false;
             }
             
@@ -64,7 +64,7 @@ class rssPIFeaturedImage {
             $img_url = $this->extract_image_url($content);
             
             if (empty($img_url)) {
-                error_log("RSS PI Featured Image: No image found in content for post ID: {$post_id}");
+                $this->err_log("RSS PI Featured Image: No image found in content for post ID: {$post_id}");
                 return false;
             }
             
@@ -72,13 +72,13 @@ class rssPIFeaturedImage {
             $absolute_img_url = $this->make_absolute_url($img_url, $baseref);
             
             if (!$absolute_img_url) {
-                error_log("RSS PI Featured Image: Could not construct absolute URL from: {$img_url}");
+                $this->err_log("RSS PI Featured Image: Could not construct absolute URL from: {$img_url}");
                 return false;
             }
             
             // Validate the final URL
             if (!filter_var($absolute_img_url, FILTER_VALIDATE_URL)) {
-                error_log("RSS PI Featured Image: Invalid image URL: {$absolute_img_url}");
+                $this->err_log("RSS PI Featured Image: Invalid image URL: {$absolute_img_url}");
                 return false;
             }
             
@@ -86,19 +86,29 @@ class rssPIFeaturedImage {
             $featured_id = $this->_sideload($absolute_img_url, $post_id);
             
             if ($featured_id === false) {
-                error_log("RSS PI Featured Image: Failed to sideload image: {$absolute_img_url}");
+                $this->err_log("RSS PI Featured Image: Failed to sideload image: {$absolute_img_url}");
                 return false;
             }
             
-            error_log("RSS PI Featured Image: Successfully prepared image with ID: {$featured_id}");
+            $this->err_log("RSS PI Featured Image: Successfully prepared image with ID: {$featured_id}");
             return $featured_id;
             
         } catch (Exception $e) {
-            error_log("RSS PI Featured Image: Unexpected error in _prepare: " . $e->getMessage());
+            $this->err_log("RSS PI Featured Image: Unexpected error in _prepare: " . $e->getMessage());
             return false;
         } catch (Error $e) {
-            error_log("RSS PI Featured Image: Fatal error in _prepare: " . $e->getMessage());
+            $this->err_log("RSS PI Featured Image: Fatal error in _prepare: " . $e->getMessage());
             return false;
+        }
+    }
+
+    private function err_log($message): void {
+        if (defined('WP_DEBUG') && WP_DEBUG ) {
+            if (is_array($message) || is_object($message) ) {
+                error_log(print_r($message, true));
+            } else {
+                error_log($message);
+            }
         }
     }
 
@@ -111,7 +121,7 @@ class rssPIFeaturedImage {
         // Try to parse the image URL to see if it has a host
         $img_parsed = wp_parse_url($img_url);
         if ($img_parsed === false) {
-            error_log("RSS PI Featured Image: Could not parse image URL: {$img_url}");
+            $this->err_log("RSS PI Featured Image: Could not parse image URL: {$img_url}");
             return false;
         }
         
@@ -122,14 +132,14 @@ class rssPIFeaturedImage {
         
         // Need base reference for relative URLs
         if (empty($baseref)) {
-            error_log("RSS PI Featured Image: No base reference for relative URL: {$img_url}");
+            $this->err_log("RSS PI Featured Image: No base reference for relative URL: {$img_url}");
             return false;
         }
         
         // Parse base reference
         $base_parsed = wp_parse_url($baseref);
         if ($base_parsed === false || empty($base_parsed['host'])) {
-            error_log("RSS PI Featured Image: Invalid base reference URL: {$baseref}");
+            $this->err_log("RSS PI Featured Image: Invalid base reference URL: {$baseref}");
             return false;
         }
         

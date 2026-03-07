@@ -49,14 +49,14 @@ class rssPostImporter {
 
         $settings = [];
         $valid_api_key = '';
-        if (isset($_POST['feeds_api_key'])) {
-            $settings = [
-                'feeds_api_key' => sanitize_key($_POST['feeds_api_key'])
-            ];
+        // if (isset($_POST['feeds_api_key'])) {
+        //     $settings = [
+        //         'feeds_api_key' => sanitize_key($_POST['feeds_api_key'])
+        //     ];
 
-            // check if submitted api key is valid
-            $valid_api_key = $this->is_valid_key($settings['feeds_api_key']);
-        }
+        //     // check if submitted api key is valid
+        //     $valid_api_key = $this->is_valid_key($settings['feeds_api_key']);
+        // }
 
         // determine the API type
         $api_type = $valid_api_key == '' ? 'normal' : 'premium';
@@ -190,7 +190,15 @@ class rssPostImporter {
                 }
                 $rss_pi_imported_posts_migrated[] = $k;
                 // check if there is a post with this source URL
-                $post_id = $wpdb->get_var($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'rss_pi_source_url' and meta_value = %s", $source_url));
+                $posts = get_posts( [
+                    'post_type'  => 'any',
+                    'meta_key'   => 'rss_pi_source_url',
+                    'meta_value' => $source_url,
+                    'fields'     => 'ids', // Only return the ID for performance
+                    'limit'      => 1,
+                ] );
+
+                $post_id = ! empty( $posts ) ? $posts[0] : null;
                 // when there is no such post (it was deleted?)
                 if (!$post_id) {
                     // add this source URL to "deleted" metadata
@@ -239,12 +247,14 @@ class rssPostImporter {
      * Load translations
      */
     public function localize(): void {
-        // Determine the relative path to the languages folder
-        // This should be relative to the WP_PLUGIN_DIR, not an absolute server path.
-        $domain = 'rss-posts-importer';
-        $path   = dirname(plugin_basename( __FILE__ )) . '/app/lang/';
-
-        load_plugin_textdomain($domain,false,$path);
+        // Only call this if the .mo file isn't already loaded by the core
+        if ( ! is_textdomain_loaded( 'rss-posts-importer' ) ) {
+            load_plugin_textdomain(
+                'rss-posts-importer',
+                false,
+                dirname( plugin_basename( RSS_PI_PATH . 'rss-posts-importer.php' ) ) . '/app/lang/'
+            );
+        }
     }
 
     /**

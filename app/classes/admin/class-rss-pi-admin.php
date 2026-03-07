@@ -141,10 +141,10 @@ class rssPIAdmin {
         add_filter('cron_schedules', [$this, 'rss_pi_cron_add_custom']);
 
         // trigger on Export
-        if ( isset($_POST['export_opml']) ) {
-            $this->opml = new Rss_pi_opml();
-            $this->opml->export();
-        }
+        // if ( isset($_POST['export_opml']) ) {
+        //     $this->opml = new Rss_pi_opml();
+        //     $this->opml->export();
+        // }
 
     }
 
@@ -171,7 +171,7 @@ class rssPIAdmin {
         // register scripts & styles
         wp_enqueue_style('rss-pi', RSS_PI_URL . 'app/assets/css/style.css', [], RSS_PI_VERSION);
 
-        wp_enqueue_style('rss-pi-jquery-ui-css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/redmond/jquery-ui.css', [], RSS_PI_VERSION);
+        //wp_enqueue_style('rss-pi-jquery-ui-css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/redmond/jquery-ui.css', [], RSS_PI_VERSION);
 
         wp_enqueue_script('jquery-ui-core');
         wp_enqueue_script('jquery-ui-datepicker');
@@ -265,77 +265,73 @@ class rssPIAdmin {
      * Display the screen/ui
      */
     public function screen(): void {
-
-        // it'll process any submitted form data
-        // reload the options just in case
+        // Reload the options to ensure we have current data
         $this->load_options();
 
-        // display a success message
-        if ( isset($_GET['deleted_cache_purged']) || isset($_GET['settings-updated']) || isset($_GET['invalid_api_key']) || (isset($_GET['import']) && @$_GET['settings-updated']) ) {
-?>
-        <div id="message" class="updated">
-<?php
-            if( isset($_GET['deleted_cache_purged']) && $_GET['deleted_cache_purged'] == 'true' ) {
-?>
-            <p><strong><?php esc_html_e('Cache for Deleted posts was purged.', 'rss-posts-importer') ?></strong></p>
-<?php
+        // Use filter_input for cleaner, sanitized access to $_GET variables
+        $deleted_cache_purged = filter_input( INPUT_GET, 'deleted_cache_purged', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $settings_updated     = filter_input( INPUT_GET, 'settings-updated', FILTER_VALIDATE_BOOLEAN );
+        $invalid_api_key      = filter_input( INPUT_GET, 'invalid_api_key', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $import_requested     = filter_input( INPUT_GET, 'import', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $message_code         = filter_input( INPUT_GET, 'message', FILTER_VALIDATE_INT );
+
+        // 1. Success Messages
+        if ( $deleted_cache_purged || $settings_updated || $invalid_api_key || ( $import_requested && $settings_updated ) ) {
+            echo '<div id="message" class="updated">';
+            
+            if ( 'true' === $deleted_cache_purged ) {
+                echo '<p><strong>' . esc_html__( 'Cache for Deleted posts was purged.', 'rss-posts-importer' ) . '</strong></p>';
             }
-            if( isset($_GET['settings-updated']) && $_GET['settings-updated'] ) {
-?>
-            <p><strong><?php esc_html_e('Settings saved.', 'rss-posts-importer') ?></strong></p>
-<?php
+            
+            if ( $settings_updated ) {
+                echo '<p><strong>' . esc_html__( 'Settings saved.', 'rss-posts-importer' ) . '</strong></p>';
             }
-?>
-        </div>
-<?php
-            // import feeds via AJAX but only when Save is done
-            if( isset($_GET['import']) && isset($_GET['settings-updated']) && $_GET['settings-updated'] ) {
-?>
-<script type="text/javascript">
-// determine the feed ids within wordpress
-<?php
-    $feed_ids = [];
-    if (is_array($this->options['feeds']) ) {
-        foreach ($this->options['feeds'] as $f) {
-            $feed_ids[] = $f['id'];
-        }
-    }
-?>
-// and set them as a global JS variable
-    if ( typeof feeds !== 'undefined' ) {
-        feeds.set(<?php echo json_encode($feed_ids); ?>);
-    }  else {
-        var feeds = <?php echo json_encode($feed_ids); ?>;
-    }
-    console.log('what is this');
-</script>
-<?php
+            
+            echo '</div>';
+
+            // 2. Trigger AJAX Import Script
+            if ( $import_requested && $settings_updated ) {
+                $feed_ids = [];
+                if ( ! empty( $this->options['feeds'] ) && is_array( $this->options['feeds'] ) ) {
+                    foreach ( $this->options['feeds'] as $f ) {
+                        if ( isset( $f['id'] ) ) {
+                            $feed_ids[] = $f['id'];
+                        }
+                    }
+                }
+                ?>
+                <script type="text/javascript">
+                    (function() {
+                        var feedList = <?php echo wp_json_encode( $feed_ids ); ?>;
+                        if ( typeof feeds !== 'undefined' && typeof feeds.set === 'function' ) {
+                            feeds.set( feedList );
+                        } else {
+                            window.feeds = feedList;
+                        }
+                    })();
+                </script>
+                <?php
             }
         }
 
-        // display an error message
-        if( isset($_GET['message']) && $_GET['message'] > 1 ) {
-?>
-        <div id="message" class="error">
-<?php
-            switch ( $_GET['message'] ) {
+        // 3. Error Messages
+        if ( $message_code && $message_code > 1 ) {
+            echo '<div id="message" class="error">';
+            switch ( $message_code ) {
                 case 2:
-                {
-?>
-            <p><strong><?php esc_html_e('Invalid API key!', 'rss-posts-importer'); ?></strong></p>
-<?php
-                }
+                    echo '<p><strong>' . esc_html__( 'Invalid API key!', 'rss-posts-importer' ) . '</strong></p>';
+                    break;
             }
-?>
-        </div>
-<?php
+            echo '</div>';
         }
 
         global $rss_post_importer;
 
-        // include the template for the ui
-        include( RSS_PI_PATH . 'app/templates/admin-ui.php');
-        //include( RSS_PI_PATH . 'app/templates/rss-post-importer-admin.php');
+        // Include the template for the UI
+        $template_path = RSS_PI_PATH . 'app/templates/admin-ui.php';
+        if ( file_exists( $template_path ) ) {
+            include $template_path;
+        }
     }
 
     /**
@@ -355,27 +351,25 @@ class rssPIAdmin {
      * Add a new row for a new feed
      */
     public function add_row(): void {
-        if (! isset($_POST['feed_id']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+        if (! isset($_POST['feed_id']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce(sanitize_key($_POST['rss_pi_ajax_nonce']), 'rss_pi_ajax_nonce_action')) {
             wp_send_json_error(['message' => 'Invalid request']);
         }
 
-        $_POST['feed_id'] = sanitize_text_field($_POST['feed_id']);
-
+        $ajax_feed_id = sanitize_key( wp_unslash( $_POST['feed_id'] ) );
         $ajax_add = true;
-        $ajax_feed_id = $_POST['feed_id'];
         include( RSS_PI_PATH . 'app/templates/feed-table-row.php');
         die();
     }
 
     public function edit_row(): void {
-        if (! isset($_POST['feed_id']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+        if (! isset($_POST['feed_id']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce(sanitize_key($_POST['rss_pi_ajax_nonce']), 'rss_pi_ajax_nonce_action')) {
             wp_send_json_error(['message' => 'Invalid request']);
         }
 
-        $_POST['feed_id'] = sanitize_text_field($_POST['feed_id']);
+        $ajax_feed_id = sanitize_key( wp_unslash( $_POST['feed_id'] ) );
 
         foreach ($this->options['feeds'] as $f) {
-            if ($f['id'] == $_POST['feed_id']) {
+            if ($f['id'] == $ajax_feed_id) {
                 $ajax_edit = true;
                 include( RSS_PI_PATH . 'app/templates/feed-table-row.php');
                 die();
@@ -387,14 +381,14 @@ class rssPIAdmin {
      * Generate stats data and return
      */
     public function ajax_stats(): void {
-        if (! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+        if (! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce(sanitize_key($_POST['rss_pi_ajax_nonce']), 'rss_pi_ajax_nonce_action')) {
             wp_send_json_error(['message' => 'Invalid request']);
         }
 
+        $_POST['rss_from_date'] = isset($_POST['rss_from_date']) ? sanitize_text_field(wp_unslash( $_POST['rss_from_date'])) : '';
+        $_POST['rss_till_date'] = isset($_POST['rss_till_date']) ? sanitize_text_field(wp_unslash( $_POST['rss_till_date'])) : '';
+        $_POST['rss_filter_stats'] = isset($_POST['rss_filter_stats']) ? sanitize_text_field(wp_unslash($_POST['rss_filter_stats'])) : '';
         // Sanitize date parameters
-        $_POST['rss_from_date'] = isset($_POST['rss_from_date']) ? sanitize_text_field($_POST['rss_from_date']) : '';
-        $_POST['rss_till_date'] = isset($_POST['rss_till_date']) ? sanitize_text_field($_POST['rss_till_date']) : '';
-        $_POST['rss_filter_stats'] = isset($_POST['rss_filter_stats']) ? sanitize_text_field($_POST['rss_filter_stats']) : '';
 
         include( RSS_PI_PATH . 'app/templates/stats.php');
         die();
@@ -409,11 +403,11 @@ class rssPIAdmin {
         $this->load_options();
 
         // if there's nothing for processing or invalid data, bail
-        if ( ! isset($_POST['feed']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action') ) {
+        if ( ! isset($_POST['feed']) || ! isset($_POST['rss_pi_ajax_nonce']) || ! wp_verify_nonce(sanitize_key($_POST['rss_pi_ajax_nonce']), 'rss_pi_ajax_nonce_action') ) {
             wp_send_json_error(['message'=>'Invalid request']);
         }
 
-        $_POST['feed'] = sanitize_text_field($_POST['feed']);
+        $_POST['feed'] = sanitize_key(wp_unslash($_POST['feed']));
 
         $_found = false;
         foreach ( $this->options['feeds'] as $id => $f ) {
