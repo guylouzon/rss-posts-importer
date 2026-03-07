@@ -91,7 +91,7 @@ class rssPIEngine {
         update_option('rss_pi_feeds', [
             'feeds' => $this->options['feeds'],
             'settings' => $this->options['settings'],
-            'latest_import' => date("Y-m-d H:i:s"),
+            'latest_import' => gmdate("Y-m-d H:i:s"),
             'imports' => $imports,
             'upgraded' => $this->options['upgraded'] ?? null
         ]);
@@ -110,11 +110,28 @@ class rssPIEngine {
     }
 
     /**
-     * Dummy function for filtering because we can't use anon ones yet
-     * @return string
+     * Convert frequency setting to seconds for SimplePie cache duration
+     * Handles both WordPress schedule names and custom minute-based frequencies
+     * @return int Duration in seconds
      */
-    public function frequency(): string {
-        return $this->options['settings']['frequency'];
+    public function frequency(): int {
+        $frequency = $this->options['settings']['frequency'];
+        
+        // If it's a custom frequency (minutes_N format), convert from minutes to seconds
+        if (strpos($frequency, 'minutes_') === 0) {
+            $minutes = intval(str_replace('minutes_', '', $frequency));
+            return $minutes * 60;
+        }
+        
+        // Convert WordPress schedule names to seconds
+        $schedules = [
+            'hourly' => 3600,           // 1 hour
+            'twicedaily' => 43200,      // 12 hours
+            'daily' => 86400,           // 24 hours
+        ];
+        
+        // Return matching schedule in seconds, or default to 12 hours
+        return isset($schedules[$frequency]) ? $schedules[$frequency] : 43200;
     }
 
     /**
@@ -141,6 +158,16 @@ class rssPIEngine {
         ];
 
         return $this->_import($f['url'], $args);
+    }
+
+    private function err_log($message): void {
+        if (defined('WP_DEBUG') && WP_DEBUG ) {
+            if (is_array($message) || is_object($message) ) {
+                error_log(print_r($message, true));
+            } else {
+                error_log($message);
+            }
+        }
     }
 
     /**
@@ -427,7 +454,7 @@ class rssPIEngine {
                         preg_match('/href="(.+?)"/ui', $content, $matches);
                         $baseref = (is_array($matches) && !empty($matches)) ? $matches[1] : '';
                         if (!empty($baseref)) {
-                            $bc = parse_url($baseref);
+                            $bc = wp_parse_url($baseref);
                             $scheme = (!isset($bc['scheme']) || empty($bc['scheme'])) ? 'http' : $bc['scheme'];
                             $port = isset($bc['port']) ? ':' . $bc['port'] : '';
                             $host = $bc['host'] ?? '';
@@ -506,6 +533,10 @@ class rssPIEngine {
         $post_exists = false;
 
         if (isset($this->options['upgraded']['deleted_posts'])) { // database migrated
+            if ( ! empty( $existing_posts ) ) {
+                $post_exists = true;
+            }
+
             $posts = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT meta_id FROM {$wpdb->postmeta} pm, {$wpdb->posts} p WHERE pm.meta_key = 'rss_pi_source_md5' AND ( pm.meta_value = %s) AND pm.post_id = p.ID AND p.post_status <> 'trash'",
@@ -565,7 +596,7 @@ class rssPIEngine {
     // deprecated as of 2.1.2
     // TODO: Remove
     private function get_domain(string $url): string|false {
-        $pieces = parse_url($url);
+        $pieces = wp_parse_url($url);
         $domain = $pieces['host'] ?? '';
         if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
             return $regs['domain'];
@@ -605,13 +636,6 @@ class rssPIEngine {
         return $post_id;
     }
 
-    public function pre($arr): void {
-        echo '<pre>';
-        print_r($arr);
-        echo '</pre>';
-    }
-
-
     private function is_local_url(string $url): bool {
         $site_url = get_site_url();
         $upload_dir = wp_get_upload_dir();
@@ -630,7 +654,7 @@ class rssPIEngine {
         
         // Check if content has images
         if (strpos($post_content, '<img') === false) {
-            error_log("RSS PI: No images found in post content");
+            $this->err_log("RSS PI: No images found in post content");
             return $post;
         }
         
@@ -647,7 +671,7 @@ class rssPIEngine {
         $html_content = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' . $post_content . '</body></html>';
         
         if (!$dom->loadHTML($html_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD)) {
-            error_log("RSS PI: Failed to load HTML content into DOMDocument, falling back to regex method");
+            $this->err_log("RSS PI: Failed to load HTML content into DOMDocument, falling back to regex method");
             libxml_use_internal_errors($libxml_previous_state);
             return $this->download_images_locally_regex_fallback($post);
         }
@@ -659,7 +683,7 @@ class rssPIEngine {
         $images = $xpath->query('//img[@src]');
         
         if ($images->length === 0) {
-            error_log("RSS PI: No images found with DOM method, trying regex fallback");
+            $this->err_log("RSS PI: No images found with DOM method, trying regex fallback");
             libxml_use_internal_errors($libxml_previous_state);
             return $this->download_images_locally_regex_fallback($post);
         }
@@ -671,11 +695,11 @@ class rssPIEngine {
             $src_attr = $img->getAttribute('src');
             $original_url = trim($src_attr);
             
-            error_log("RSS PI: Processing image {$count}: {$original_url}");
+            $this->err_log("RSS PI: Processing image {$count}: {$original_url}");
             
             // Skip if already local or empty
             if (empty($original_url) || $this->is_local_url($original_url) || !preg_match('#^https?://[^\s]+$#', $original_url)) {
-                error_log("RSS PI: Skipping local/empty URL: {$original_url}");
+                $this->err_log("RSS PI: Skipping local/empty URL: {$original_url}");
                 $count++;
                 continue;
             }
@@ -689,13 +713,13 @@ class rssPIEngine {
                 if ($new_url) {
                     $img->setAttribute('src', $new_url);
                     $replaced_images++;
-                    error_log("RSS PI: Successfully replaced image {$count} with local URL: {$new_url}");
+                    $this->err_log("RSS PI: Successfully replaced image {$count} with local URL: {$new_url}");
                 } else {
-                    error_log("RSS PI: Failed to get attachment URL for image {$count}");
+                    $this->err_log("RSS PI: Failed to get attachment URL for image {$count}");
                 }
             } else {
                 $error_msg = is_wp_error($attachment_id) ? $attachment_id->get_error_message() : 'Unknown error';
-                error_log("RSS PI: Failed to download image {$count}: {$error_msg}");
+                $this->err_log("RSS PI: Failed to download image {$count}: {$error_msg}");
             }
             
             $count++;
@@ -710,9 +734,9 @@ class rssPIEngine {
             }
             $post['post_content'] = $new_content;
             
-            error_log("RSS PI: Successfully processed {$replaced_images} out of " . ($count - 1) . " images");
+            $this->err_log("RSS PI: Successfully processed {$replaced_images} out of " . ($count - 1) . " images");
         } else {
-            error_log("RSS PI: Failed to extract body content from DOM, falling back to regex method");
+            $this->err_log("RSS PI: Failed to extract body content from DOM, falling back to regex method");
             libxml_use_internal_errors($libxml_previous_state);
             return $this->download_images_locally_regex_fallback($post);
         }
@@ -726,7 +750,7 @@ class rssPIEngine {
 public function add_to_media(string $url, int $associated_with_post, string $desc) {
     // Validate URL
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
-        error_log("RSS PI: Invalid URL format: {$url}");
+        $this->err_log("RSS PI: Invalid URL format: {$url}");
         return false;
     }
     
@@ -737,20 +761,20 @@ public function add_to_media(string $url, int $associated_with_post, string $des
     ));
     
     if (is_wp_error($response)) {
-        error_log("RSS PI: URL not reachable: " . $response->get_error_message());
+        $this->err_log("RSS PI: URL not reachable: " . $response->get_error_message());
         return false;
     }
     
     $response_code = wp_remote_retrieve_response_code($response);
     if ($response_code !== 200) {
-        error_log("RSS PI: URL returned response code: {$response_code}");
+        $this->err_log("RSS PI: URL returned response code: {$response_code}");
         return false;
     }
     
     // Check content type
     $content_type = wp_remote_retrieve_header($response, 'content-type');
     if ($content_type && !preg_match('/^image\//i', $content_type)) {
-        error_log("RSS PI: URL is not an image. Content-Type: {$content_type}");
+        $this->err_log("RSS PI: URL is not an image. Content-Type: {$content_type}");
         return false;
     }
     
@@ -758,7 +782,7 @@ public function add_to_media(string $url, int $associated_with_post, string $des
     $tmp = download_url($url, 10); // 10 second timeout
     
     if (is_wp_error($tmp)) {
-        error_log("RSS PI: Download failed: " . $tmp->get_error_message());
+        $this->err_log("RSS PI: Download failed: " . $tmp->get_error_message());
         return false;
     }
     
@@ -766,7 +790,7 @@ public function add_to_media(string $url, int $associated_with_post, string $des
     $file_array = array();
     
     // Extract filename from URL, handle query strings better
-    $url_path = parse_url($url, PHP_URL_PATH);
+    $url_path = wp_parse_url($url, PHP_URL_PATH);
     $filename = basename($url_path);
     
     // If no proper filename, generate one based on content type and current time
@@ -782,7 +806,7 @@ public function add_to_media(string $url, int $associated_with_post, string $des
             );
             $extension = $type_map[$content_type] ?? 'jpg';
         }
-        $filename = 'imported-image-' . time() . '-' . rand(1000, 9999) . '.' . $extension;
+        $filename = 'imported-image-' . time() . '-' . wp_rand(1000, 9999) . '.' . $extension;
     }
     
     $file_array['name'] = sanitize_file_name($filename);
@@ -790,16 +814,16 @@ public function add_to_media(string $url, int $associated_with_post, string $des
     
     // Validate the downloaded file
     if (!file_exists($tmp) || filesize($tmp) === 0) {
-        error_log("RSS PI: Downloaded file is empty or doesn't exist");
-        @unlink($tmp);
+        $this->err_log("RSS PI: Downloaded file is empty or doesn't exist");
+        @wp_delete_file($tmp);
         return false;
     }
     
     // Check if it's actually an image
     $image_info = @getimagesize($tmp);
     if (!$image_info) {
-        error_log("RSS PI: Downloaded file is not a valid image");
-        @unlink($tmp);
+        $this->err_log("RSS PI: Downloaded file is not a valid image");
+        @wp_delete_file($tmp);
         return false;
     }
     
@@ -808,25 +832,25 @@ public function add_to_media(string $url, int $associated_with_post, string $des
     
     // Clean up temp file if there was an error
     if (is_wp_error($attachment_id)) {
-        error_log("RSS PI: Media handle sideload failed: " . $attachment_id->get_error_message());
-        @unlink($tmp);
+        $this->err_log("RSS PI: Media handle sideload failed: " . $attachment_id->get_error_message());
+        @wp_delete_file($tmp);
         return false;
     }
     
-    error_log("RSS PI: Successfully uploaded image with ID: {$attachment_id}");
+    $this->err_log("RSS PI: Successfully uploaded image with ID: {$attachment_id}");
     return $attachment_id;
 }
 
 public function download_images_locally_regex_fallback(array $post): array {
     $post_content = $post['post_content'];
     
-    error_log("RSS PI: Using regex fallback for image processing");
+    $this->err_log("RSS PI: Using regex fallback for image processing");
     
     // Find all img tags with src attributes
     $pattern = '/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i';
     
     if (preg_match_all($pattern, $post_content, $matches, PREG_SET_ORDER)) {
-        error_log("RSS PI: Found " . count($matches) . " images using regex");
+        $this->err_log("RSS PI: Found " . count($matches) . " images using regex");
         
         $count = 1;
         foreach ($matches as $match) {
@@ -847,7 +871,7 @@ public function download_images_locally_regex_fallback(array $post): array {
                     // Replace the src attribute in the original tag
                     $new_img_tag = str_replace($image_url, $new_url, $full_img_tag);
                     $post_content = str_replace($full_img_tag, $new_img_tag, $post_content);
-                    error_log("RSS PI: Replaced image {$count} with local URL");
+                    $this->err_log("RSS PI: Replaced image {$count} with local URL");
                 }
             }
             

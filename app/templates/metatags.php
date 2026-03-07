@@ -773,26 +773,6 @@ extract(webdados_fb_open_graph_load_settings());
 				</div>
 			</div>
 		</div>
-	
-		<div id="poststuff">
-			<div id="webdados_fb_open_graph_donation" class="postbox">
-				<h3 id="settings"><?php esc_html_e('Donate', 'rss-posts-importer');?></h3>
-				<div class="inside">
-					<p><?php esc_html_e('If you find this plugin useful and want to make a contribution towards future development please consider making a small, or big ;-), donation.', 'rss-posts-importer');?></p>
-					<center><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-						<input type="hidden" name="cmd" value="_donations">
-						<input type="hidden" name="business" value="wonderm00n@gmail.com">
-						<input type="hidden" name="lc" value="PT">
-						<input type="hidden" name="item_name" value="Marco Almeida (Wonderm00n)">
-						<input type="hidden" name="item_number" value="wonderm00n_open_graph">
-						<input type="hidden" name="currency_code" value="USD">
-						<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
-						<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-						<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-					</form></center>
-				</div>
-			</div>
-		</div>
 		
 	</div>
 	

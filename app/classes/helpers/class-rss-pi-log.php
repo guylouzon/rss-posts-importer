@@ -21,7 +21,7 @@ class rssPILog {
      * Loads log contents
      */
     public function load_log(): void {
-        if (! isset($_POST['rss_pi_ajax_nonce']) || !wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+        if (! isset($_POST['rss_pi_ajax_nonce']) || !wp_verify_nonce(sanitize_key($_POST['rss_pi_ajax_nonce']), 'rss_pi_ajax_nonce_action')) {
             wp_send_json_error(['message' => 'Invalid request']);
         }
 
@@ -39,7 +39,7 @@ class rssPILog {
     }
 
     public function clear_log(): void {
-        if (!isset($_POST['rss_pi_ajax_nonce']) || !wp_verify_nonce($_POST['rss_pi_ajax_nonce'], 'rss_pi_ajax_nonce_action')) {
+        if (!isset($_POST['rss_pi_ajax_nonce']) || !wp_verify_nonce(sanitize_key($_POST['rss_pi_ajax_nonce']), 'rss_pi_ajax_nonce_action')) {
             wp_send_json_error(['message' => 'Invalid request']);
         }
 
