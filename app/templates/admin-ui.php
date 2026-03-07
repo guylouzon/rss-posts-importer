@@ -25,6 +25,7 @@ $new_version = RSS_PI_VERSION;
             <input type="hidden" name="import_now" id="import_now" value="false">
 
             <?php wp_nonce_field('rss_pi_save_settings_action', 'rss_pi_nonce_field'); ?>
+            <input type="hidden" id="rss_pi_ajax_nonce" value="<?php echo esc_attr(wp_create_nonce('rss_pi_ajax_nonce_action')); ?>" />
 
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder columns-2">

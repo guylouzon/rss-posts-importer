@@ -771,9 +771,11 @@
             <div id="rss_pi_progressbar_label"></div>
 
             <form method="post" id="rss_pi-settings-form" enctype="multipart/form-data" action="<?php echo esc_url($rss_post_importer->page_link); ?>">
+                <input type="hidden" name="info_update" id="info_update" value="true">
                 <input type="hidden" name="save_to_db" id="save_to_db">
                 <input type="hidden" name="import_now" id="import_now" value="false">
-                <?php wp_nonce_field('settings_page', 'rss_pi_nonce'); ?>
+                <?php wp_nonce_field('rss_pi_save_settings_action', 'rss_pi_nonce_field'); ?>
+                <input type="hidden" id="rss_pi_ajax_nonce" value="<?php echo esc_attr(wp_create_nonce('rss_pi_ajax_nonce_action')); ?>" />
 
                 <div id="poststuff">
                     <div id="post-body" class="metabox-holder">
@@ -1112,6 +1114,7 @@
                     const editRow = document.createElement('div');
                     editRow.id = `edit_${feed.id}`;
                     editRow.className = 'edit-row';
+                    def_max_posts = feed.max_posts || 5;
                     editRow.innerHTML = `
                         <div class="edit-table">
                             <div class="edit-table-row">
@@ -1119,12 +1122,12 @@
                                 <div class="edit-table-cell"><input type="text" class="field-name" name="${feed.id}-name" id="${feed.id}-name" value="${feed.name}"></div>
                             </div>
                             <div class="edit-table-row">
-                                <div class="edit-table-cell"><label for="${feed.id}-url">Feed url</label><p class="description">e.g. "http://news.google.com/?output=rss"</p></div>
+                                <div class="edit-table-cell"><label for="${feed.id}-url">Feed url</label><p class="description">e.g. "https://interq.link/42/6x7.php?v=rss&channel=238"</p></div>
                                 <div class="edit-table-cell"><input type="text" class="field-url" name="${feed.id}-url" id="${feed.id}-url" value="${feed.url}"></div>
                             </div>
                             <div class="edit-table-row">
                                 <div class="edit-table-cell"><label for="${feed.id}-max_posts">Max posts / import</label></div>
-                                <div class="edit-table-cell"><input type="number" class="field-max_posts" name="${feed.id}-max_posts" id="${feed.id}-max_posts" value="${feed.max_posts}" min="1" max="1000"></div>
+                                <div class="edit-table-cell"><input type="number" class="field-max_posts" name="${feed.id}-max_posts" id="${feed.id}-max_posts" value="${def_max_posts}" min="1" max="1000"></div>
                             </div>
                             <div class="edit-table-row">
                                 <div class="edit-table-cell"><label for="${feed.id}-nofollow_outbound">Nofollow option for all outbound links?</label><p class="description">Add rel="nofollow" to all outbounded links.</p></div>

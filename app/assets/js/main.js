@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    // Ensure rss_pi object exists and has nonce (fallback to hidden field if needed)
+    if (typeof rss_pi === 'undefined' || !rss_pi.nonce) {
+        const nonceField = document.getElementById('rss_pi_ajax_nonce');
+        if (typeof rss_pi === 'undefined') {
+            window.rss_pi = {};
+        }
+        if (nonceField && !rss_pi.nonce) {
+            rss_pi.nonce = nonceField.value;
+        }
+    }
+
     // Helper functions
     function $(selector, context = document) {
         return context.querySelector(selector);
@@ -39,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let modified = $('#modified_feeds').value;
         modified = modified ? modified.split(',') : [target];
         const index = modified.indexOf(target);
-
         const displayRow = $('#display_' + target);
         const editRow = $('#edit_' + target);
 
