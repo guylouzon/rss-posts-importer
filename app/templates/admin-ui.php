@@ -20,10 +20,12 @@ $new_version = RSS_PI_VERSION;
 
         <form method="post" id="rss_pi-settings-form" enctype="multipart/form-data" action="<?php echo esc_url($rss_post_importer->page_link); ?>">
 
+            <input type="hidden" name="info_update" id="info_update" value="true">
             <input type="hidden" name="save_to_db" id="save_to_db" >
             <input type="hidden" name="import_now" id="import_now" value="false">
 
-            <?php wp_nonce_field('settings_page', 'rss_pi_nonce'); ?>
+            <?php wp_nonce_field('rss_pi_save_settings_action', 'rss_pi_nonce_field'); ?>
+            <input type="hidden" id="rss_pi_ajax_nonce" value="<?php echo esc_attr(wp_create_nonce('rss_pi_ajax_nonce_action')); ?>" />
 
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder columns-2">

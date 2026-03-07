@@ -239,7 +239,12 @@ class rssPostImporter {
      * Load translations
      */
     public function localize(): void {
-        load_plugin_textdomain('rss-posts-importer', false, RSS_PI_PATH . 'app/lang/');
+        // Determine the relative path to the languages folder
+        // This should be relative to the WP_PLUGIN_DIR, not an absolute server path.
+        $domain = 'rss-posts-importer';
+        $path   = dirname(plugin_basename( __FILE__ )) . '/app/lang/';
+
+        load_plugin_textdomain($domain,false,$path);
     }
 
     /**
