@@ -39,8 +39,8 @@ class rssPIAdminProcessor {
 
         // Sanitize POST data
         //$_POST['info_update'] = sanitize_text_field($_POST['info_update']);
-        $save_to_db = isset($_POST['save_to_db']) && 'true' === sanitize_text_field($_POST['save_to_db']);
-        $import_now  = (isset( $_POST['import_now'] ) && 'true' === $_POST['import_now']);
+        $save_to_db = isset( $_POST['save_to_db'] ) && 'true' === sanitize_text_field( wp_unslash( $_POST['save_to_db'] ) );
+        $import_now  = (isset( $_POST['import_now'] ) && 'true' === sanitize_text_field( wp_unslash( $_POST['import_now'] ) ));
 
         // formulate the settings array
         $settings = $this->process_settings();
@@ -112,7 +112,7 @@ class rssPIAdminProcessor {
             return;
         }
 
-        $_POST['purge_deleted_cache'] = sanitize_text_field($_POST['purge_deleted_cache']);
+        $_POST['purge_deleted_cache'] = sanitize_text_field( wp_unslash( $_POST['purge_deleted_cache'] ) );
 
         delete_option('rss_pi_deleted_posts');
         delete_option('rss_pi_imported_posts');
@@ -137,13 +137,16 @@ class rssPIAdminProcessor {
     private function import_csv( array $feeds ): array {
 
         if (
-            ! isset( $_FILES['import_csv']['tmp_name'] ) ||
-            ! is_uploaded_file( $_FILES['import_csv']['tmp_name'] )
+            !isset( $_FILES['import_csv']['tmp_name'])
+           // !is_uploaded_file( $_FILES['import_csv']['tmp_name'] )
         ) {
             return $feeds;
         }
+        $file = sanitize_text_field( wp_unslash( $_FILES['import_csv']['tmp_name'] ) ) ?? '';
 
-        $file = wp_unslash( $_FILES['import_csv']['tmp_name'] );
+        if ( ! empty( $file ) && ! file_exists( $file ) ) {
+            return $feeds;
+        }
 
         // Use WP Filesystem API instead of direct file operations
         global $wp_filesystem;
@@ -334,22 +337,26 @@ class rssPIAdminProcessor {
     private function process_feeds(array $feeds): array {
         $paused_feeds = [];
         if (isset($_POST['paused_feeds'])) {
-            $paused_feeds = explode(',', $_POST['paused_feeds']);
+            sanitize_text_field(wp_unslash($_POST['paused_feeds']));
+            $paused_feeds = array_filter( array_map( 'sanitize_text_field', explode( ',', $paused_feeds_raw )));
         }
 
         $deleted_feeds = [];
         if (isset($_POST['deleted_feeds'])) {
-            $deleted_feeds = explode(',', $_POST['deleted_feeds']);
+            sanitize_text_field(wp_unslash($_POST['deleted_feeds']));
+            $deleted_feeds = array_filter(array_map('sanitize_text_field', explode( ',', $_POST['deleted_feeds'])));
         }
 
         $modified_feeds = [];
         if (isset($_POST['modified_feeds'])) {
-            $modified_feeds = explode(',', $_POST['modified_feeds']);
+            sanitize_text_field(wp_unslash($_POST['modified_feeds']));
+            $modified_feeds = array_filter( array_map( 'sanitize_text_field', explode( ',', $_POST['modified_feeds']) ) );
         }
 
         $new_feeds = [];
         if (isset($_POST['new_feeds'])) {
-            $new_feeds = explode(',', $_POST['new_feeds']);
+            sanitize_text_field(wp_unslash($_POST['new_feeds']));
+            $new_feeds = array_filter( array_map( 'sanitize_text_field', explode( ',', $_POST['new_feeds'])));
         }
 
         foreach ($feeds as $key => $feed) {
@@ -364,31 +371,29 @@ class rssPIAdminProcessor {
                 continue;
             }
 
-            if (in_array($feed['id'], $modified_feeds)) {
+            if ( in_array( $feed['id'], $modified_feeds, true ) ) {
                 $keywords = [];
                 $keyword_str = '';
-                if ($this->is_key_valid) {
+                if ( $this->is_key_valid ) {
                     // if the key is valid set up keywords (otherwise don't)
-                    if (isset($_POST[$feed['id'] . '-keywords'])) {
-                        $keyword_str = $_POST[$feed['id'] . '-keywords'];
-                    }
-                    if (!empty($keyword_str)) {
-                        $keywords = explode(',', $keyword_str);
+                    $keyword_str = isset( $_POST[ $feed['id'] . '-keywords' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-keywords' ] ) ) : '';
+                    if ( ! empty( $keyword_str ) ) {
+                        $keywords = explode( ',', $keyword_str );
                     }
                 }
 
-                $feed['url'] = $_POST[$feed['id'] . '-url'] ?? '';
-                $feed['name'] = $_POST[$feed['id'] . '-name'] ?? '';
-                $feed['max_posts'] = intval($_POST[$feed['id'] . '-max_posts'] ?? 0);
-                $feed['author_id'] = ($this->is_key_valid && isset($_POST[$feed['id'] . '-author_id'])) ? intval($_POST[$feed['id'] . '-author_id']) : intval($_POST['author_id'] ?? 0);
-                $feed['category_id'] = $_POST[$feed['id'] . '-category_id'] ?? '';
-                $feed['tags_id'] = $_POST[$feed['id'] . '-tags_id'] ?? '';
-                $feed['keywords'] = array_map('trim', $keywords);
-                $feed['strip_html'] = $_POST[$feed['id'] . '-strip_html'] ?? '';
-                $feed['nofollow_outbound'] = $_POST[$feed['id'] . '-nofollow_outbound'] ?? '';
-                $feed['automatic_import_categories'] = $_POST[$feed['id'] . '-automatic_import_categories'] ?? '';
-                $feed['automatic_import_author'] = $_POST[$feed['id'] . '-automatic_import_author'] ?? '';
-                $feed['canonical_urls'] = $_POST[$feed['id'] . '-canonical_urls'] ?? '';
+                $feed['url'] = isset( $_POST[ $feed['id'] . '-url' ] ) ? esc_url_raw( wp_unslash( $_POST[ $feed['id'] . '-url' ] ) ) : '';
+                $feed['name'] = isset( $_POST[ $feed['id'] . '-name' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-name' ] ) ) : '';
+                $feed['max_posts'] = isset( $_POST[ $feed['id'] . '-max_posts' ] ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-max_posts' ] ) ) : 0;
+                $feed['author_id'] = ( $this->is_key_valid && isset( $_POST[ $feed['id'] . '-author_id' ] ) ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-author_id' ] ) ) : intval( $_POST['author_id'] ?? 0 );
+                $feed['category_id'] = isset( $_POST[ $feed['id'] . '-category_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-category_id' ] ) ) : '';
+                $feed['tags_id'] = isset( $_POST[ $feed['id'] . '-tags_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-tags_id' ] ) ) : '';
+                $feed['keywords'] = array_map( 'trim', $keywords );
+                $feed['strip_html'] = isset( $_POST[ $feed['id'] . '-strip_html' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-strip_html' ] ) ) : '';
+                $feed['nofollow_outbound'] = isset( $_POST[ $feed['id'] . '-nofollow_outbound' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-nofollow_outbound' ] ) ) : '';
+                $feed['automatic_import_categories'] = isset( $_POST[ $feed['id'] . '-automatic_import_categories' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-automatic_import_categories' ] ) ) : '';
+                $feed['automatic_import_author'] = isset( $_POST[ $feed['id'] . '-automatic_import_author' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-automatic_import_author' ] ) ) : '';
+                $feed['canonical_urls'] = isset( $_POST[ $feed['id'] . '-canonical_urls' ] ) ? esc_url_raw( wp_unslash( $_POST[ $feed['id'] . '-canonical_urls' ] ) ) : '';
 
                 $feeds[$key] = $feed;
             }
