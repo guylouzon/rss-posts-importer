@@ -14,7 +14,13 @@ if (!is_multisite()) {
 } else {
 	// For Multisite
 	global $wpdb;
-	$blog_ids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+	$blog_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT blog_id FROM {$wpdb->blogs} WHERE archived = %d AND deleted = %d",
+			0,
+			0
+		)
+	);
 	$original_blog_id = get_current_blog_id();
 	foreach ($blog_ids as $blog_id) {
 		switch_to_blog($blog_id);

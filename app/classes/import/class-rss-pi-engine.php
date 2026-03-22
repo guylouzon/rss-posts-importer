@@ -547,6 +547,8 @@ class rssPIEngine {
             if (count($posts)) {
                 $post_exists = true;
             }
+
+
         }
         if (!$post_exists) {
             // do it the old fashion way -> check for post title and source domain

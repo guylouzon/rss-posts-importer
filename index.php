@@ -38,7 +38,26 @@ if (!defined('RSS_PI_LOG_PATH')) {
 }
 
 if (!is_dir(RSS_PI_LOG_PATH)) {
-    mkdir(RSS_PI_LOG_PATH);
+    global $wp_filesystem;
+
+    // Initialize WP_Filesystem if not already available
+    if ( empty( $wp_filesystem ) ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+    }
+
+    $target_dir = RSS_PI_LOG_PATH;
+
+    // Check if the directory exists using WP_Filesystem abstraction
+    if ( ! $wp_filesystem->is_dir( $target_dir ) ) {
+        /**
+         * mkdir parameters: 
+         * path, 
+         * chmod (null defaults to FS_CHMOD_DIR), 
+         * recursive (true)
+         */
+        $wp_filesystem->mkdir( $target_dir, FS_CHMOD_DIR );
+    }
 }
 
 // helper classes
@@ -46,7 +65,7 @@ include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-log.php';
 include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-featured-image.php';
 include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-parser.php';
 include_once RSS_PI_PATH . 'app/classes/helpers/rss-pi-functions.php';
-include_once RSS_PI_PATH . 'app/classes/helpers/class-OPMLParser.php'; // OPML Parser
+//include_once RSS_PI_PATH . 'app/classes/helpers/class-OPMLParser.php'; // OPML Parser
 
 // admin classes
 include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-admin-processor.php';

@@ -6,10 +6,10 @@
 <div class="postbox">
     <div class="inside">
         <div class="misc-pub-section">
-            <h3 class="version">V. <?php esc_html_e($pi, 'rss-posts-importer'); ?></h3>
+            <h3 class="version">V. <?php echo esc_html($pi); ?></h3>
             <ul>
                 <li>
-                    <i class="icon-calendar"></i> <?php esc_html_e("Latest import:", 'rss-posts-importer'); ?> <strong><?php esc_html_e($latest_import, 'rss-posts-importer'); ?></strong>
+                    <i class="icon-calendar"></i> <?php esc_html_e("Latest import:", 'rss-posts-importer'); ?> <strong><?php echo esc_html($latest_import); ?></strong>
                 </li>
                 <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php esc_html_e("View the log", 'rss-posts-importer'); ?></a></li>
             </ul>
