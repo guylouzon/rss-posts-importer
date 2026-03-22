@@ -68,7 +68,9 @@ class rssPostImporter {
         );
 
         // hook translations
-        add_action('plugins_loaded', [$this, 'localize']);
+        //add_action( 'init', [ $this, 'load_textdomain' ] );
+        add_action( 'init', [ $this, 'load_textdomain' ], 0 );
+
 
         add_filter(
             'plugin_action_links_' . RSS_PI_BASENAME,
@@ -190,13 +192,28 @@ class rssPostImporter {
                 }
                 $rss_pi_imported_posts_migrated[] = $k;
                 // check if there is a post with this source URL
+
                 $posts = get_posts( [
-                    'post_type'  => 'any',
-                    'meta_key'   => 'rss_pi_source_url',
-                    'meta_value' => $source_url,
-                    'fields'     => 'ids', // Only return the ID for performance
-                    'limit'      => 1,
+                    'post_type'   => 'any',
+                    'meta_query'  => [
+                        [
+                            'key'     => 'rss_pi_source_url',
+                            'value'   => $source_url,
+                            'compare' => '=',
+                        ],
+                    ],
+                    'fields'      => 'ids',
+                    'posts_per_page' => 1,
+                    'no_found_rows'  => true, // Don't count total rows
                 ] );
+
+                // $posts = get_posts( [
+                //     'post_type'  => 'any',
+                //     'meta_key'   => 'rss_pi_source_url',
+                //     'meta_value' => $source_url,
+                //     'fields'     => 'ids', // Only return the ID for performance
+                //     'limit'      => 1,
+                // ] );
 
                 $post_id = ! empty( $posts ) ? $posts[0] : null;
                 // when there is no such post (it was deleted?)
@@ -246,15 +263,13 @@ class rssPostImporter {
     /**
      * Load translations
      */
-    public function localize(): void {
-        // Only call this if the .mo file isn't already loaded by the core
-        if ( ! is_textdomain_loaded( 'rss-posts-importer' ) ) {
-            load_plugin_textdomain(
-                'rss-posts-importer',
-                false,
-                dirname( plugin_basename( RSS_PI_PATH . 'rss-posts-importer.php' ) ) . '/app/lang/'
-            );
-        }
+
+    public function load_textdomain(): void {
+        load_plugin_textdomain(
+            'rss-posts-importer',
+            false,
+            dirname( plugin_basename( __FILE__ ) ) . '/app/languages/'
+        );
     }
 
     /**
