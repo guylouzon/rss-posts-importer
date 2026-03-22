@@ -10,30 +10,12 @@ class rssPIAdminProcessor {
      */
     public bool $is_key_valid = false;
 
-    /**
-     * Nonce action name
-     *
-     * @var string
-     */
-    private const NONCE_ACTION = 'rss_pi_save_settings_action';
-
-    /**
-     * Nonce field name
-     *
-     * @var string
-     */
-    private const NONCE_FIELD = 'rss_pi_nonce_field';
-    /**
-     * Process the form result
-     *
-     * @global object $rss_post_importer
-     * @return void
-     */
     public function process(): void {
         global $rss_post_importer;
 
         // bail if there's nothing to process or the data is invalid
-        if ( ! isset( $_POST[ self::NONCE_FIELD ] ) || ! wp_verify_nonce( wp_unslash( $_POST[ self::NONCE_FIELD ] ), self::NONCE_ACTION ) ) {
+        $nonce = isset( $_POST['rss_pi_nonce_field'] ) ? sanitize_key( $_POST['rss_pi_nonce_field'] ) : '';
+        if (! isset($_POST['rss_pi_nonce_field']) || !wp_verify_nonce(sanitize_key($_POST['rss_pi_nonce_field']), 'rss_pi_ajax_nonce_action')) {
             return;
         }
 
@@ -42,221 +24,8 @@ class rssPIAdminProcessor {
         $save_to_db = isset($_POST['save_to_db'] ) && 'true' === sanitize_text_field( wp_unslash($_POST['save_to_db']));
         $import_now  = (isset($_POST['import_now']) && 'true' === sanitize_text_field( wp_unslash( $_POST['import_now'])));
 
-        // formulate the settings array
-        $settings = $this->process_settings();
+        // process settings
 
-        // check result for "invalid_key" flag
-        $invalid_api_key = isset($settings['invalid_api_key']);
-        unset($settings['invalid_api_key']);
-
-        // update cron settings
-        $this->update_cron($settings['frequency']);
-
-        $feeds = $this->process_feeds($rss_post_importer->options['feeds']);
-
-        // import CSV file
-        if (
-            isset($_FILES['import_csv']) &&
-            isset($settings['is_key_valid']) &&
-            $settings['is_key_valid']
-        ) {
-            $feeds = $this->import_csv($feeds);
-        }
-
-        // import OPML file
-        // @since v2.1.3
-        // if (
-        //     isset($_FILES['import_opml']) &&
-        //     isset($_FILES['import_opml']['tmp_name']) &&
-        //     is_uploaded_file($_FILES['import_opml']['tmp_name'])
-        // ) {
-        //     $opml = new Rss_pi_opml();
-        //     $feeds = $opml->import($feeds);
-        //     $opml_errors = $opml->errors;
-        // } else {
-        //     $opml_errors = [];
-        // }
-
-        // save and reload the options
-        $this->save_reload_options($settings, $feeds);
-
-        if ($import_now) {
-            // yield the routine for import feeds via AJAX when needed
-            do_action('rss_pi_cron');
-        }
-
-        wp_redirect(add_query_arg(
-            [
-                'settings-updated' => 'true',
-                // yield the routine for import feeds via AJAX when needed
-                'import' => $save_to_db,
-                'message' => $invalid_api_key ? 2 : 1,
-                //'opml_errors' => $opml_errors ? urlencode(implode('<br/>', $opml_errors)) : '',
-            ],
-            $rss_post_importer->page_link
-        ));
-
-        exit;
-    }
-
-    /**
-     * Purge "deleted_posts" cache from wp_options
-     * @return void
-     */
-    public function purge_deleted_posts_cache(): void {
-        if (
-            !isset( $_POST[ self::NONCE_FIELD ] ) ||
-            !wp_verify_nonce( wp_unslash( $_POST[ self::NONCE_FIELD ] ), self::NONCE_ACTION) ||
-            !isset($_POST['purge_deleted_cache'])
-        ) {
-            return;
-        }
-
-        $_POST['purge_deleted_cache'] = sanitize_text_field( wp_unslash( $_POST['purge_deleted_cache'] ) );
-
-        delete_option('rss_pi_deleted_posts');
-        delete_option('rss_pi_imported_posts');
-
-        global $rss_post_importer;
-
-        wp_redirect(add_query_arg(
-            [
-                'deleted_cache_purged' => 'true',
-            ],
-            $rss_post_importer->page_link
-        ));
-
-        exit;
-    }
-
-    /**
-     * Import CSV function to import CSV file data into database
-     * @param array $feeds
-     * @return array
-     */
-    private function import_csv( array $feeds ): array {
-
-        if (
-            !isset( $_FILES['import_csv']['tmp_name'])
-           // !is_uploaded_file( $_FILES['import_csv']['tmp_name'] )
-        ) {
-            return $feeds;
-        }
-        $file = sanitize_text_field( wp_unslash( $_FILES['import_csv']['tmp_name'] ) ) ?? '';
-
-        if ( ! empty( $file ) && ! file_exists( $file ) ) {
-            return $feeds;
-        }
-
-        // Use WP Filesystem API instead of direct file operations
-        global $wp_filesystem;
-
-        if ( ! function_exists( 'WP_Filesystem' ) ) {
-            require_once wp_normalize_path( ABSPATH . 'wp-admin/includes/file.php' );
-        }
-
-        WP_Filesystem();
-
-        // Read file using WP Filesystem
-        if ( ! $wp_filesystem->is_file( $file ) ) {
-            return $feeds;
-        }
-
-        $file_contents = $wp_filesystem->get_contents( $file );
-
-        if ( ! $file_contents ) {
-            return $feeds;
-        }
-
-        // Parse CSV contents
-        $lines = explode( "\n", $file_contents );
-        $titlearray = [];
-        $importdata = [];
-        $t = 0;
-
-        foreach ( $lines as $csv_line ) {
-            $csv_line = trim( $csv_line );
-
-            if ( empty( $csv_line ) ) {
-                continue;
-            }
-
-            $fields = str_getcsv( $csv_line );
-
-            if ( 0 === $t ) {
-                // First line contains headers
-                $titlearray = $fields;
-            } else {
-                // Subsequent lines contain data
-                $row = [];
-                foreach ( $fields as $i => $field ) {
-                    if ( isset( $titlearray[ $i ] ) ) {
-                        $row[ $titlearray[ $i ] ] = sanitize_text_field( $field );
-                    }
-                }
-
-                if ( ! empty( $row ) ) {
-                    $row['id'] = 'uniqid_' . uniqid( '54d4c' );
-                    $importdata['feeds'][] = $row;
-                }
-            }
-
-            $t++;
-        }
-
-        if ( ! empty( $importdata['feeds'] ) ) {
-            foreach ( $importdata['feeds'] as $r => $feed ) {
-                // Set defaults if not present
-                if ( ! isset( $feed['category_id'] ) ) {
-                    $feed['category_id'] = [1];
-                    $feed['tags_id'] = '';
-                    $feed['keywords'] = '';
-                    $feed['strip_html'] = 'false';
-                } else {
-                    $feed['category_id'] = array_map( 'intval', explode( ',', $feed['category_id'] ) );
-                    $feed['tags_id'] = explode( ',', $feed['tags_id'] ?? '' );
-                    $feed['keywords'] = explode( ',', $feed['keywords'] ?? '' );
-                    $feed['strip_html'] = isset( $feed['strip_html'] ) ? sanitize_text_field( $feed['strip_html'] ) : 'false';
-                }
-
-                $check_result = $this->check_feed_exist( $feeds, $feed );
-
-                if ( ! $check_result ) {
-                    $feeds[] = $feed;
-                }
-            }
-        }
-
-        return $feeds;
-    }
-
-    /**
-     * @param array $feeds
-     * @param array $csvlink
-     * @return bool
-     */
-    public function check_feed_exist(array $feeds, array $csvlink): bool {
-        if (!empty($feeds) && !empty($csvlink)) {
-            foreach ($feeds as $feed) {
-                if (isset($feed['url'], $csvlink['url']) && $feed['url'] === $csvlink['url']) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Process submitted data to formulate settings array
-     *
-     * @global object $rss_post_importer
-     * @return array
-     */
-    private function process_settings(): array {
-
-        // Get selected settings for all imported posts
-
-        // Code added for custom frequency
         $frequency_check = isset( $_POST['frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['frequency'] ) ) : '';
 
         if ($frequency_check === "custom_frequency") {
@@ -308,33 +77,47 @@ class rssPIAdminProcessor {
         // save key validity state
         $settings['is_key_valid'] = $this->is_key_valid;
 
-        // filter the settings and then send them back for saving
-        return $this->filter($settings);
-    }
+        // filter settings
+        // if the key is not fine
+        if (!empty($settings['feeds_api_key']) && !$this->is_key_valid) {
 
-    /**
-     * Update the frequency of the import cron job
-     *
-     * @param string $frequency
-     */
-    private function update_cron(string $frequency): void {
-
-        // If cron settings have changed
-        if (wp_get_schedule('rss_pi_cron') != $frequency) {
-
-            // Reset cron
-            wp_clear_scheduled_hook('rss_pi_cron');
-            wp_schedule_event(time(), $frequency, 'rss_pi_cron');
+            // unset from settings
+            unset($settings['feeds_api_key']);
+            $settings['invalid_api_key'] = true;
         }
-    }
 
-    /**
-     * Creates the feeds array from the submitted data
-     *
-     * @param array $feeds
-     * @return array
-     */
-    private function process_feeds(array $feeds): array {
+        // if the key is valid
+        if ($this->is_key_valid) {
+
+            // set up keywords (otherwise don't)
+            $keyword_str = '';
+            if (isset($_POST['keyword_filter'])) {
+                // Strip Slashes for RegEx
+                $keyword_str = sanitize_text_field(wp_unslash($_POST['keyword_filter']));
+            }
+
+            $keywords = [];
+
+            if (!empty($keyword_str)) {
+                $keywords = explode(',', $keyword_str);
+            }
+
+            $settings['keywords'] = array_map('trim', $keywords);
+
+            // set up "import deleted posts" (otherwise don't)
+            $settings['cache_deleted'] = sanitize_text_field(wp_unslash($_POST['cache_deleted'] ?? 'true'));
+        }
+        // formulate the settings array
+
+        // check result for "invalid_key" flag
+        $invalid_api_key = isset($settings['invalid_api_key']);
+        unset($settings['invalid_api_key']);
+
+        // update cron settings
+        $this->update_cron($settings['frequency']);
+
+        $feeds = $this->process_feeds($rss_post_importer->options['feeds']);
+        // process feeds start
         $paused_feeds = [];
         if (isset($_POST['paused_feeds'])) {
             $paused_feeds_raw = sanitize_text_field(wp_unslash($_POST['paused_feeds']));
@@ -435,8 +218,230 @@ class rssPIAdminProcessor {
             ];
         }
 
-        return $feeds;
+        // process feeds end
+
+        // import CSV file
+        if (
+            isset($_FILES['import_csv']) &&
+            isset($settings['is_key_valid']) &&
+            $settings['is_key_valid']
+        ) {
+            $feeds = $this->import_csv($feeds);
+        }
+
+        // import OPML file
+        // @since v2.1.3
+        // if (
+        //     isset($_FILES['import_opml']) &&
+        //     isset($_FILES['import_opml']['tmp_name']) &&
+        //     is_uploaded_file($_FILES['import_opml']['tmp_name'])
+        // ) {
+        //     $opml = new Rss_pi_opml();
+        //     $feeds = $opml->import($feeds);
+        //     $opml_errors = $opml->errors;
+        // } else {
+        //     $opml_errors = [];
+        // }
+
+        // save and reload the options
+        $this->save_reload_options($settings, $feeds);
+
+        if ($import_now) {
+            // yield the routine for import feeds via AJAX when needed
+            do_action('rss_pi_cron');
+        }
+
+        wp_redirect(add_query_arg(
+            [
+                'settings-updated' => 'true',
+                // yield the routine for import feeds via AJAX when needed
+                'import' => $save_to_db,
+                'message' => $invalid_api_key ? 2 : 1,
+                //'opml_errors' => $opml_errors ? urlencode(implode('<br/>', $opml_errors)) : '',
+            ],
+            $rss_post_importer->page_link
+        ));
+
+        exit;
     }
+
+    /**
+     * Purge "deleted_posts" cache from wp_options
+     * @return void
+     */
+
+    public function purge_deleted_posts_cache(): void {
+        $nonce = isset( $_POST['rss_pi_nonce_field'] ) ? sanitize_key( $_POST['rss_pi_nonce_field'] ) : '';
+        if (
+            empty( $nonce ) || ! wp_verify_nonce( $nonce, 'rss_pi_save_settings_action' ) ||
+            !isset($_POST['purge_deleted_cache'])
+        ) {
+            return;
+        }
+
+        $_POST['purge_deleted_cache'] = sanitize_text_field( wp_unslash( $_POST['purge_deleted_cache'] ) );
+
+        delete_option('rss_pi_deleted_posts');
+        delete_option('rss_pi_imported_posts');
+
+        global $rss_post_importer;
+
+        wp_redirect(add_query_arg(
+            [
+                'deleted_cache_purged' => 'true',
+            ],
+            $rss_post_importer->page_link
+        ));
+
+        exit;
+    }
+
+    /**
+     * Import CSV function to import CSV file data into database
+     * @param array $feeds
+     * @return array
+     */
+    // private function import_csv( array $feeds ): array {
+
+    //     if (
+    //         !isset( $_FILES['import_csv']['tmp_name'])
+    //        // !is_uploaded_file( $_FILES['import_csv']['tmp_name'] )
+    //     ) {
+    //         return $feeds;
+    //     }
+    //     $file = sanitize_text_field( wp_unslash( $_FILES['import_csv']['tmp_name'] ) ) ?? '';
+
+    //     if ( ! empty( $file ) && ! file_exists( $file ) ) {
+    //         return $feeds;
+    //     }
+
+    //     // Use WP Filesystem API instead of direct file operations
+    //     global $wp_filesystem;
+
+    //     if ( ! function_exists( 'WP_Filesystem' ) ) {
+    //         require_once wp_normalize_path( ABSPATH . 'wp-admin/includes/file.php' );
+    //     }
+
+    //     WP_Filesystem();
+
+    //     // Read file using WP Filesystem
+    //     if ( ! $wp_filesystem->is_file( $file ) ) {
+    //         return $feeds;
+    //     }
+
+    //     $file_contents = $wp_filesystem->get_contents( $file );
+
+    //     if ( ! $file_contents ) {
+    //         return $feeds;
+    //     }
+
+    //     // Parse CSV contents
+    //     $lines = explode( "\n", $file_contents );
+    //     $titlearray = [];
+    //     $importdata = [];
+    //     $t = 0;
+
+    //     foreach ( $lines as $csv_line ) {
+    //         $csv_line = trim( $csv_line );
+
+    //         if ( empty( $csv_line ) ) {
+    //             continue;
+    //         }
+
+    //         $fields = str_getcsv( $csv_line );
+
+    //         if ( 0 === $t ) {
+    //             // First line contains headers
+    //             $titlearray = $fields;
+    //         } else {
+    //             // Subsequent lines contain data
+    //             $row = [];
+    //             foreach ( $fields as $i => $field ) {
+    //                 if ( isset( $titlearray[ $i ] ) ) {
+    //                     $row[ $titlearray[ $i ] ] = sanitize_text_field( $field );
+    //                 }
+    //             }
+
+    //             if ( ! empty( $row ) ) {
+    //                 $row['id'] = 'uniqid_' . uniqid( '54d4c' );
+    //                 $importdata['feeds'][] = $row;
+    //             }
+    //         }
+
+    //         $t++;
+    //     }
+
+    //     if ( ! empty( $importdata['feeds'] ) ) {
+    //         foreach ( $importdata['feeds'] as $r => $feed ) {
+    //             // Set defaults if not present
+    //             if ( ! isset( $feed['category_id'] ) ) {
+    //                 $feed['category_id'] = [1];
+    //                 $feed['tags_id'] = '';
+    //                 $feed['keywords'] = '';
+    //                 $feed['strip_html'] = 'false';
+    //             } else {
+    //                 $feed['category_id'] = array_map( 'intval', explode( ',', $feed['category_id'] ) );
+    //                 $feed['tags_id'] = explode( ',', $feed['tags_id'] ?? '' );
+    //                 $feed['keywords'] = explode( ',', $feed['keywords'] ?? '' );
+    //                 $feed['strip_html'] = isset( $feed['strip_html'] ) ? sanitize_text_field( $feed['strip_html'] ) : 'false';
+    //             }
+
+    //             $check_result = $this->check_feed_exist( $feeds, $feed );
+
+    //             if ( ! $check_result ) {
+    //                 $feeds[] = $feed;
+    //             }
+    //         }
+    //     }
+
+    //     return $feeds;
+    // }
+
+    /**
+     * @param array $feeds
+     * @param array $csvlink
+     * @return bool
+     */
+    public function check_feed_exist(array $feeds, array $csvlink): bool {
+        if (!empty($feeds) && !empty($csvlink)) {
+            foreach ($feeds as $feed) {
+                if (isset($feed['url'], $csvlink['url']) && $feed['url'] === $csvlink['url']) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Process submitted data to formulate settings array
+     *
+     * @global object $rss_post_importer
+     * @return array
+     */
+
+    /**
+     * Update the frequency of the import cron job
+     *
+     * @param string $frequency
+     */
+    private function update_cron(string $frequency): void {
+
+        // If cron settings have changed
+        if (wp_get_schedule('rss_pi_cron') != $frequency) {
+
+            // Reset cron
+            wp_clear_scheduled_hook('rss_pi_cron');
+            wp_schedule_event(time(), $frequency, 'rss_pi_cron');
+        }
+    }
+
+    /**
+     * Creates the feeds array from the submitted data
+     *
+     * @param array $feeds
+     * @return array
+     */
 
     /**
      * Update options and reload global options
@@ -473,39 +478,5 @@ class rssPIAdminProcessor {
      * @param array $settings
      * @return array
      */
-    private function filter(array $settings): array {
-
-        // if the key is not fine
-        if (!empty($settings['feeds_api_key']) && !$this->is_key_valid) {
-
-            // unset from settings
-            unset($settings['feeds_api_key']);
-            $settings['invalid_api_key'] = true;
-        }
-
-        // if the key is valid
-        if ($this->is_key_valid) {
-
-            // set up keywords (otherwise don't)
-            $keyword_str = '';
-            if (isset($_POST['keyword_filter'])) {
-                // Strip Slashes for RegEx
-                $keyword_str = stripslashes($_POST['keyword_filter']);
-            }
-
-            $keywords = [];
-
-            if (!empty($keyword_str)) {
-                $keywords = explode(',', $keyword_str);
-            }
-
-            $settings['keywords'] = array_map('trim', $keywords);
-
-            // set up "import deleted posts" (otherwise don't)
-            $settings['cache_deleted'] = sanitize_text_field(wp_unslash($_POST['cache_deleted'] ?? 'true'));
-        }
-
-        return $settings;
-    }
 
 }
