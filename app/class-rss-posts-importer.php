@@ -266,7 +266,7 @@ class rssPostImporter {
 
     public function load_textdomain(): void {
         load_plugin_textdomain(
-            'rss-posts-importer',
+            'rss-pie',
             false,
             dirname( plugin_basename( __FILE__ ) ) . '/app/languages/'
         );

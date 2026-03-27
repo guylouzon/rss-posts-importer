@@ -1,4 +1,4 @@
-# RSS posts importer - 2025 updated
+# RSS posts importer Engine - 2026 updated
 
 ![RSS Post Importer Logo](rss-pi-small.png)
 
@@ -60,19 +60,13 @@ RSS Post Importer is the Most Powerful & Easy to use WordPress RSS Aggregator pl
 == Description ==
 
 
-**This is the Best WordPress Plugin for Syndicating, Importing, Curating, Merging and Displaying Full Text RSS and Atom feeds on your WordPress Blog. Watch for yourself!**
-
-[vimeo https://vimeo.com/117679639]
-
 **The RSS Post Importer plugin fetchs an RSS feed and publishes the full article content of each Feed Item as stand-alone post.**
 
-Content syndication allows a blogger to import an rss feed from other blogs in his niche, allowing him to share relevant content with his readers, with far less of a time commitment than writing his own posts or scheduling guest bloggers and ghost writers. RSS Post Importer is very easy to install, here's how:
-
-[vimeo https://vimeo.com/113134777]
+Content syndication allows a blogger to import an rss feed from other blogs in his niche, allowing him to share relevant content with his readers, with far less of a time commitment than writing his own posts or scheduling guest bloggers and ghost writers. RSS Post Importer is very easy to install
 
 **RSS Post Importer** handles all of that, it will import and publish Full Text RSS Posts from one or several RSS feeds sources to your WordPress blog on Auto-pilot while you are laying on the beach of doing some other work, making your blogging, content syndication strategy & autoblogging life much more easier!
 
-Not only does this WordPress RSS Aggregator Plugin import a snippet of the rss feed, it automatically imports the entire [**Full Text RSS Feed**](http://www.feedsapi.com) , allowing you to post the entire article on your site if you want. This means you're providing your readers with relevant content on a daily, weekly, or even hourly basis, depending on the top of blog you're running. RSS Post Importer is a great plugin for news aggregators, content syndicator, company blogs, current events bloggers, or deal bloggers, as it keeps the fresh content that your readers love you for, coming on a regular basis!
+Not only does this WordPress RSS Aggregator Plugin import a snippet of the rss feed, it automatically imports the entire **Full Text RSS Feed** , allowing you to post the entire article on your site if you want. This means you're providing your readers with relevant content on a daily, weekly, or even hourly basis, depending on the top of blog you're running. RSS Post Importer is a great plugin for news aggregators, content syndicator, company blogs, current events bloggers, or deal bloggers, as it keeps the fresh content that your readers love you for, coming on a regular basis!
 
 
 **Features include:**
@@ -99,42 +93,6 @@ Not only does this WordPress RSS Aggregator Plugin import a snippet of the rss f
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 3. Set up what feeds to import and when!
-
-[vimeo https://vimeo.com/113134777]
-
-== Frequently Asked Questions ==
-
-= I've already installed RSS Post Importer, but not all features are enable, what's going on? =
-
-RSS Post Importer requires a Full Text RSS Key [Try it Free for 14 Days](http://www.feedsapi.org/register.htm?utm_source=rss-posts-importer_upgrade-free-trial) to enable all premium features. It comes with a 14 day free trial and will save you several hours of manual work.
-
-= How do I upgrade RSS Post Importer? =
-
-You need a Full Text RSS Key to upgrade your RSS Post Importer Plugin and boost your traffic and revenues, you simply need to go to [Boost my Traffic](http://www.feedsapi.org/register.htm?utm_source=rss-posts-importer_upgrade) and create a premium account , then use the key you receive with your RSS Post Importer
-
-= How do I view my stats? =
-
-Once you've installed RSS Post Importer, your stats will be available via the "Setting" menu which appears in the RSS Post Importer "Stats" block UI  (under the RSS Post Importer settings block).
-
-= Is this a service or a stand-alone plugin? =
-
-This exceptionally powerful and user-friendly wordpress plugin premium features use our cloud-based services:  [**Full Text RSS Feed Processor**](http://www.feedsapi.com) and  [**Best WP RSS Plugin**](http://www.rsspostimporter.com) in the backend to process your feeds and generate the full text + images version of each feed item
-
-= How do I contribute to RSS Post Importer? =
-
-Easy! There are opportunities for developers and non-developers at all levels to contribute:
-
-* Join our Beta Test group.
-* Give us a hand answering questions in our [support forum](https://wordpress.org/support/plugin/rss-posts-importer).
-* Report bugs, with reproduction steps, to [Support](rsspostimporter@feedsapi.com).
-
-Learn more (and get detailed instructions) in our [contribute guide](http://jetpack.me/contribute/).
-
-
-== Screenshots ==
-
-
-1. This is the combined settings- and feed-management-screen.
 
 
 == Change Log ==

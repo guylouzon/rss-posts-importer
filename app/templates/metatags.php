@@ -88,7 +88,7 @@ extract(webdados_fb_open_graph_load_settings());
 		
 	<h2><?php echo esc_html($webdados_fb_open_graph_plugin_name); ?> - <?php echo esc_html($webdados_fb_open_graph_plugin_name); ?> (<?php echo esc_html($webdados_fb_open_graph_plugin_version); ?>)</h2>
 	<br class="clear"/>
-	<p><?php esc_html_e('Please set some default values and which tags should, or should not, be included. It may be necessary to exclude some tags if other plugins are already including them.', 'rss-posts-importer'); ?></p>
+	<p><?php esc_html_e('Please set some default values and which tags should, or should not, be included. It may be necessary to exclude some tags if other plugins are already including them.', 'rss-pie'); ?></p>
 	
 	<?php
 	settings_fields('wonderm00n_open_graph');
@@ -100,17 +100,17 @@ extract(webdados_fb_open_graph_load_settings());
 				<?php wp_nonce_field('wonderm00n_open_graph_settings_save', 'wonderm00n_open_graph_nonce'); ?>
 				
 				<div id="webdados_fb_open_graph-settings" class="postbox">
-					<h3 id="settings"><?php esc_html_e('Settings','rss-posts-importer'); ?></h3>
+					<h3 id="settings"><?php esc_html_e('Settings','rss-pie'); ?></h3>
 					<div class="inside">
 						<table width="100%" class="form-table">
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Facebook Platform App ID (fb:app_id) tag', 'rss-posts-importer'); ?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Facebook Platform App ID (fb:app_id) tag', 'rss-pie'); ?></th>
 								<td>
 									<input type="checkbox" name="fb_app_id_show" id="fb_app_id_show" value="1" <?php echo (intval($fb_app_id_show)==1 ? ' checked="checked"' : ''); ?> onclick="showAppidOptions();"/>
 								</td>
 							</tr>
 							<tr class="fb_app_id_options">
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Facebook Platform App ID', 'rss-posts-importer'); ?>:</th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Facebook Platform App ID', 'rss-pie'); ?>:</th>
 								<td>
 									<input type="text" name="fb_app_id" id="fb_app_id" size="30" value="<?php echo (esc_attr(trim($fb_app_id))); ?>"/>
 								</td>
@@ -119,33 +119,33 @@ extract(webdados_fb_open_graph_load_settings());
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Facebook Admin(s) ID (fb:admins) tag', 'rss-posts-importer'); ?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Facebook Admin(s) ID (fb:admins) tag', 'rss-pie'); ?></th>
 								<td>
 									<input type="checkbox" name="fb_admin_id_show" id="fb_admin_id_show" value="1" <?php echo (intval($fb_admin_id_show)==1 ? ' checked="checked"' : ''); ?> onclick="showAdminOptions();"/>
 								</td>
 							</tr>
 							<tr class="fb_admin_id_options">
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Facebook Admin(s) ID', 'rss-posts-importer'); ?>:</th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Facebook Admin(s) ID', 'rss-pie'); ?>:</th>
 								<td>
 									<input type="text" name="fb_admin_id" id="fb_admin_id" size="30" value="<?php echo (esc_attr(trim($fb_admin_id))); ?>"/>
 									<br/>
-									<?php esc_html_e('Comma separated if more than one', 'rss-posts-importer'); ?>
+									<?php esc_html_e('Comma separated if more than one', 'rss-pie'); ?>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include locale (fb:locale) tag', 'rss-posts-importer'); ?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include locale (fb:locale) tag', 'rss-pie'); ?></th>
 								<td>
 									<input type="checkbox" name="fb_locale_show" id="fb_locale_show" value="1" <?php echo (intval($fb_locale_show)==1 ? ' checked="checked"' : ''); ?> onclick="showLocaleOptions();"/>
 								</td>
 							</tr>
 							<tr class="fb_locale_options">
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Locale', 'rss-posts-importer'); ?>:</th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Locale', 'rss-pie'); ?>:</th>
 								<td>
 									<select name="fb_locale" id="fb_locale">
-										<option value=""<?php if (trim($fb_locale)=='') echo ' selected="selected"'; ?>><?php esc_html_e('WordPress current locale/language', 'rss-posts-importer'); ?> (<?php echo esc_html(get_locale()); ?>)&nbsp;</option>
+										<option value=""<?php if (trim($fb_locale)=='') echo ' selected="selected"'; ?>><?php esc_html_e('WordPress current locale/language', 'rss-pie'); ?> (<?php echo esc_html(get_locale()); ?>)&nbsp;</option>
 										<?php
 											$listLocales=false;
 											$loadedOnline=false;
@@ -204,12 +204,12 @@ extract(webdados_fb_open_graph_load_settings());
 									<br/>
 									<?php
 									if ($loadedOnline) {
-										esc_html_e('List loaded from Facebook (online)', 'rss-posts-importer');
+										esc_html_e('List loaded from Facebook (online)', 'rss-pie');
 									} else {
 										if ($loadedOffline) {
-											esc_html_e('List loaded from local cache (offline)', 'rss-posts-importer'); ?> - <a href="?page=wonderm00n-open-graph.php&amp;localeOnline=1" onClick="return(confirm('<?php esc_html_e('You\\\'l lose any changes you haven\\\'t saved. Are you sure?', 'rss-posts-importer'); ?>'));"><?php esc_html_e('Reload from Facebook', 'rss-posts-importer'); ?></a><?php
+											esc_html_e('List loaded from local cache (offline)', 'rss-pie'); ?> - <a href="?page=wonderm00n-open-graph.php&amp;localeOnline=1" onClick="return(confirm('<?php esc_html_e('You\\\'l lose any changes you haven\\\'t saved. Are you sure?', 'rss-pie'); ?>'));"><?php esc_html_e('Reload from Facebook', 'rss-pie'); ?></a><?php
 										} else {
-											esc_html_e('List not loaded', 'rss-posts-importer');
+											esc_html_e('List not loaded', 'rss-pie');
 										}
 									}
 									?>
@@ -219,7 +219,7 @@ extract(webdados_fb_open_graph_load_settings());
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Site Name (og:site_name) tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Site Name (og:site_name) tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_sitename_show" id="fb_sitename_show" value="1" <?php echo (intval($fb_sitename_show)==1 ? ' checked="checked"' : ''); ?>/>
 								</td>
@@ -228,56 +228,56 @@ extract(webdados_fb_open_graph_load_settings());
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Post/Page title (og:title) tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Post/Page title (og:title) tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_title_show" id="fb_title_show" value="1" <?php echo (intval($fb_title_show)==1 ? ' checked="checked"' : ''); ?> onclick="showTitleOptions();"/>
 								</td>
 							</tr>
 							<tr class="fb_title_options">
-								<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Schema.org "itemprop" Name tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Schema.org "itemprop" Name tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_title_show_schema" id="fb_title_show_schema" value="1" <?php echo (intval($fb_title_show_schema)==1 ? ' checked="checked"' : ''); ?>/>
 									<br/>
 									<i>&lt;meta itemprop="name" content="..."/&gt;</i>
 									<br/>
-									<?php esc_html_e('Recommended for Google+ sharing purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+									<?php esc_html_e('Recommended for Google+ sharing purposes if no other plugin is setting it already', 'rss-pie');?>
 								</td>
 							</tr>
 							<tr class="fb_title_options">
-								<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Title tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Title tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_title_show_twitter" id="fb_title_show_twitter" value="1" <?php echo (intval($fb_title_show_twitter)==1 ? ' checked="checked"' : ''); ?>/>
 									<br/>
 									<i>&lt;meta name="twitter:title" content=..."/&gt;</i>
 									<br/>
-									<?php esc_html_e('Recommended for Twitter sharing purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+									<?php esc_html_e('Recommended for Twitter sharing purposes if no other plugin is setting it already', 'rss-pie');?>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include URL (og:url) tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include URL (og:url) tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_url_show" id="fb_url_show" value="1" <?php echo (intval($fb_url_show)==1 ? ' checked="checked"' : ''); ?> onclick="showUrlOptions();"/>
 								</td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card URL tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card URL tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_url_show_twitter" id="fb_url_show_twitter" value="1" <?php echo (intval($fb_url_show_twitter)==1 ? ' checked="checked"' : ''); ?>/>
 								</td>
 							</tr>
 							<tr class="fb_url_options">
-								<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Add trailing slash at the end', 'rss-posts-importer');?>:</th>
+								<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Add trailing slash at the end', 'rss-pie');?>:</th>
 								<td>
 									<input type="checkbox" name="fb_url_add_trailing" id="fb_url_add_trailing" value="1" <?php echo (intval($fb_url_add_trailing)==1 ? ' checked="checked"' : ''); ?> onclick="showUrlTrail();"/>
 									<br/>
-									<?php esc_html_e('On the homepage will be', 'rss-posts-importer');?>: <i><?php echo esc_html(get_option('siteurl')); ?><span id="fb_url_add_trailing_example">/</span></i>
+									<?php esc_html_e('On the homepage will be', 'rss-pie');?>: <i><?php echo esc_html(get_option('siteurl')); ?><span id="fb_url_add_trailing_example">/</span></i>
 								</td>
 							</tr>
 							<tr class="fb_url_options">
-								<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Set Canonical URL', 'rss-posts-importer');?>:</th>
+								<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Set Canonical URL', 'rss-pie');?>:</th>
 								<td>
 									<input type="checkbox" name="fb_url_canonical" id="fb_url_canonical" value="1" <?php echo (intval($fb_url_canonical)==1 ? ' checked="checked"' : ''); ?>/>
 									<br/>
@@ -288,20 +288,20 @@ extract(webdados_fb_open_graph_load_settings());
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Type (og:type) tag', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Type (og:type) tag', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_type_show" id="fb_type_show" value="1" <?php echo (intval($fb_type_show)==1 ? ' checked="checked"' : ''); ?> onclick="showTypeOptions();"/>
 									<br/>
 									<?php printf(
 										/* translators: 1: The schema type for posts (article), 2: Schema type for homepage (website), 3: Alternative schema type (blog). */
-										esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'rss-posts-importer'), 'article', 'website', 'blog');
+										esc_html__('Will be "%1$s" for posts and pages and "%2$s" or "%3$s"; for the homepage', 'rss-pie'), 'article', 'website', 'blog');
 									?>
 								</td>
 							</tr>
 							<tr class="fb_type_options">
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Homepage type', 'rss-posts-importer');?>:</th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Homepage type', 'rss-pie');?>:</th>
 								<td>
-									<?php esc_html_e('Use', 'rss-posts-importer');?>
+									<?php esc_html_e('Use', 'rss-pie');?>
 									<select name="fb_type_homepage" id="fb_type_homepage">
 										<option value="website"<?php if (trim($fb_type_homepage)=='' || trim($fb_type_homepage)=='website') echo ' selected="selected"'; ?>>website&nbsp;</option>
 										<option value="blog"<?php if (trim($fb_type_homepage)=='blog') echo ' selected="selected"'; ?>>blog&nbsp;</option>
@@ -312,74 +312,74 @@ extract(webdados_fb_open_graph_load_settings());
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include published and modified dates (article:published_time, article:modified_time and og:updated_time) tags', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include published and modified dates (article:published_time, article:modified_time and og:updated_time) tags', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_article_dates_show" id="fb_article_dates_show" value="1" <?php echo (intval($fb_article_dates_show)==1 ? ' checked="checked"' : ''); ?>/>
 									<br/>
-									<?php esc_html_e('Works for posts only', 'rss-posts-importer'); ?>
+									<?php esc_html_e('Works for posts only', 'rss-pie'); ?>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include article section (article:section) tags', 'rss-posts-importer');?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include article section (article:section) tags', 'rss-pie');?></th>
 								<td>
 									<input type="checkbox" name="fb_article_sections_show" id="fb_article_sections_show" value="1" <?php echo (intval($fb_article_sections_show)==1 ? ' checked="checked"' : ''); ?>/>
 									<br/>
-									<?php esc_html_e('Works for posts only', 'rss-posts-importer'); ?>, <?php esc_html_e('from the categories', 'rss-posts-importer'); ?>
+									<?php esc_html_e('Works for posts only', 'rss-pie'); ?>, <?php esc_html_e('from the categories', 'rss-pie'); ?>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2"><hr/></td>
 							</tr>
 							<tr>
-									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Publisher Page (article:publisher) tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Publisher Page (article:publisher) tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_publisher_show" id="fb_publisher_show" value="1" <?php echo (intval($fb_publisher_show)==1 ? ' checked="checked"' : ''); ?> onclick="showPublisherOptions();"/>
 										<br/>
-										<?php esc_html_e('Links the website to the publisher Facebook Page.', 'rss-posts-importer');?>
+										<?php esc_html_e('Links the website to the publisher Facebook Page.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_publisher_options">
-									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Website\'s Facebook Page', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Website\'s Facebook Page', 'rss-pie');?>:</th>
 									<td>
 										<input type="text" name="fb_publisher" id="fb_publisher" size="50" value="<?php echo esc_attr(trim($fb_publisher)); ?>"/>
 										<br/>
-										<?php esc_html_e('Full URL with http://', 'rss-posts-importer');?>
+										<?php esc_html_e('Full URL with http://', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Google+ "publisher" tag', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Google+ "publisher" tag', 'rss-pie');?>:</th>
 									<td>
 										<input type="checkbox" name="fb_publisher_show_schema" id="fb_publisher_show_schema" value="1" <?php echo (intval($fb_publisher_show_schema)==1 ? ' checked="checked"' : ''); ?> onclick="showPublisherSchemaOptions();"/>
 										<br/>
-										<?php esc_html_e('Links the website to the publisher Google+ Page.', 'rss-posts-importer');?>
+										<?php esc_html_e('Links the website to the publisher Google+ Page.', 'rss-pie');?>
 									</td>
 
 								</tr>
 								<tr class="fb_publisher_schema_options">
-									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Website\'s Google+ Page', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Website\'s Google+ Page', 'rss-pie');?>:</th>
 									<td>
 										<input type="text" name="fb_publisher_schema" id="fb_publisher_schema" size="50" value="<?php echo esc_attr(trim($fb_publisher_schema)); ?>"/>
 										<br/>
-										<?php esc_html_e('Full URL with http://', 'rss-posts-importer');?>
+										<?php esc_html_e('Full URL with http://', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Website Username tag', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Website Username tag', 'rss-pie');?>:</th>
 									<td>
 										<input type="checkbox" name="fb_publisher_show_twitter" id="fb_publisher_show_twitter" value="1" <?php echo (intval($fb_publisher_show_twitter)==1 ? ' checked="checked"' : ''); ?> onclick="showPublisherTwitterOptions();"/>
 										<br/>
-										<?php esc_html_e('Links the website to the publisher Twitter Username.', 'rss-posts-importer');?>
+										<?php esc_html_e('Links the website to the publisher Twitter Username.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_publisher_twitter_options">
-									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Website\'s Twitter Username', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Website\'s Twitter Username', 'rss-pie');?>:</th>
 									<td>
 										<input type="text" name="fb_publisher_twitteruser" id="fb_publisher_twitteruser" size="20" value="<?php echo esc_attr(trim($fb_publisher_twitteruser)); ?>"/>
 										<br/>
-										<?php esc_html_e('Twitter username (without @)', 'rss-posts-importer');?>
+										<?php esc_html_e('Twitter username (without @)', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr>
@@ -387,49 +387,49 @@ extract(webdados_fb_open_graph_load_settings());
 								</tr>
 
 								<tr>
-									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Author Profile (article:author) tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Author Profile (article:author) tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_author_show" id="fb_author_show" value="1" <?php echo (intval($fb_author_show)==1 ? ' checked="checked"' : ''); ?> onclick="showAuthorOptions();"/>
 										<br/>
-										<?php esc_html_e('Links the article to the author Facebook Profile. The user\'s Facebook profile URL must be filled in.', 'rss-posts-importer');?>
+										<?php esc_html_e('Links the article to the author Facebook Profile. The user\'s Facebook profile URL must be filled in.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_author_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Include Meta Author tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Include Meta Author tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_author_show_meta" id="fb_author_show_meta" value="1" <?php echo (intval($fb_author_show_meta)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta name="author" content="..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Sets the article author name', 'rss-posts-importer');?>
+										<?php esc_html_e('Sets the article author name', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_author_options">
-									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Google+ link rel "author" tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Google+ link rel "author" tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_author_show_linkrelgp" id="fb_author_show_linkrelgp" value="1" <?php echo (intval($fb_author_show_linkrelgp)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;link rel="author" href="..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Links the article to the author Google+ Profile (authorship). The user\'s Google+ profile URL must be filled in.', 'rss-posts-importer');?>
+										<?php esc_html_e('Links the article to the author Google+ Profile (authorship). The user\'s Google+ profile URL must be filled in.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_author_options">
-									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Creator tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Creator tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_author_show_twitter" id="fb_author_show_twitter" value="1" <?php echo (intval($fb_author_show_twitter)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta name="twitter:creator" content="@..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Links the article to the author Twitter profile. The user\'s Twitter user must be filled in.', 'rss-posts-importer');?>
+										<?php esc_html_e('Links the article to the author Twitter profile. The user\'s Twitter user must be filled in.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_author_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Hide author on pages', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Hide author on pages', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_author_hide_on_pages" id="fb_author_hide_on_pages" value="1" <?php echo (intval($fb_author_hide_on_pages)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
-										<?php esc_html_e('Hides all author tags on pages.', 'rss-posts-importer');?>
+										<?php esc_html_e('Hides all author tags on pages.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr>
@@ -437,63 +437,63 @@ extract(webdados_fb_open_graph_load_settings());
 								</tr>
 
 								<tr>
-									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Description (og:description) tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Description (og:description) tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_desc_show" id="fb_desc_show" value="1" <?php echo (intval($fb_desc_show)==1 ? ' checked="checked"' : ''); ?> onclick="showDescriptionOptions();"/>
 									</td>
 								</tr>
 								<tr class="fb_description_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Include Meta Description tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Include Meta Description tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_desc_show_meta" id="fb_desc_show_meta" value="1" <?php echo (intval($fb_desc_show_meta)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta name="description" content="..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Recommended for SEO purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+										<?php esc_html_e('Recommended for SEO purposes if no other plugin is setting it already', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_description_options">
-									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Schema.org "itemprop" Description tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Schema.org "itemprop" Description tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_desc_show_schema" id="fb_desc_show_schema" value="1" <?php echo (intval($fb_desc_show_schema)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta itemprop="description" content="..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Recommended for Google+ sharing purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+										<?php esc_html_e('Recommended for Google+ sharing purposes if no other plugin is setting it already', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_description_options">
-									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Description tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Description tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_desc_show_twitter" id="fb_desc_show_twitter" value="1" <?php echo (intval($fb_desc_show_twitter)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta name="twitter:description" content"..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Recommended for Twitter sharing purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+										<?php esc_html_e('Recommended for Twitter sharing purposes if no other plugin is setting it already', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_description_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Description maximum length', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Description maximum length', 'rss-pie');?>:</th>
 									<td>
 										<input type="text" name="fb_desc_chars" id="fb_desc_chars" size="3" maxlength="3" value="<?php echo (intval($fb_desc_chars)>0 ? intval($fb_desc_chars) : ''); ?>"/> characters,
 										<br/>
-										<?php esc_html_e('0 or blank for no maximum length', 'rss-posts-importer');?>
+										<?php esc_html_e('0 or blank for no maximum length', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_description_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Homepage description', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Homepage description', 'rss-pie');?>:</th>
 									<td>
 										<?php
 										$hide_home_description=false;
 										if (get_option('show_on_front')=='page') {
 											$hide_home_description=true;
-											esc_html_e('The description of your front page:', 'rss-posts-importer');
+											esc_html_e('The description of your front page:', 'rss-pie');
 											echo ' <a href="'. esc_url(get_edit_post_link(get_option('page_on_front'))).'" target="_blank">'. esc_html(get_the_title(get_option('page_on_front'))).'</a>';
 										}; ?>
-										<div<?php if ($hide_home_description) echo ' style="display: none;"'; ?>><?php esc_html_e('Use', 'rss-posts-importer');?>
+										<div<?php if ($hide_home_description) echo ' style="display: none;"'; ?>><?php esc_html_e('Use', 'rss-pie');?>
 											<select name="fb_desc_homepage" id="fb_desc_homepage" onchange="showDescriptionCustomText();">
-												<option value=""<?php if (trim($fb_desc_homepage)=='') echo ' selected="selected"'; ?>><?php esc_html_e('Website tagline', 'rss-posts-importer');?>&nbsp;</option>
-												<option value="custom"<?php if (trim($fb_desc_homepage)=='custom') echo ' selected="selected"'; ?>><?php esc_html_e('Custom text', 'rss-posts-importer');?>&nbsp;</option>
+												<option value=""<?php if (trim($fb_desc_homepage)=='') echo ' selected="selected"'; ?>><?php esc_html_e('Website tagline', 'rss-pie');?>&nbsp;</option>
+												<option value="custom"<?php if (trim($fb_desc_homepage)=='custom') echo ' selected="selected"'; ?>><?php esc_html_e('Custom text', 'rss-pie');?>&nbsp;</option>
 											</select>
 											<div id="fb_desc_homepage_customtext_div">
 												<textarea name="fb_desc_homepage_customtext" id="fb_desc_homepage_customtext" rows="3" cols="50"><?php echo esc_attr(trim($fb_desc_homepage_customtext)); ?></textarea>
@@ -504,7 +504,7 @@ extract(webdados_fb_open_graph_load_settings());
 													<?php
 													printf(
 														/* translators: 1: Link to WPML String translation page. */
-														esc_html__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'rss-posts-importer'),
+														esc_html__('WPML users: Set the default language description here, save changes and then go to <a href="%s">WPML &gt; String translation</a> to set it for other languages.', 'rss-pie'),
 														'admin.php?page=wpml-string-translation/menu/string-translation.php&amp;context=wd-fb-og'
 													); 
 												}
@@ -517,82 +517,82 @@ extract(webdados_fb_open_graph_load_settings());
 									<td colspan="2"><hr/></td>
 								</tr>
 								<tr>
-									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Image (og:image) tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Image (og:image) tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_image_show" id="fb_image_show" value="1" <?php echo (intval($fb_image_show)==1 ? ' checked="checked"' : ''); ?> onclick="showImageOptions();"/>
 										<br/>
-										<?php esc_html_e('All images MUST have at least 200px on both dimensions in order to Facebook to load them at all.<br/>1200x630px for optimal results.<br/>Minimum of 600x315px is recommended.', 'rss-posts-importer');?>
+										<?php esc_html_e('All images MUST have at least 200px on both dimensions in order to Facebook to load them at all.<br/>1200x630px for optimal results.<br/>Minimum of 600x315px is recommended.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_image_options">
-									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Image size (og:image:width and og:image:height) tags', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Include Image size (og:image:width and og:image:height) tags', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_image_size_show" id="fb_image_size_show" value="1" <?php echo (intval($fb_image_size_show)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
-										<?php esc_html_e('Recommended only if Facebook is having problems loading the image when the post is shared for the first time.', 'rss-posts-importer');?>
+										<?php esc_html_e('Recommended only if Facebook is having problems loading the image when the post is shared for the first time.', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_image_options">
-									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Schema.org "itemprop" Image tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-googleplus"></i><?php esc_html_e('Include Schema.org "itemprop" Image tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_image_show_schema" id="fb_image_show_schema" value="1" <?php echo (intval($fb_image_show_schema)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta itemprop="image" content="..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Recommended for Google+ sharing purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+										<?php esc_html_e('Recommended for Google+ sharing purposes if no other plugin is setting it already', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_image_options">
-									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Image tag', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Include Twitter Card Image tag', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_image_show_twitter" id="fb_image_show_twitter" value="1" <?php echo (intval($fb_image_show_twitter)==1 ? ' checked="checked"' : ''); ?>/>
 										<br/>
 										<i>&lt;meta name="twitter:image:src" content="..."/&gt;</i>
 										<br/>
-										<?php esc_html_e('Recommended for Twitter sharing purposes if no other plugin is setting it already', 'rss-posts-importer');?>
+										<?php esc_html_e('Recommended for Twitter sharing purposes if no other plugin is setting it already', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_image_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Default image', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Default image', 'rss-pie');?>:</th>
 									<td>
 										<input type="text" name="fb_image" id="fb_image" size="50" value="<?php echo esc_attr(trim($fb_image)); ?>"/>
 										<input id="fb_image_button" class="button" type="button" value="Upload/Choose image" />
 										<br/>
-										<?php esc_html_e('Full URL with http://', 'rss-posts-importer');?>
+										<?php esc_html_e('Full URL with http://', 'rss-pie');?>
 										<br/>
-										<?php esc_html_e('Recommended size: 1200x630px', 'rss-posts-importer'); ?>
+										<?php esc_html_e('Recommended size: 1200x630px', 'rss-pie'); ?>
 									</td>
 								</tr>
 								<tr class="fb_image_options">
-									<th scope="row"><i class="dashicons-before dashicons-rss"></i><?php esc_html_e('Add image to RSS/RSS2 feeds', 'rss-posts-importer');?></th>
+									<th scope="row"><i class="dashicons-before dashicons-rss"></i><?php esc_html_e('Add image to RSS/RSS2 feeds', 'rss-pie');?></th>
 									<td>
 										<input type="checkbox" name="fb_image_rss" id="fb_image_rss" value="1" <?php echo (intval($fb_image_rss)==1 ? ' checked="checked"' : ''); ?> onclick="showImageOptions();"/>
 										<br/>
-										<?php esc_html_e('For auto-posting apps like RSS Graffiti, twitterfeed, ...', 'rss-posts-importer');?>
+										<?php esc_html_e('For auto-posting apps like RSS Graffiti, twitterfeed, ...', 'rss-pie');?>
 									</td>
 								</tr>
 								<tr class="fb_image_options">
-									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('On posts/pages', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('On posts/pages', 'rss-pie');?>:</th>
 									<td>
 										<div>
 											1) <input type="checkbox" name="fb_image_use_specific" id="fb_image_use_specific" value="1" <?php echo (intval($fb_image_use_specific)==1 ? ' checked="checked"' : ''); ?>/>
-											<?php esc_html_e('Image will be fetched from the specific "Open Graph Image" custom field on the post', 'rss-posts-importer');?>
+											<?php esc_html_e('Image will be fetched from the specific "Open Graph Image" custom field on the post', 'rss-pie');?>
 										</div>
 										<div>
 											2) <input type="checkbox" name="fb_image_use_featured" id="fb_image_use_featured" value="1" <?php echo (intval($fb_image_use_featured)==1 ? ' checked="checked"' : ''); ?>/>
-											<?php esc_html_e('If it\'s not set, image will be fetched from post/page featured/thumbnail picture', 'rss-posts-importer');?>
+											<?php esc_html_e('If it\'s not set, image will be fetched from post/page featured/thumbnail picture', 'rss-pie');?>
 										</div>
 										<div>
 											3) <input type="checkbox" name="fb_image_use_content" id="fb_image_use_content" value="1" <?php echo (intval($fb_image_use_content)==1 ? ' checked="checked"' : ''); ?>/>
-											<?php esc_html_e('If it doesn\'t exist, use the first image from the post/page content', 'rss-posts-importer');?>
+											<?php esc_html_e('If it doesn\'t exist, use the first image from the post/page content', 'rss-pie');?>
 										</div>
 										<div>
 											4) <input type="checkbox" name="fb_image_use_media" id="fb_image_use_media" value="1" <?php echo (intval($fb_image_use_media)==1 ? ' checked="checked"' : ''); ?>/>
-											<?php esc_html_e('If it doesn\'t exist, use first image from the post/page media gallery', 'rss-posts-importer');?>
+											<?php esc_html_e('If it doesn\'t exist, use first image from the post/page media gallery', 'rss-pie');?>
 										</div>
 										<div>
 											5) <input type="checkbox" name="fb_image_use_default" id="fb_image_use_default" value="1" <?php echo (intval($fb_image_use_default)==1 ? ' checked="checked"' : ''); ?>/>
-											<?php esc_html_e('If it doesn\'t exist, use the default image above', 'rss-posts-importer');?>
+											<?php esc_html_e('If it doesn\'t exist, use the default image above', 'rss-pie');?>
 										</div>
 									</td>
 								</tr>
@@ -600,11 +600,11 @@ extract(webdados_fb_open_graph_load_settings());
 									<td colspan="2"><hr/></td>
 								</tr>
 								<tr>
-									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Twitter Card Type', 'rss-posts-importer');?>:</th>
+									<th scope="row"><i class="dashicons-before dashicons-twitter"></i><?php esc_html_e('Twitter Card Type', 'rss-pie');?>:</th>
 									<td>
 										<select name="fb_twitter_card_type" id="fb_twitter_card_type">
-											<option value="summary"<?php if (trim($fb_twitter_card_type)=='summary') echo ' selected="selected"'; ?>><?php esc_html_e('Summary Card', 'rss-posts-importer');?></option>
-											<option value="summary_large_image"<?php if (trim($fb_twitter_card_type)=='summary_large_image') echo ' selected="selected"'; ?>><?php esc_html_e('Summary Card with Large Image', 'rss-posts-importer');?></option>
+											<option value="summary"<?php if (trim($fb_twitter_card_type)=='summary') echo ' selected="selected"'; ?>><?php esc_html_e('Summary Card', 'rss-pie');?></option>
+											<option value="summary_large_image"<?php if (trim($fb_twitter_card_type)=='summary_large_image') echo ' selected="selected"'; ?>><?php esc_html_e('Summary Card with Large Image', 'rss-pie');?></option>
 										</select>
 									</td>
 								</tr>
@@ -613,7 +613,7 @@ extract(webdados_fb_open_graph_load_settings());
 				</div>
 
 				<div id="webdados_fb_open_graph-thirdparty" class="postbox">
-					<h3 id="thirdparty"><?php esc_html_e('3rd Party Integration', 'rss-posts-importer');?></h3>
+					<h3 id="thirdparty"><?php esc_html_e('3rd Party Integration', 'rss-pie');?></h3>
 					<div class="inside">
 						<?php
 						$thirdparty=false;
@@ -624,10 +624,10 @@ extract(webdados_fb_open_graph_load_settings());
 							<hr/>
 							<a name="wpseo"></a>
 							<h4><a href="http://wordpress.org/plugins/wordpress-seo/" target="_blank">WordPress SEO by Yoast</a></h4>
-							<p><?php esc_html_e('It\'s HIGHLY recommended to go to <a href="admin.php?page=wpseo_social" target="_blank">SEO &gt; Social</a> and disable "Add Open Graph meta data", "Add Twitter card meta data" and "Add Google+ specific post meta data"', 'rss-posts-importer'); ?> <?php esc_html_e('even if you don\'t enable integration bellow. You will get duplicate tags if you don\'t do this.', 'rss-posts-importer'); ?></p>
+							<p><?php esc_html_e('It\'s HIGHLY recommended to go to <a href="admin.php?page=wpseo_social" target="_blank">SEO &gt; Social</a> and disable "Add Open Graph meta data", "Add Twitter card meta data" and "Add Google+ specific post meta data"', 'rss-pie'); ?> <?php esc_html_e('even if you don\'t enable integration bellow. You will get duplicate tags if you don\'t do this.', 'rss-pie'); ?></p>
 							<table width="100%" class="form-table">
 									<tr>
-										<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Use title, url (canonical) and description from WPSEO', 'rss-posts-importer');?></th>
+										<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Use title, url (canonical) and description from WPSEO', 'rss-pie');?></th>
 										<td>
 											<input type="checkbox" name="fb_show_wpseoyoast" id="fb_show_wpseoyoast" value="1" <?php echo (intval($fb_show_wpseoyoast)==1 ? ' checked="checked"' : ''); ?>/>
 										</td>
@@ -643,7 +643,7 @@ extract(webdados_fb_open_graph_load_settings());
 							<h4><a href="http://wordpress.org/extend/plugins/subheading/" target="_blank">SubHeading</a></h4>
 							<table width="100%" class="form-table">
 									<tr>
-										<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Add SubHeading to Post/Page title', 'rss-posts-importer');?></th>
+										<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Add SubHeading to Post/Page title', 'rss-pie');?></th>
 										<td>
 											<input type="checkbox" name="fb_show_subheading" id="fb_show_subheading" value="1" <?php echo (intval($fb_show_subheading)==1 ? ' checked="checked"' : ''); ?>/>
 										</td>
@@ -659,11 +659,11 @@ extract(webdados_fb_open_graph_load_settings());
 							<h4><a href="http://wordpress.org/extend/plugins/business-directory-plugin/" target="_blank">Business Directory Plugin</a></h4>
 							<table width="100%" class="form-table">
 									<tr>
-										<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Use BDP listing contents as OG tags', 'rss-posts-importer');?></th>
+										<th scope="row"><i class="dashicons-before dashicons-admin-site"></i><?php esc_html_e('Use BDP listing contents as OG tags', 'rss-pie');?></th>
 										<td>
 											<input type="checkbox" name="fb_show_businessdirectoryplugin" id="fb_show_businessdirectoryplugin" value="1" <?php echo (intval($fb_show_businessdirectoryplugin)==1 ? ' checked="checked"' : ''); ?>/>
 											<br/>
-											<?php esc_html_e('Setting "Include URL", "Set Canonical URL", "Include Description" and "Include Image" options above is HIGHLY recommended', 'rss-posts-importer');?>
+											<?php esc_html_e('Setting "Include URL", "Set Canonical URL", "Include Description" and "Include Image" options above is HIGHLY recommended', 'rss-pie');?>
 										</td>
 									</tr>
 								</table>
@@ -671,8 +671,8 @@ extract(webdados_fb_open_graph_load_settings());
 						}
 						if (!$thirdparty) {
 							?>
-							<p><?php esc_html_e('You don\'t have any compatible 3rd Party plugin installed/active.', 'rss-posts-importer');?></p>
-							<p><?php esc_html_e('This plugin is currently compatible with:', 'rss-posts-importer');?></p>
+							<p><?php esc_html_e('You don\'t have any compatible 3rd Party plugin installed/active.', 'rss-pie');?></p>
+							<p><?php esc_html_e('This plugin is currently compatible with:', 'rss-pie');?></p>
 							<ul>
 								<li><a href="http://wordpress.org/extend/plugins/wordpress-seo/" target="_blank">WordPress SEO by Yoast</a></li>
 								<li><a href="http://wordpress.org/extend/plugins/subheading/" target="_blank">SubHeading</a></li>
@@ -685,26 +685,26 @@ extract(webdados_fb_open_graph_load_settings());
 				</div>
 
 				<div id="webdados_fb_open_graph-advanced" class="postbox">
-					<h3 id="advanced"><?php esc_html_e('Advanced settings', 'rss-posts-importer');?></h3>
+					<h3 id="advanced"><?php esc_html_e('Advanced settings', 'rss-pie');?></h3>
 					<div class="inside">
-						<p><?php esc_html_e('Don\'t mess with this unless you know what you\'re doing', 'rss-posts-importer');?></p>
+						<p><?php esc_html_e('Don\'t mess with this unless you know what you\'re doing', 'rss-pie');?></p>
 						<table width="100%" class="form-table">
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-admin-generic"></i><?php esc_html_e('Force getimagesize on local file even if allow_url_fopen=1', 'rss-posts-importer'); ?></th>
+								<th scope="row"><i class="dashicons-before dashicons-admin-generic"></i><?php esc_html_e('Force getimagesize on local file even if allow_url_fopen=1', 'rss-pie'); ?></th>
 								<td>
 									<input type="checkbox" name="fb_adv_force_local" id="fb_adv_force_local" value="1" <?php echo (intval($fb_adv_force_local)==1 ? ' checked="checked"' : ''); ?>/>
 									<br/>
-									<?php esc_html_e('May cause problems with some multisite configurations but fix "HTTP request failed" errors', 'rss-posts-importer');?>
+									<?php esc_html_e('May cause problems with some multisite configurations but fix "HTTP request failed" errors', 'rss-pie');?>
 								</td>
 							</tr>
 							<tr>
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Try to update Facebook Open Graph Tags cache when saving the post', 'rss-posts-importer'); ?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Try to update Facebook Open Graph Tags cache when saving the post', 'rss-pie'); ?></th>
 								<td>
 									<input type="checkbox" name="fb_adv_notify_fb" id="fb_adv_notify_fb" value="1" onclick="showFBNotifyOptions();"<?php echo (intval($fb_adv_notify_fb)==1 ? ' checked="checked"' : ''); ?>/>
 								</td>
 							</tr>
 							<tr class="fb_adv_notify_fb_options">
-								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Supress Facebook Open Graph Tags cache updated notice', 'rss-posts-importer'); ?></th>
+								<th scope="row"><i class="dashicons-before dashicons-facebook-alt"></i><?php esc_html_e('Supress Facebook Open Graph Tags cache updated notice', 'rss-pie'); ?></th>
 								<td>
 									<input type="checkbox" name="fb_adv_supress_fb_notice" id="fb_adv_supress_fb_notice" value="1" <?php echo (intval($fb_adv_supress_fb_notice)==1 ? ' checked="checked"' : ''); ?>/>
 								</td>
@@ -715,7 +715,7 @@ extract(webdados_fb_open_graph_load_settings());
 				
 				<p class="submit">
 					<input type="hidden" name="action" value="save"/>
-					<input type="submit" class="button-primary" value="<?php esc_html_e('Save Changes','rss-posts-importer'); ?>" />
+					<input type="submit" class="button-primary" value="<?php esc_html_e('Save Changes','rss-pie'); ?>" />
 				</p>
 
 			</form>
@@ -723,47 +723,47 @@ extract(webdados_fb_open_graph_load_settings());
 	</div>
 	
 	<?php
-		$links[0]['text']=__('Test your URLs at Facebook URL Linter / Debugger', 'rss-posts-importer');
+		$links[0]['text']=__('Test your URLs at Facebook URL Linter / Debugger', 'rss-pie');
 		$links[0]['url']='https://developers.facebook.com/tools/debug';
 		
-		$links[5]['text']=__('Test (and request approval for) your URLs at Twitter Card validator', 'rss-posts-importer');
+		$links[5]['text']=__('Test (and request approval for) your URLs at Twitter Card validator', 'rss-pie');
 		$links[5]['url']='https://cards-dev.twitter.com/validator';
 
-		$links[10]['text']=__('About the Open Graph Protocol (on Facebook)', 'rss-posts-importer');
+		$links[10]['text']=__('About the Open Graph Protocol (on Facebook)', 'rss-pie');
 		$links[10]['url']='https://developers.facebook.com/docs/opengraph/';
 
-		$links[20]['text']=__('The Open Graph Protocol (official website)', 'rss-posts-importer');
+		$links[20]['text']=__('The Open Graph Protocol (official website)', 'rss-pie');
 		$links[20]['url']='http://ogp.me/';
 
-		$links[25]['text']=__('About Twitter Cards', 'rss-posts-importer');
+		$links[25]['text']=__('About Twitter Cards', 'rss-pie');
 		$links[25]['url']='hhttps://dev.twitter.com/cards/getting-started';
 
-		$links[30]['text']=__('Plugin official URL', 'rss-posts-importer');
+		$links[30]['text']=__('Plugin official URL', 'rss-pie');
 		$links[30]['url']='http://www.webdados.pt/produtos-e-servicos/internet/desenvolvimento-wordpress/facebook-open-graph-meta-tags-wordpress/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin';
 
-		$links[40]['text']=__('Author\'s website: Webdados', 'rss-posts-importer');
+		$links[40]['text']=__('Author\'s website: Webdados', 'rss-pie');
 		$links[40]['url']='http://www.webdados.pt/?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin';
 
-		$links[50]['text']=__('Author\'s Facebook page: Webdados', 'rss-posts-importer');
+		$links[50]['text']=__('Author\'s Facebook page: Webdados', 'rss-pie');
 		$links[50]['url']='http://www.facebook.com/Webdados';
 
-		$links[60]['text']=__('Author\'s Twitter account: @Wonderm00n<br/>(Webdados founder)', 'rss-posts-importer');
+		$links[60]['text']=__('Author\'s Twitter account: @Wonderm00n<br/>(Webdados founder)', 'rss-pie');
 		$links[60]['url']='http://twitter.com/wonderm00n';
 	?>
 	<div class="postbox-container og_right_col">
 		
 		<div id="poststuff">
 			<div id="webdados_fb_open_graph_links" class="postbox">
-				<h3 id="settings"><?php esc_html_e('Rate this plugin', 'rss-posts-importer');?></h3>
+				<h3 id="settings"><?php esc_html_e('Rate this plugin', 'rss-pie');?></h3>
 				<div class="inside">
-					<?php esc_html_e('If you like this plugin,', 'rss-posts-importer');?> <a href="http://wordpress.org/extend/plugins/wonderm00ns-simple-facebook-open-graph-tags/" target="_blank"><?php esc_html_e('please give it a high Rating', 'rss-posts-importer');?></a>.
+					<?php esc_html_e('If you like this plugin,', 'rss-pie');?> <a href="http://wordpress.org/extend/plugins/wonderm00ns-simple-facebook-open-graph-tags/" target="_blank"><?php esc_html_e('please give it a high Rating', 'rss-pie');?></a>.
 				</div>
 			</div>
 		</div>
 		
 		<div id="poststuff">
 			<div id="webdados_fb_open_graph_links" class="postbox">
-				<h3 id="settings"><?php esc_html_e('Useful links', 'rss-posts-importer');?></h3>
+				<h3 id="settings"><?php esc_html_e('Useful links', 'rss-pie');?></h3>
 				<div class="inside">
 					<ul>
 						<?php foreach($links as $link) { ?>

@@ -1,4 +1,4 @@
-=== RSS Posts Importer ===
+=== RSS Posts Importer Engine ===
 Contributors: guylouzon
 Donate link: https://github.com/guylouzon/rss-posts-importer
 Tags: rss aggregation, autoblog, rss feed, content curation, importer
@@ -9,11 +9,11 @@ Stable tag: 2025.7.01
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Rss Posts Importer is a powerful WordPress RSS Aggregator that imports full RSS posts as stand-alone articles on your blog.
+Rss Posts Importer Engine is a powerful WordPress RSS Aggregator that imports full RSS posts as stand-alone articles on your blog.
 
 == Description ==
 
-**Rss Posts Importer** allows you to syndicate, import, and display Full Text RSS and Atom feeds on your WordPress site automatically. It fetches RSS feed items and publishes them as individual posts, making content curation and aggregation seamless.
+**Rss Posts Importer Engine** allows you to syndicate, import, and display Full Text RSS and Atom feeds on your WordPress site automatically. It fetches RSS feed items and publishes them as individual posts, making content curation and aggregation seamless.
 
 Content syndication allows bloggers to share relevant content from other sources in their niche, providing value to readers with minimal manual effort.
 
@@ -29,7 +29,7 @@ Content syndication allows bloggers to share relevant content from other sources
 
 1. Upload the `rss-post-importer` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Navigate to the Rss Posts Importer menu to configure your feed sources.
+3. Navigate to the Rss Posts Importer Engine menu to configure your feed sources.
 
 
 == Change Log ==

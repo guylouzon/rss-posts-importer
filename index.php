@@ -1,16 +1,5 @@
 <?php
 
-/*
-  Plugin Name: Rss Post Importer
-  Plugin URI: https://wordpress.org/plugins/rss-posts-importer/
-  Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
-  Author: Guy Louzon
-  Version: 2025.7.01
-  Author URI: https://github.com/guylouzon/RSS-posts-importer
-  License: GPLv2 or later
-  License URI: http://www.gnu.org/licenses/gpl-2.0.html
-  Text Domain: rss-posts-importer
- */
 
 // define some constants
 if (!defined('RSS_PI_PATH')) {
@@ -65,14 +54,10 @@ include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-log.php';
 include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-featured-image.php';
 include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-parser.php';
 include_once RSS_PI_PATH . 'app/classes/helpers/rss-pi-functions.php';
-//include_once RSS_PI_PATH . 'app/classes/helpers/class-OPMLParser.php'; // OPML Parser
 
 // admin classes
 include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-admin-processor.php';
 include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-admin.php';
-//include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-export-to-csv.php';
-//include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-stats.php';
-//include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-opml.php';
 
 // Front classes
 include_once RSS_PI_PATH . 'app/classes/front/class-rss-pi-front.php';

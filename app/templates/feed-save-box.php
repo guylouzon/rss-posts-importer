@@ -9,13 +9,13 @@
             <h3 class="version">V. <?php echo esc_html($pi); ?></h3>
             <ul>
                 <li>
-                    <i class="icon-calendar"></i> <?php esc_html_e("Latest import:", 'rss-posts-importer'); ?> <strong><?php echo esc_html($latest_import); ?></strong>
+                    <i class="icon-calendar"></i> <?php esc_html_e("Latest import:", 'rss-pie'); ?> <strong><?php echo esc_html($latest_import); ?></strong>
                 </li>
-                <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php esc_html_e("View the log", 'rss-posts-importer'); ?></a></li>
+                <li><i class="icon-eye-open"></i> <a href="#" class="load-log"><?php esc_html_e("View the log", 'rss-pie'); ?></a></li>
             </ul>
         </div>
         <div id="major-publishing-actions">
-            <input class="button button-large right" type="submit" name="info_update" value="<?php esc_attr_e('Save All', 'rss-posts-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
+            <input class="button button-large right" type="submit" name="info_update" value="<?php esc_attr_e('Save All', 'rss-pie'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
         </div>
     </div>
 </div>
@@ -23,7 +23,7 @@
     <div class="rate-box">
        <h4><?php
         /* translators: 1: Number of imported posts */
-        echo esc_html(sprintf(_n('%d post imported and counting!','%d posts imported and counting!',$this->options['imports'],'rss-posts-importer'),number_format_i18n($this->options['imports'] ))); 
+        echo esc_html(sprintf(_n('%d post imported and counting!','%d posts imported and counting!',$this->options['imports'],'rss-pie'),number_format_i18n($this->options['imports'] ))); 
        ?></h4>
         <i class="icon-star"></i>
         <i class="icon-star"></i>

@@ -66,7 +66,7 @@ class rssPIAdmin {
 
     public function init_properties() {
         /* translators: 1: Prefix or empty space, 2: URL to get the Full Text RSS Key */
-        $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'rss-posts-importer');
+        $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'rss-pie');
     }
 
     private function load_options(): void {
@@ -187,7 +187,7 @@ class rssPIAdmin {
             'pluginurl' => RSS_PI_URL,
             'nonce' => wp_create_nonce('rss_pi_ajax_nonce_action'),
             'l18n' => [
-                'unsaved' => __( 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?', 'rss-posts-importer' )
+                'unsaved' => __( 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?', 'rss-pie' )
             ]
         ];
         wp_localize_script('rss-pi', 'rss_pi', $localise_args);
@@ -280,11 +280,11 @@ class rssPIAdmin {
             echo '<div id="message" class="updated">';
             
             if ( 'true' === $deleted_cache_purged ) {
-                echo '<p><strong>' . esc_html__( 'Cache for Deleted posts was purged.', 'rss-posts-importer' ) . '</strong></p>';
+                echo '<p><strong>' . esc_html__( 'Cache for Deleted posts was purged.', 'rss-pie' ) . '</strong></p>';
             }
             
             if ( $settings_updated ) {
-                echo '<p><strong>' . esc_html__( 'Settings saved.', 'rss-posts-importer' ) . '</strong></p>';
+                echo '<p><strong>' . esc_html__( 'Settings saved.', 'rss-pie' ) . '</strong></p>';
             }
             
             echo '</div>';
@@ -319,7 +319,7 @@ class rssPIAdmin {
             echo '<div id="message" class="error">';
             switch ( $message_code ) {
                 case 2:
-                    echo '<p><strong>' . esc_html__( 'Invalid API key!', 'rss-posts-importer' ) . '</strong></p>';
+                    echo '<p><strong>' . esc_html__( 'Invalid API key!', 'rss-pie' ) . '</strong></p>';
                     break;
             }
             echo '</div>';

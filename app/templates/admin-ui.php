@@ -13,7 +13,7 @@ $new_api_url_2 = $rss_post_importer->is_valid_key($this->options['settings']['fe
 $new_version = RSS_PI_VERSION;
 ?>
 
-        <h2><?php esc_html_e("Rss Post Importer Feeds and Settings", 'rss-posts-importer'); ?></h2>
+        <h2><?php esc_html_e("Rss Post Importer Feeds and Settings", 'rss-pie'); ?></h2>
 
         <div id="rss_pi_progressbar"></div>
         <div id="rss_pi_progressbar_label"></div>
