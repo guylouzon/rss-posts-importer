@@ -39,8 +39,6 @@ $new_version = RSS_PI_VERSION;
                         <?php
                         include_once RSS_PI_PATH . 'app/templates/feed-table.php';
                         include_once RSS_PI_PATH . 'app/templates/settings-table.php';
-                        // include_once RSS_PI_PATH . 'app/templates/stats.php'; // doing this via AJAX
-                        //include_once RSS_PI_PATH . 'app/templates/stats-placeholder.php';
                         ?>
                     </div>
 
