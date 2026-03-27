@@ -30,7 +30,7 @@
         <i class="icon-star"></i>
         <i class="icon-star"></i>
         <i class="icon-star"></i>
-        <p class="description"><a href="http://wordpress.org/plugins/rss-posts-importer/" target="_blank">Please support this plugin by rating it!</a></p>
+        <!--p class="description"><a href="http://wordpress.org/plugins/rss-posts-importer/" target="_blank">Please support this plugin by rating it!</a></p -->
     </div>
 <?php endif; ?>
 
@@ -47,8 +47,8 @@
         $rand_str .= $base62[wp_rand(0, 61)];
     }
     $result = $result . $rand_str;
-?>
-<a href="https://interq.link/42/6x7.php?v=webapp&channel=238" target="_blank"><img src="<?php echo esc_url(plugins_url( 'assets/img/trending_banner.png', RSS_PI_PATH )); ?>" class="rss_pi_banner_img"></a>
-<a target="_blank" href="https://interq.link/?source=rsspi'">
-    <img class="rss_pi_banner_img" src="<?php echo esc_url($banner); ?>" alt="<?php esc_attr_e('RSS Posts Importer Banner', 'rss-posts-importer'); ?>" />
+?> 
+<a href="https://interq.link/42/6x7.php?v=webapp&channel=238&source=rsspi" target="_blank"><img src="<?php echo esc_url(RSS_PI_URL . 'app/assets/img/trending_banner.png'); ?>" class="rss_pi_banner_img"></a>
+<a target="_blank" href="https://interq.link/?source=rsspi">
+    Share a story to interq -> pull your feed as rss -> add a post to your site => InterQ.link
 </a>
