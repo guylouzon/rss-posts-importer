@@ -1,5 +1,6 @@
 === RSS Posts Importer Engine ===
 Contributors: guylouzon
+Plugin Name: RSS posts importer Engine
 Donate link: https://github.com/guylouzon/rss-posts-importer
 Tags: rss aggregation, autoblog, rss feed, content curation, importer
 Requires at least: 4.9

@@ -1,5 +1,16 @@
 <?php
 
+/*
+  Plugin Name: Rss Post Importer Engine
+  Plugin URI: https://wordpress.org/plugins/rss-posts-importer/
+  Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
+  Author: Guy Louzon
+  Version: 2025.7.01
+  Author URI: https://github.com/guylouzon/RSS-posts-importer
+  License: GPLv2 or later
+  License URI: http://www.gnu.org/licenses/gpl-2.0.html
+  Text Domain: rss-pie
+ */
 
 // define some constants
 if (!defined('RSS_PI_PATH')) {
