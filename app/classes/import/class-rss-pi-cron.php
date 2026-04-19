@@ -34,7 +34,7 @@ class rssPICron {
      */
     public function import(): void {
 
-        $engine = new rssPIEngine();
+        $engine = new InterQrssPI();
         $engine->import_feed();
     }
 

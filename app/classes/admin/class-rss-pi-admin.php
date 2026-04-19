@@ -66,7 +66,7 @@ class rssPIAdmin {
 
     public function init_properties() {
         /* translators: 1: Prefix or empty space, 2: URL to get the Full Text RSS Key */
-        $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'rss-pie');
+        $this->key_prompt = __('%1$sYou need a <a href="%2$s" target="_blank">Full Text RSS Key</a> to activate this section, please <a href="%2$s" target="_blank">get one and try it free</a> for the next 14 days to see how it goes.', 'interq-rss-pi');
     }
 
     private function load_options(): void {
@@ -170,6 +170,7 @@ class rssPIAdmin {
 
         // register scripts & styles
         wp_enqueue_style('rss-pi', RSS_PI_URL . 'app/assets/css/style.css', [], RSS_PI_VERSION);
+        wp_enqueue_style('rss-pi-admin', RSS_PI_URL . 'app/assets/css/admin-settings.css', [], RSS_PI_VERSION);
 
         //wp_enqueue_style('rss-pi-jquery-ui-css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/redmond/jquery-ui.css', [], RSS_PI_VERSION);
 
@@ -179,7 +180,9 @@ class rssPIAdmin {
 
         wp_enqueue_script('modernizr', RSS_PI_URL . 'app/assets/js/modernizr.custom.32882.js', [], RSS_PI_VERSION, true);
         wp_enqueue_script('phpjs-uniqid', RSS_PI_URL . 'app/assets/js/uniqid.js', [], RSS_PI_VERSION, true);
-        wp_enqueue_script('rss-pi', RSS_PI_URL . 'app/assets/js/main.js', ['jquery'], RSS_PI_VERSION, true);
+        wp_enqueue_script('rss-pi-localise', RSS_PI_URL . 'app/assets/js/localise.js', [], RSS_PI_VERSION, true);
+        wp_enqueue_script('rss-pi', RSS_PI_URL . 'app/assets/js/main.js', ['jquery', 'rss-pi-localise'], RSS_PI_VERSION, true);
+        wp_enqueue_script('rss-pi-admin', RSS_PI_URL . 'app/assets/js/admin-settings.js', ['rss-pi'], RSS_PI_VERSION, true);
 
         // localise ajaxurl and nonce for use
         $localise_args = [
@@ -187,10 +190,36 @@ class rssPIAdmin {
             'pluginurl' => RSS_PI_URL,
             'nonce' => wp_create_nonce('rss_pi_ajax_nonce_action'),
             'l18n' => [
-                'unsaved' => __( 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?', 'rss-pie' )
+                'unsaved' => __( 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?', 'interq-rss-pi' )
             ]
         ];
         wp_localize_script('rss-pi', 'rss_pi', $localise_args);
+
+        // Add inline script for import trigger if needed
+        $import_requested = filter_input( INPUT_GET, 'import', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $settings_updated = filter_input( INPUT_GET, 'settings-updated', FILTER_VALIDATE_BOOLEAN );
+        
+        if ( $import_requested && $settings_updated ) {
+            $feed_ids = [];
+            if ( ! empty( $this->options['feeds'] ) && is_array( $this->options['feeds'] ) ) {
+                foreach ( $this->options['feeds'] as $f ) {
+                    if ( isset( $f['id'] ) ) {
+                        $feed_ids[] = $f['id'];
+                    }
+                }
+            }
+            
+            $inline_script = '(function() {
+                var feedList = ' . wp_json_encode( $feed_ids ) . ';
+                if ( typeof feeds !== "undefined" && typeof feeds.set === "function" ) {
+                    feeds.set( feedList );
+                } else {
+                    window.feeds = feedList;
+                }
+            })();';
+            
+            wp_add_inline_script('rss-pi-admin', $inline_script);
+        }
     }
 
     // add post URL to rss_pi_deleted_posts when trashing
@@ -280,38 +309,14 @@ class rssPIAdmin {
             echo '<div id="message" class="updated">';
             
             if ( 'true' === $deleted_cache_purged ) {
-                echo '<p><strong>' . esc_html__( 'Cache for Deleted posts was purged.', 'rss-pie' ) . '</strong></p>';
+                echo '<p><strong>' . esc_html__( 'Cache for Deleted posts was purged.', 'interq-rss-pi' ) . '</strong></p>';
             }
             
             if ( $settings_updated ) {
-                echo '<p><strong>' . esc_html__( 'Settings saved.', 'rss-pie' ) . '</strong></p>';
+                echo '<p><strong>' . esc_html__( 'Settings saved.', 'interq-rss-pi' ) . '</strong></p>';
             }
             
             echo '</div>';
-
-            // 2. Trigger AJAX Import Script
-            if ( $import_requested && $settings_updated ) {
-                $feed_ids = [];
-                if ( ! empty( $this->options['feeds'] ) && is_array( $this->options['feeds'] ) ) {
-                    foreach ( $this->options['feeds'] as $f ) {
-                        if ( isset( $f['id'] ) ) {
-                            $feed_ids[] = $f['id'];
-                        }
-                    }
-                }
-                ?>
-                <script type="text/javascript">
-                    (function() {
-                        var feedList = <?php echo wp_json_encode( $feed_ids ); ?>;
-                        if ( typeof feeds !== 'undefined' && typeof feeds.set === 'function' ) {
-                            feeds.set( feedList );
-                        } else {
-                            window.feeds = feedList;
-                        }
-                    })();
-                </script>
-                <?php
-            }
         }
 
         // 3. Error Messages
@@ -319,7 +324,7 @@ class rssPIAdmin {
             echo '<div id="message" class="error">';
             switch ( $message_code ) {
                 case 2:
-                    echo '<p><strong>' . esc_html__( 'Invalid API key!', 'rss-pie' ) . '</strong></p>';
+                    echo '<p><strong>' . esc_html__( 'Invalid API key!', 'interq-rss-pi' ) . '</strong></p>';
                     break;
             }
             echo '</div>';
@@ -446,7 +451,7 @@ class rssPIAdmin {
 
         $f = $this->options['feeds'][$_found];
 
-        $engine = new rssPIEngine();
+        $engine = new InterQrssPI();
 
         // filter cache lifetime
         add_filter('wp_feed_cache_transient_lifetime', [$engine, 'frequency']);

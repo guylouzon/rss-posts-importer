@@ -5,7 +5,7 @@
  *
  * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
-class rssPIEngine {
+class InterQrssPI {
 
     /**
      * Whether the API key is valid
