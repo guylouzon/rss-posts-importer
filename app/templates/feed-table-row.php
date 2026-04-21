@@ -79,16 +79,16 @@ if ($ajax_add || !$ajax_edit):
         <div class="row-options">
             <?php
             if (isset($f['feed_status'])): ?>
-            <a href="#" id="edit_btn_<?php echo esc_html( $f['id'] ); ?>" class="edit_<?php echo esc_html( $f['id'] ); ?> toggle-edit" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Edit', 'rss-pie'); ?></a> |
+            <a href="#" id="edit_btn_<?php echo esc_html( $f['id'] ); ?>" class="edit_<?php echo esc_html( $f['id'] ); ?> toggle-edit" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Edit', 'interq-rss-pi'); ?></a> |
             <?php
             endif;
             ?>
-            <a href="#" class="delete-row" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Delete', 'rss-pie'); ?></a>
+            <a href="#" class="delete-row" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Delete', 'interq-rss-pi'); ?></a>
             <?php
             if (isset($f['feed_status']) && $f['feed_status'] == "active") { ?>
-            | <a href="#" class="status-row" data-action="pause" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Pause', 'rss-pie'); ?></a>
+            | <a href="#" class="status-row" data-action="pause" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Pause', 'interq-rss-pi'); ?></a>
             <?php } elseif (isset($f['feed_status']) && $f['feed_status'] == "pause") { ?>
-            | <a href="#" class="status-row" data-action="enable" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Enable Feed', 'rss-pie'); ?></a>
+            | <a href="#" class="status-row" data-action="enable" data-target="<?php echo esc_html( $f['id'] ); ?>"><?php esc_html_e('Enable Feed', 'interq-rss-pi'); ?></a>
             <?php } ?>
         </div>
     </td>
@@ -107,64 +107,64 @@ if ($ajax_add || $ajax_edit):
     <td colspan="4">
         <table class="widefat edit-table">
             <tr>
-                <td><label for="<?php echo esc_html( $f['id'] ); ?>-name"><?php esc_html_e("Feed name", 'rss-pie'); ?></label></td>
+                <td><label for="<?php echo esc_html( $f['id'] ); ?>-name"><?php esc_html_e("Feed name", 'interq-rss-pi'); ?></label></td>
                 <td>
                     <input type="text" class="field-name" name="<?php echo esc_html( $f['id'] ); ?>-name" id="<?php echo esc_html( $f['id'] ); ?>-name" value="<?php echo esc_attr(stripslashes($f['name'])); ?>" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo esc_html( $f['id'] ); ?>-url"><?php esc_html_e("Feed url", 'rss-pie'); ?></label>
+                    <label for="<?php echo esc_html( $f['id'] ); ?>-url"><?php esc_html_e("Feed url", 'interq-rss-pi'); ?></label>
                     <p class="description">e.g. "http://news.google.com/?output=rss"</p>
                 </td>
                 <td><input type="text" class="field-url" name="<?php echo esc_html( $f['id'] ); ?>-url" id="<?php echo esc_html( $f['id'] ); ?>-url" value="<?php echo esc_attr(stripslashes($f['url'])); ?>" /></td>
             </tr>
             <tr>
-                <td><label for="<?php echo esc_html( $f['id'] ); ?>-max_posts"><?php esc_html_e("Max posts / import", 'rss-pie'); ?></label></td>
+                <td><label for="<?php echo esc_html( $f['id'] ); ?>-max_posts"><?php esc_html_e("Max posts / import", 'interq-rss-pi'); ?></label></td>
                 <td><input type="number" class="field-max_posts" name="<?php echo esc_html( $f['id'] ); ?>-max_posts" id="<?php echo esc_html( $f['id'] ); ?>-max_posts" value="<?php echo esc_html($f['max_posts']); ?>" min="1" max="1000" /></td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound"><?php esc_html_e('Nofollow option for all outbound links?', "rss-pie"); ?></label>
-                    <p class="description"><?php esc_html_e('Add rel="nofollow" to all outbounded links.', "rss-pie"); ?></p>
+                    <label for="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound"><?php esc_html_e('Nofollow option for all outbound links?', "interq-rss-pi"); ?></label>
+                    <p class="description"><?php esc_html_e('Add rel="nofollow" to all outbounded links.', "interq-rss-pi"); ?></p>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound_true" name="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound" value="true" <?php echo($f['nofollow_outbound'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound_true" name="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound" value="true" <?php echo($f['nofollow_outbound'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'interq-rss-pi'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound_false" name="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound" value="false" <?php echo($f['nofollow_outbound'] == 'false' || $f['nofollow_outbound'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound_false" name="<?php echo esc_html( $f['id'] ); ?>-nofollow_outbound" value="false" <?php echo($f['nofollow_outbound'] == 'false' || $f['nofollow_outbound'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'interq-rss-pi'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo esc_html( $f['id'] ); ?>-canonical_urls"><?php esc_html_e('SEO canonical URLs', "rss-pie"); ?></label>
+                    <label for="<?php echo esc_html( $f['id'] ); ?>-canonical_urls"><?php esc_html_e('SEO canonical URLs', "interq-rss-pi"); ?></label>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-canonical_urls_myblog" name="<?php echo esc_html( $f['id'] ); ?>-canonical_urls" value="my_blog" <?php echo($f['canonical_urls'] == 'my_blog' || $f['canonical_urls'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('My Blog URLs', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-canonical_urls_myblog" name="<?php echo esc_html( $f['id'] ); ?>-canonical_urls" value="my_blog" <?php echo($f['canonical_urls'] == 'my_blog' || $f['canonical_urls'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('My Blog URLs', 'interq-rss-pi'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-canonical_urls_sourceblog" name="<?php echo esc_html( $f['id'] ); ?>-canonical_urls" value="source_blog" <?php echo($f['canonical_urls'] == 'source_blog' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Source Blog URLs', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-canonical_urls_sourceblog" name="<?php echo esc_html( $f['id'] ); ?>-canonical_urls" value="source_blog" <?php echo($f['canonical_urls'] == 'source_blog' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Source Blog URLs', 'interq-rss-pi'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author"><?php esc_html_e('Automatic import of Authors', "rss-pie"); ?></label>
+                    <label for="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author"><?php esc_html_e('Automatic import of Authors', "interq-rss-pi"); ?></label>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author_true" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author" value="true" <?php echo($f['automatic_import_author'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author_true" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author" value="true" <?php echo($f['automatic_import_author'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'interq-rss-pi'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author_false" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author" value="false" <?php echo($f['automatic_import_author'] == 'false' || $f['automatic_import_author'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author_false" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_author" value="false" <?php echo($f['automatic_import_author'] == 'false' || $f['automatic_import_author'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'interq-rss-pi'); ?></label>
                         </li>
                     </ul>
                 </td>
@@ -172,21 +172,21 @@ if ($ajax_add || $ajax_edit):
   
             <tr>
                 <td>
-                    <label for="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories"><?php esc_html_e('Automatic import of Categories', "rss-pie"); ?></label>
+                    <label for="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories"><?php esc_html_e('Automatic import of Categories', "interq-rss-pi"); ?></label>
                 </td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories_true" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories" value="true" <?php echo($f['automatic_import_categories'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories_true" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories" value="true" <?php echo($f['automatic_import_categories'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'interq-rss-pi'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories_false" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories" value="false" <?php echo($f['automatic_import_categories'] == 'false' || $f['automatic_import_categories'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories_false" name="<?php echo esc_html( $f['id'] ); ?>-automatic_import_categories" value="false" <?php echo($f['automatic_import_categories'] == 'false' || $f['automatic_import_categories'] == '' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'interq-rss-pi'); ?></label>
                         </li>
                     </ul>
                 </td>
             </tr>
             <tr>
-                <td><label for=""><?php esc_html_e("Category", 'rss-pie'); ?></label></td>
+                <td><label for=""><?php esc_html_e("Category", 'interq-rss-pi'); ?></label></td>
                 <td>
                     <?php
                     $rss_post_pi_admin = new rssPIAdmin();
@@ -215,7 +215,7 @@ if ($ajax_add || $ajax_edit):
                 </td>
             </tr>
             <tr>
-                <td><label for=""><?php esc_html_e("Tags", 'rss-pie'); ?></label></td>
+                <td><label for=""><?php esc_html_e("Tags", 'interq-rss-pi'); ?></label></td>
                 <td>
                     <div class="tags_container">
                         <?php
@@ -225,14 +225,14 @@ if ($ajax_add || $ajax_edit):
                 </td>
             </tr>
             <tr>
-                <td><label for=""><?php esc_html_e("Strip html tags", 'rss-pie'); ?></label></td>
+                <td><label for=""><?php esc_html_e("Strip html tags", 'interq-rss-pi'); ?></label></td>
                 <td>
                     <ul class="radiolist">
                         <li>
-                            <label><input type="radio" id="<?php echo esc_attr( $f['id'] ); ?>-strip_html" name="<?php echo esc_attr( $f['id'] ); ?>-strip_html" value="true" <?php echo($f['strip_html'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_attr( $f['id'] ); ?>-strip_html" name="<?php echo esc_attr( $f['id'] ); ?>-strip_html" value="true" <?php echo($f['strip_html'] == 'true' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('Yes', 'interq-rss-pi'); ?></label>
                         </li>
                         <li>
-                            <label><input type="radio" id="<?php echo esc_attr( $f['id'] ); ?>-strip_html" name="<?php echo esc_attr( $f['id'] ); ?>-strip_html" value="false" <?php echo($f['strip_html'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'rss-pie'); ?></label>
+                            <label><input type="radio" id="<?php echo esc_attr( $f['id'] ); ?>-strip_html" name="<?php echo esc_attr( $f['id'] ); ?>-strip_html" value="false" <?php echo($f['strip_html'] == 'false' ? 'checked="checked"' : ''); ?> /> <?php esc_html_e('No', 'interq-rss-pi'); ?></label>
                         </li>
                     </ul>
                 </td>

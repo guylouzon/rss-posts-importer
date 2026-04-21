@@ -1,4 +1,4 @@
-# RSS posts importer Engine - 2026 updated
+# InterQ Rss Posts Importer - 2026 updated
 
 ![RSS Post Importer Logo](rss-pi-small.png)
 
