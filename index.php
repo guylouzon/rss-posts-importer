@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Plugin Name: Rss Post Importer Engine
+  Plugin Name: InterQ InterQ Rss Posts Importer
   Plugin URI: https://wordpress.org/plugins/rss-posts-importer/
   Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
   Author: Guy Louzon
@@ -9,7 +9,7 @@
   Author URI: https://github.com/guylouzon/RSS-posts-importer
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
-  Text Domain: rss-pie
+  Text Domain: interq-rss-pi
  */
 
 // define some constants
