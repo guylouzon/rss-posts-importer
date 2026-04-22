@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <div class="wrap">
 	<h2><?php esc_html_e("Rss Post Importer Log", 'interq-rss-pi'); ?></h2>
 	<div id="poststuff">

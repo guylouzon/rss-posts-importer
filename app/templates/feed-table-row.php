@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if (!isset($ajax_add)) {
     $ajax_add = false;
 }

@@ -3,7 +3,9 @@
  * Settings Table Template for InterQ Rss Posts Importer
  * Ensures compliance with WordPress.org security and translation standards.
  */
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 ?>
+
 
 <button type="button" class="rsspi_settings_control_button button button-primary" id="toggle-rsspi-settings-table">
     <?php esc_html_e('Settings', 'interq-rss-pi'); ?>

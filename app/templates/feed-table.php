@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <table class="widefat rss_pi-table" id="rss_pi-feed-table">
 	<thead>
 		<tr>

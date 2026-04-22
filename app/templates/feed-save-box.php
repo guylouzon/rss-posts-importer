@@ -1,4 +1,5 @@
 <?php
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     $pi = RSS_PI_VERSION;
     $latest_import = $this->options['latest_import'] ?? 'never';
     $banner = esc_url(plugins_url( 'assets/img/iq_rss_pi_banner.jpg', __FILE__ ));

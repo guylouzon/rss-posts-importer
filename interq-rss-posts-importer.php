@@ -1,8 +1,8 @@
 <?php
 
 /*
-  Plugin Name: InterQ InterQ Rss Posts Importer
-  Plugin URI: https://wordpress.org/plugins/rss-posts-importer/
+  Plugin Name: InterQ Rss Posts Importer
+  Plugin URI: https://wordpress.org/plugins/interq-rss-posts-importer/
   Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
   Author: Guy Louzon
   Version: 2025.7.01
@@ -11,6 +11,8 @@
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
   Text Domain: interq-rss-pi
  */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // define some constants
 if (!defined('RSS_PI_PATH')) {
