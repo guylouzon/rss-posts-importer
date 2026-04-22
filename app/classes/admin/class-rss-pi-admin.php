@@ -152,7 +152,7 @@ class rssPIAdmin {
      * Add to admin menu
      */
     public function admin_menu(): void {
-        add_options_page('Rss Post Importer', 'Rss Post Importer', 'manage_options','rss_pi', [$this, 'screen']);
+        add_options_page('InterQ Rss Post Importer', 'InterQ Rss Post Importer', 'manage_options','rss_pi', [$this, 'screen']);
     }
 
     /**

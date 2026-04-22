@@ -49,28 +49,13 @@ class rssPostImporter {
 
         $settings = [];
         $valid_api_key = '';
-        // if (isset($_POST['feeds_api_key'])) {
-        //     $settings = [
-        //         'feeds_api_key' => sanitize_key($_POST['feeds_api_key'])
-        //     ];
-
-        //     // check if submitted api key is valid
-        //     $valid_api_key = $this->is_valid_key($settings['feeds_api_key']);
-        // }
-
-        // determine the API type
-        $api_type = $valid_api_key == '' ? 'normal' : 'premium';
 
         // setup this plugin options page link
         $this->page_link = admin_url(
-            'options-general.php?page=rss_pi&version=' . RSS_PI_VERSION .
-            '&type=' . $api_type
+            'options-general.php?page=rss_pi&version=' . RSS_PI_VERSION
         );
 
-        // hook translations
-        //add_action( 'init', [ $this, 'load_textdomain' ] );
         add_action( 'init', [ $this, 'load_textdomain' ], 0 );
-
 
         add_filter(
             'plugin_action_links_' . RSS_PI_BASENAME,
