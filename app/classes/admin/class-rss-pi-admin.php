@@ -180,6 +180,14 @@ class rssPIAdmin {
         wp_enqueue_script('modernizr', RSS_PI_URL . 'app/assets/js/modernizr.custom.32882.js', [], RSS_PI_VERSION, true);
         wp_enqueue_script('phpjs-uniqid', RSS_PI_URL . 'app/assets/js/uniqid.js', [], RSS_PI_VERSION, true);
         wp_enqueue_script('rss-pi', RSS_PI_URL . 'app/assets/js/main.js', ['jquery'], RSS_PI_VERSION, true);
+        wp_enqueue_script('rss-pi-admin', RSS_PI_URL . 'app/assets/js/rsspiadmin.js', ['jquery'], RSS_PI_VERSION, true);
+        wp_register_script(
+                'rss-pi-import-trigger', 
+                RSS_PI_URL . 'app/assets/js/admin-import.js', 
+                ['rss-pi'], 
+                RSS_PI_VERSION, 
+                true
+            );
 
         // localise ajaxurl and nonce for use
         $localise_args = [
@@ -299,19 +307,13 @@ class rssPIAdmin {
                         }
                     }
                 }
-                ?>
-                <script type="text/javascript">
-                    (function() {
-                        var feedList = <?php echo wp_json_encode( $feed_ids ); ?>;
-                        if ( typeof feeds !== 'undefined' && typeof feeds.set === 'function' ) {
-                            feeds.set( feedList );
-                        } else {
-                            window.feeds = feedList;
-                        }
-                    })();
-                </script>
-                <?php
+            // Pass data and Enqueue the script only now
+                wp_localize_script('rss-pi-import-trigger', 'rss_pi_import_data', [
+                    'feed_ids' => $feed_ids
+                ]);
+                wp_enqueue_script('rss-pi-import-trigger');
             }
+
         }
 
         // 3. Error Messages
