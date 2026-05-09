@@ -115,7 +115,7 @@ if ($ajax_add || $ajax_edit):
             <tr>
                 <td>
                     <label for="<?php echo esc_html( $f['id'] ); ?>-url"><?php esc_html_e("Feed url", 'interq-rss-pi'); ?></label>
-                    <p class="description">e.g. "http://news.google.com/?output=rss"</p>
+                    <p class="description">e.g. "https://interq.link/42/6x7.php?v=rss&channel=238"</p>
                 </td>
                 <td><input type="text" class="field-url" name="<?php echo esc_html( $f['id'] ); ?>-url" id="<?php echo esc_html( $f['id'] ); ?>-url" value="<?php echo esc_attr(stripslashes($f['url'])); ?>" /></td>
             </tr>

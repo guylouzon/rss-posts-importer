@@ -145,21 +145,21 @@ class rssPIAdminProcessor {
             $frequency = "minutes_" . $rss_custom_frequency;
             $custom_frequency = 'true';
             // Adding option for custom cron
-            $rss_custom_cron_frequency = serialize(
+            $rsspi_custom_cron_frequency = serialize(
                 [
                     'time' => $rss_custom_frequency,
                     'frequency' => $frequency
                 ]
             );
 
-            delete_option('rss_custom_cron_frequency');
-            add_option('rss_custom_cron_frequency', $rss_custom_cron_frequency);
+            delete_option('rsspi_custom_cron_frequency');
+            add_option('rsspi_custom_cron_frequency', $rsspi_custom_cron_frequency);
         } else {
             $frequency = isset( $_POST['frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['frequency'] ) ) : '';
             $custom_frequency = 'false';
 
             // Delete custom cron if not exists
-            delete_option('rss_custom_cron_frequency');
+            delete_option('rsspi_custom_cron_frequency');
         }
 
         $settings = [

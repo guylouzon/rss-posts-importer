@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                             <td>
                                 <?php
                                 $schedules = wp_get_schedules();
-                                $custom_cron_options = get_option('rss_custom_cron_frequency', []);
+                                $custom_cron_options = get_option('rsspi_custom_cron_frequency', []);
                                 
                                 // Clean up serialization logic
                                 if (!empty($custom_cron_options) && is_string($custom_cron_options)) {

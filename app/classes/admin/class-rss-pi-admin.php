@@ -238,7 +238,7 @@ class rssPIAdmin {
 
         // min in sec
         $rss_min = 60;
-        $custom_cron_options = get_option('rss_custom_cron_frequency', []);
+        $custom_cron_options = get_option('rsspi_custom_cron_frequency', []);
         if(! empty($custom_cron_options)) {
             $rss_custom_cron    = @unserialize($custom_cron_options);
             if (is_array($rss_custom_cron) && isset($rss_custom_cron['frequency'], $rss_custom_cron['time'])) {

@@ -5,12 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RSS Post Importer Admin UI</title>
+    <title>InterQ RSS Post Importer Admin UI</title>
 </head>
 <body>
     <div class="wrap">
         <div id="main_ui">
-            <h2>RSS Post Importer Feeds and Settings</h2>
+            <h2>InterQ RSS Post Importer Feeds and Settings</h2>
 
             <div id="rss_pi_progressbar"></div>
             <div id="rss_pi_progressbar_label"></div>
