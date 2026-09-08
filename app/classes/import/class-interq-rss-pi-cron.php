@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
-class rssPICron {
+class InterQ_Rss_Pi_Cron {
 
     /**
      * Initialise
@@ -15,7 +15,7 @@ class rssPICron {
         // hook up scheduled events
         add_action('wp', [$this, 'schedule']);
 
-        add_action('rss_pi_cron', [$this, 'import']);
+        add_action('interq_rss_pi_cron', [$this, 'import']);
     }
 
     /**
@@ -23,8 +23,8 @@ class rssPICron {
      */
     public function schedule(): void {
 
-        if (!wp_next_scheduled('rss_pi_cron')) {
-            wp_schedule_event(time(), 'hourly', 'rss_pi_cron');
+        if (!wp_next_scheduled('interq_rss_pi_cron')) {
+            wp_schedule_event(time(), 'hourly', 'interq_rss_pi_cron');
         }
     }
 
@@ -34,7 +34,7 @@ class rssPICron {
      */
     public function import(): void {
 
-        $engine = new rssPIEngine();
+        $engine = new InterQ_Rss_Pi_Engine();
         $engine->import_feed();
     }
 

@@ -5,12 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
-class rssPIParser {
+class InterQ_Rss_Pi_Parser {
 
     /**
      * Parse content
      * 
-     * @global object $rss_post_importer
+     * @global object $interq_rss_post_importer
      * @param object $item Feed item
      * @param string $feed_title Feed title
      * @param string $strip_html whether to strip html tags
@@ -18,15 +18,15 @@ class rssPIParser {
      */
     public function _parse($item, string $feed_title, string $strip_html): string {
 
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
 
         // get the saved template
-        $post_template = $rss_post_importer->options['settings']['post_template'];
+        $post_template = $interq_rss_post_importer->options['settings']['post_template'];
 
         // get the content
         $c = $item->get_description() != "" ? $item->get_description() : $item->get_content();
 
-        $c = apply_filters('pre_rss_pi_parse_content', $c);
+        $c = apply_filters('interq_rss_pi_pre_parse_content', $c);
 
         $c = $this->escape_backreference($c);
 
@@ -51,7 +51,7 @@ class rssPIParser {
             $parsed_content
         );
 
-        $parsed_content = apply_filters('after_rss_pi_parse_content', $parsed_content);
+        $parsed_content = apply_filters('interq_rss_pi_after_parse_content', $parsed_content);
 
         return $parsed_content;
     }

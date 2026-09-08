@@ -6,7 +6,7 @@ Tags: rss aggregation, autoblog, rss feed, content curation, importer
 Requires at least: 4.9
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2025.7.01
+Stable tag: 2026.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,13 @@ Content syndication allows bloggers to share relevant content from other sources
 
 
 == Change Log ==
+
+= 2026.9.1 =
+* WordPress.org review compliance: all classes, options, hooks, AJAX actions and nonces now use the unique interq_rss_pi_ prefix, with automatic migration of existing settings and the old cron hook.
+* Removed the FeedsAPI full-text integration: no external service is called anymore and keyword filtering works locally for all users.
+* Log directory moved from wp-content/rsspi-log to the uploads folder; removed the raw POST debug log write.
+* Text domain now matches the plugin slug (interq-rss-posts-importer); translation files renamed accordingly.
+* Removed inline styles and unused template files.
 
 = 2025.7.01 =
 * Refresh: Full compatibility update for PHP 8.2+ and PHP 8.3.

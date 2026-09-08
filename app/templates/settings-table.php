@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
 <button type="button" class="rsspi_settings_control_button button button-primary" id="toggle-rsspi-settings-table">
-    <?php esc_html_e('Settings', 'interq-rss-pi'); ?>
+    <?php esc_html_e('Settings', 'interq-rss-posts-importer'); ?>
     <span class="dashicons dashicons-arrow-down settings-table-wrapper" aria-hidden="true"></span>
 </button>
 
@@ -22,14 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                     <table class="widefat edit-table">
                         <tr>
                             <td>
-                                <label for="frequency"><?php esc_html_e('Frequency', 'interq-rss-pi'); ?></label>
-                                <p class="description"><?php esc_html_e('How often will the import run.', 'interq-rss-pi'); ?></p>
-                                <p class="description"><?php esc_html_e('Custom Frequency in minutes only.', 'interq-rss-pi'); ?></p>
+                                <label for="frequency"><?php esc_html_e('Frequency', 'interq-rss-posts-importer'); ?></label>
+                                <p class="description"><?php esc_html_e('How often will the import run.', 'interq-rss-posts-importer'); ?></p>
+                                <p class="description"><?php esc_html_e('Custom Frequency in minutes only.', 'interq-rss-posts-importer'); ?></p>
                             </td>
                             <td>
                                 <?php
                                 $schedules = wp_get_schedules();
-                                $custom_cron_options = get_option('rsspi_custom_cron_frequency', []);
+                                $custom_cron_options = get_option('interq_rss_pi_custom_cron_frequency', []);
                                 
                                 // Clean up serialization logic
                                 if (!empty($custom_cron_options) && is_string($custom_cron_options)) {
@@ -56,14 +56,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                                     ?>
 
                                     <option value="custom_frequency" <?php selected(($this->options['settings']['custom_frequency'] ?? ''), 'true'); ?>>
-                                        <?php esc_html_e('Custom frequency', 'interq-rss-pi'); ?>
+                                        <?php esc_html_e('Custom frequency', 'interq-rss-posts-importer'); ?>
                                     </option>
                                 </select>
                                 &nbsp;
 
                                 <input type="text" id="rss_custom_frequency" name="rss_custom_frequency" 
                                     value="<?php echo esc_attr($rss_custom_cron['time'] ?? ''); ?>" 
-                                    placeholder="<?php esc_attr_e('Minutes', 'interq-rss-pi'); ?>"
+                                    placeholder="<?php esc_attr_e('Minutes', 'interq-rss-posts-importer'); ?>"
                                     style="display: <?php echo (isset($this->options['settings']['custom_frequency']) && $this->options['settings']['custom_frequency'] == 'true') ? 'inline' : 'none'; ?>;" 
                                 />
                             </td>
@@ -71,17 +71,17 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <label for="post_template"><?php esc_html_e('Template', 'interq-rss-pi'); ?></label>
-                                <p class="description"><?php esc_html_e('This is how the post will be formatted.', 'interq-rss-pi'); ?></p>
+                                <label for="post_template"><?php esc_html_e('Template', 'interq-rss-posts-importer'); ?></label>
+                                <p class="description"><?php esc_html_e('This is how the post will be formatted.', 'interq-rss-posts-importer'); ?></p>
                                 <div class="description">
-                                    <?php esc_html_e('Available tags:', 'interq-rss-pi'); ?>
+                                    <?php esc_html_e('Available tags:', 'interq-rss-posts-importer'); ?>
                                     <dl>
                                         <dt><code>{$content}</code></dt>
                                         <dt><code>{$permalink}</code></dt>
                                         <dt><code>{$title}</code></dt>
                                         <dt><code>{$feed_title}</code></dt>
                                         <dt><code>{$excerpt:n}</code></dt>
-                                        <dt><code>{$inline_image}</code> <small><?php esc_html_e('insert the featured image inline into the post content', 'interq-rss-pi'); ?></small></dt>
+                                        <dt><code>{$inline_image}</code> <small><?php esc_html_e('insert the featured image inline into the post content', 'interq-rss-posts-importer'); ?></small></dt>
                                     </dl>
                                 </div>
                             </td>
@@ -96,7 +96,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                         </tr>
 
                         <tr>
-                            <td><label for="post_status"><?php esc_html_e('Post status', 'interq-rss-pi'); ?></label></td>
+                            <td><label for="post_status"><?php esc_html_e('Post status', 'interq-rss-posts-importer'); ?></label></td>
                             <td>
                                 <select name="post_status" id="post_status">
                                     <?php
@@ -112,7 +112,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                         </tr>
 
                         <tr>
-                            <td><?php esc_html_e('Author', 'interq-rss-pi'); ?></td>
+                            <td><?php esc_html_e('Author', 'interq-rss-posts-importer'); ?></td>
                             <td>
                                 <?php
                                 wp_dropdown_users(array(
@@ -125,19 +125,19 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                         </tr>
 
                         <tr>
-                            <td><?php esc_html_e('Allow comments', 'interq-rss-pi'); ?></td>
+                            <td><?php esc_html_e('Allow comments', 'interq-rss-posts-importer'); ?></td>
                             <td>
                                 <ul class="radiolist">
                                     <li>
                                         <label>
                                             <input type="radio" id="allow_comments_open" name="allow_comments" value="open" <?php checked($this->options['settings']['allow_comments'], 'open'); ?> /> 
-                                            <?php esc_html_e('Yes', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Yes', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="radio" id="allow_comments_false" name="allow_comments" value="false" <?php checked($this->options['settings']['allow_comments'], 'false'); ?> /> 
-                                            <?php esc_html_e('No', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('No', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>
@@ -146,21 +146,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <?php esc_html_e('Block search indexing?', 'interq-rss-pi'); ?>
-                                <p class="description"><?php esc_html_e('Prevent your content from appearing in search results.', 'interq-rss-pi'); ?></p>
+                                <?php esc_html_e('Block search indexing?', 'interq-rss-posts-importer'); ?>
+                                <p class="description"><?php esc_html_e('Prevent your content from appearing in search results.', 'interq-rss-posts-importer'); ?></p>
                             </td>
                             <td>
                                 <ul class="radiolist">
                                     <li>
                                         <label>
                                             <input type="radio" id="block_indexing_true" name="block_indexing" value="true" <?php checked($this->options['settings']['block_indexing'], 'true'); ?> /> 
-                                            <?php esc_html_e('Yes', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Yes', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="radio" id="block_indexing_false" name="block_indexing" value="false" <?php checked(empty($this->options['settings']['block_indexing']) || $this->options['settings']['block_indexing'] === 'false'); ?> /> 
-                                            <?php esc_html_e('No', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('No', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>
@@ -169,21 +169,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <?php esc_html_e('Nofollow option for all outbound links?', 'interq-rss-pi'); ?>
-                                <p class="description"><?php esc_html_e('Add rel="nofollow" to all outbound links.', 'interq-rss-pi'); ?></p>
+                                <?php esc_html_e('Nofollow option for all outbound links?', 'interq-rss-posts-importer'); ?>
+                                <p class="description"><?php esc_html_e('Add rel="nofollow" to all outbound links.', 'interq-rss-posts-importer'); ?></p>
                             </td>
                             <td>
                                 <ul class="radiolist">
                                     <li>
                                         <label>
                                             <input type="radio" id="nofollow_outbound_true" name="nofollow_outbound" value="true" <?php checked($this->options['settings']['nofollow_outbound'], 'true'); ?> /> 
-                                            <?php esc_html_e('Yes', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Yes', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="radio" id="nofollow_outbound_false" name="nofollow_outbound" value="false" <?php checked(empty($this->options['settings']['nofollow_outbound']) || $this->options['settings']['nofollow_outbound'] === 'false'); ?> /> 
-                                            <?php esc_html_e('No', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('No', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>
@@ -192,12 +192,12 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <?php esc_html_e('Enable logging?', 'interq-rss-pi'); ?>
+                                <?php esc_html_e('Enable logging?', 'interq-rss-posts-importer'); ?>
                                 <p class="description">
                                     <?php 
                                     printf(
                                         /* translators: %s: opening and closing anchor tags */
-                                        esc_html__( 'The logfile can be found %1$shere%2$s.', 'interq-rss-pi' ),
+                                        esc_html__( 'The logfile can be found %1$shere%2$s.', 'interq-rss-posts-importer' ),
                                         '<a href="#" class="load-log">',
                                         '</a>'
                                     ); 
@@ -209,13 +209,13 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                                     <li>
                                         <label>
                                             <input type="radio" id="enable_logging_true" name="enable_logging" value="true" <?php checked($this->options['settings']['enable_logging'], 'true'); ?> /> 
-                                            <?php esc_html_e('Yes', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Yes', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="radio" id="enable_logging_false" name="enable_logging" value="false" <?php checked(empty($this->options['settings']['enable_logging']) || $this->options['settings']['enable_logging'] === 'false'); ?> /> 
-                                            <?php esc_html_e('No', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('No', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>
@@ -224,21 +224,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <?php esc_html_e('Download and save images locally?', 'interq-rss-pi'); ?>
-                                <p class="description"><?php esc_html_e('Images in the feeds will be downloaded and saved in the WordPress media.', 'interq-rss-pi'); ?></p>
+                                <?php esc_html_e('Download and save images locally?', 'interq-rss-posts-importer'); ?>
+                                <p class="description"><?php esc_html_e('Images in the feeds will be downloaded and saved in the WordPress media.', 'interq-rss-posts-importer'); ?></p>
                             </td>
                             <td>
                                 <ul class="radiolist">
                                     <li>
                                         <label>
                                             <input type="radio" id="import_images_locally_true" name="import_images_locally" value="true" <?php checked($this->options['settings']['import_images_locally'], 'true'); ?> /> 
-                                            <?php esc_html_e('Yes', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Yes', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="radio" id="import_images_locally_false" name="import_images_locally" value="false" <?php checked(empty($this->options['settings']['import_images_locally']) || $this->options['settings']['import_images_locally'] === 'false'); ?> /> 
-                                            <?php esc_html_e('No', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('No', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>
@@ -247,21 +247,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <?php esc_html_e('Disable the featured image?', 'interq-rss-pi'); ?>
-                                <p class="description"><?php esc_html_e("Don't set a featured image for the imported posts.", 'interq-rss-pi'); ?></p>
+                                <?php esc_html_e('Disable the featured image?', 'interq-rss-posts-importer'); ?>
+                                <p class="description"><?php esc_html_e("Don't set a featured image for the imported posts.", 'interq-rss-posts-importer'); ?></p>
                             </td>
                             <td>
                                 <ul class="radiolist">
                                     <li>
                                         <label>
                                             <input type="radio" id="disable_thumbnail_true" name="disable_thumbnail" value="true" <?php checked($this->options['settings']['disable_thumbnail'], 'true'); ?> /> 
-                                            <?php esc_html_e('Yes', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Yes', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="radio" id="disable_thumbnail_false" name="disable_thumbnail" value="false" <?php checked(empty($this->options['settings']['disable_thumbnail']) || $this->options['settings']['disable_thumbnail'] === 'false'); ?> /> 
-                                            <?php esc_html_e('No', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('No', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>
@@ -270,21 +270,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                         <tr>
                             <td>
-                                <?php esc_html_e('Social Media Optimization and Open Graph', 'interq-rss-pi'); ?>
-                                <p class="description"><?php esc_html_e('Social Media and Open Graph optimization', 'interq-rss-pi'); ?></p>
+                                <?php esc_html_e('Social Media Optimization and Open Graph', 'interq-rss-posts-importer'); ?>
+                                <p class="description"><?php esc_html_e('Social Media and Open Graph optimization', 'interq-rss-posts-importer'); ?></p>
                             </td>
                             <td>
                                 <ul class="radiolist">
                                     <li>
                                         <label>
                                             <input type="checkbox" name="tw_show" id="tw_show" value="1" <?php checked(isset($this->options['settings']['tw_show']) && $this->options['settings']['tw_show'] == '1'); ?> />
-                                            <?php esc_html_e('X', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('X', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                     <li>
                                         <label>
                                             <input type="checkbox" name="og_show" id="og_show" value="1" <?php checked(isset($this->options['settings']['og_show']) && $this->options['settings']['og_show'] == '1'); ?> />
-                                            <?php esc_html_e('Facebook Opengraph', 'interq-rss-pi'); ?>
+                                            <?php esc_html_e('Facebook Opengraph', 'interq-rss-posts-importer'); ?>
                                         </label>
                                     </li>
                                 </ul>

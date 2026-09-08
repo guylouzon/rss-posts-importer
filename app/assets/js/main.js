@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Ensure rss_pi object exists and has nonce (fallback to hidden field if needed)
-    if (typeof rss_pi === 'undefined' || !rss_pi.nonce) {
-        const nonceField = document.getElementById('rss_pi_ajax_nonce');
-        if (typeof rss_pi === 'undefined') {
-            window.rss_pi = {};
+    // Ensure interq_rss_pi object exists and has nonce (fallback to hidden field if needed)
+    if (typeof interq_rss_pi === 'undefined' || !interq_rss_pi.nonce) {
+        const nonceField = document.getElementById('interq_rss_pi_ajax_nonce');
+        if (typeof interq_rss_pi === 'undefined') {
+            window.interq_rss_pi = {};
         }
-        if (nonceField && !rss_pi.nonce) {
-            rss_pi.nonce = nonceField.value;
+        if (nonceField && !interq_rss_pi.nonce) {
+            interq_rss_pi.nonce = nonceField.value;
         }
     }
 
@@ -65,11 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         ajax({
             type: 'POST',
-            url: rss_pi.ajaxurl,
+            url: interq_rss_pi.ajaxurl,
             data: {
-                action: 'rss_pi_edit_row',
+                action: 'interq_rss_pi_edit_row',
                 feed_id: target,
-                rss_pi_ajax_nonce: rss_pi.nonce
+                interq_rss_pi_ajax_nonce: interq_rss_pi.nonce
             },
             success: function (data) {
                 displayRow.insertAdjacentHTML('afterend', data);
@@ -161,8 +161,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('beforeunload', function (e) {
             if (!do_save && $all("#rss_pi-feed-table .rss-pi-unsaved").length) {
                 e.preventDefault();
-                e.returnValue = rss_pi.l18n.unsaved;
-                return rss_pi.l18n.unsaved;
+                e.returnValue = interq_rss_pi.l18n.unsaved;
+                return interq_rss_pi.l18n.unsaved;
             }
         });
         $('#rss_pi-settings-form').addEventListener('submit', function () {
@@ -177,11 +177,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const target = uniqid();
             ajax({
                 type: 'POST',
-                url: rss_pi.ajaxurl,
+                url: interq_rss_pi.ajaxurl,
                 data: {
-                    action: 'rss_pi_add_row',
+                    action: 'interq_rss_pi_add_row',
                     feed_id: target,
-                    rss_pi_ajax_nonce: rss_pi.nonce
+                    interq_rss_pi_ajax_nonce: interq_rss_pi.nonce
                 },
                 success: function (data) {
                     $('.rss-rows').insertAdjacentHTML('beforeend', data);
@@ -239,8 +239,8 @@ document.addEventListener('DOMContentLoaded', function () {
             $('.ajax_content').innerHTML = '<img src="/wp-admin/images/wpspin_light.gif" alt="" class="loader" />';
             ajax({
                 type: 'POST',
-                url: rss_pi.ajaxurl,
-                data: { action: 'rss_pi_load_log', rss_pi_ajax_nonce: rss_pi.nonce },
+                url: interq_rss_pi.ajaxurl,
+                data: { action: 'interq_rss_pi_load_log', interq_rss_pi_ajax_nonce: interq_rss_pi.nonce },
                 success: function (data) {
                     $('.ajax_content').innerHTML = data;
                 }
@@ -260,8 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         ajax({
             type: 'POST',
-            url: rss_pi.ajaxurl,
-            data: { action: 'rss_pi_clear_log', rss_pi_ajax_nonce: rss_pi.nonce },
+            url: interq_rss_pi.ajaxurl,
+            data: { action: 'interq_rss_pi_clear_log', interq_rss_pi_ajax_nonce: interq_rss_pi.nonce },
             success: function (data) {
                 $('.log').innerHTML = data;
             }
@@ -276,10 +276,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if ($('#rss_pi-stats-placeholder')) {
         function rss_filter_stats(form) {
             const data = {
-                action: "rss_pi_stats",
+                action: "interq_rss_pi_stats",
                 rss_from_date: $('#from_date') ? $('#from_date').value : "",
                 rss_till_date: $('#till_date') ? $('#till_date').value : "",
-                rss_pi_ajax_nonce: rss_pi.nonce
+                interq_rss_pi_ajax_nonce: interq_rss_pi.nonce
             };
             let loading = false;
             if (form && $('#submit-rss_filter_stats')) {
@@ -287,12 +287,12 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 loading = document.createElement('div');
                 loading.className = 'rss_pi_overlay';
-                loading.innerHTML = '<img class="rss_pi_loading" src="' + rss_pi.pluginurl + 'app/assets/img/loading.gif" /><p>Stats are loading. Please wait...</p>';
+                loading.innerHTML = '<img class="rss_pi_loading" src="' + interq_rss_pi.pluginurl + 'app/assets/img/loading.gif" /><p>Stats are loading. Please wait...</p>';
                 $('#rss_pi-stats-placeholder').appendChild(loading);
             }
             ajax({
                 type: "POST",
-                url: rss_pi.ajaxurl,
+                url: interq_rss_pi.ajaxurl,
                 data: data,
                 success: function (data) {
                     if (loading) loading.remove();
@@ -319,11 +319,11 @@ document.addEventListener('DOMContentLoaded', function () {
         function import_feed(id) {
             ajax({
                 type: 'POST',
-                url: rss_pi.ajaxurl,
+                url: interq_rss_pi.ajaxurl,
                 data: {
-                    action: 'rss_pi_import',
+                    action: 'interq_rss_pi_import',
                     feed: id,
-                    rss_pi_ajax_nonce: rss_pi.nonce
+                    interq_rss_pi_ajax_nonce: interq_rss_pi.nonce
                 },
                 success: function (resp) {
                     let data;
