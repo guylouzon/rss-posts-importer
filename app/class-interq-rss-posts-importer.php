@@ -4,7 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * One class to rule them all
  *
- * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
 
 class InterQ_Rss_Posts_Importer {
@@ -54,7 +53,6 @@ class InterQ_Rss_Posts_Importer {
             'options-general.php?page=interq_rss_pi&version=' . INTERQ_RSS_PI_VERSION
         );
 
-        add_action( 'init', [ $this, 'load_textdomain' ], 0 );
 
         add_filter(
             'plugin_action_links_' . INTERQ_RSS_PI_BASENAME,
@@ -210,6 +208,7 @@ class InterQ_Rss_Posts_Importer {
 
                 $posts = get_posts( [
                     'post_type'   => 'any',
+                    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- One-time migration must locate posts by the plugin's source URL metadata.
                     'meta_query'  => [
                         [
                             'key'     => 'rss_pi_source_url',
@@ -273,18 +272,6 @@ class InterQ_Rss_Posts_Importer {
         if ($upgraded) {
             update_option('interq_rss_pi_feeds', $this->options);
         }
-    }
-
-    /**
-     * Load translations
-     */
-
-    public function load_textdomain(): void {
-        load_plugin_textdomain(
-            'interq-rss-posts-importer',
-            false,
-            dirname( plugin_basename( __FILE__ ) ) . '/app/languages/'
-        );
     }
 
     /**

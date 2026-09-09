@@ -10,6 +10,11 @@ class InterQ_Rss_Pi_Admin_Processor {
  * @return array
  */
     private function process_feeds(array $feeds): array {
+        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( wp_unslash( $_POST['interq_rss_pi_nonce_field'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'interq_rss_pi_save_settings_action' ) ) {
+            return $feeds;
+        }
+
         $paused_feeds = [];
         if (isset($_POST['paused_feeds'])) {
             $paused_feeds_raw = sanitize_text_field(wp_unslash($_POST['paused_feeds']));
@@ -56,7 +61,7 @@ class InterQ_Rss_Pi_Admin_Processor {
                 $feed['url'] = isset( $_POST[ $feed['id'] . '-url' ] ) ? esc_url_raw( wp_unslash( $_POST[ $feed['id'] . '-url' ] ) ) : '';
                 $feed['name'] = isset( $_POST[ $feed['id'] . '-name' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-name' ] ) ) : '';
                 $feed['max_posts'] = isset( $_POST[ $feed['id'] . '-max_posts' ] ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-max_posts' ] ) ) : 0;
-                $feed['author_id'] = intval( $_POST['author_id'] ?? ( $feed['author_id'] ?? 1 ) );
+                $feed['author_id'] = isset( $_POST['author_id'] ) ? intval( wp_unslash( $_POST['author_id'] ) ) : intval( $feed['author_id'] ?? 1 );
                 $feed['category_id'] = isset( $_POST[ $feed['id'] . '-category_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-category_id' ] ) ) : '';
                 $feed['tags_id'] = isset( $_POST[ $feed['id'] . '-tags_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-tags_id' ] ) ) : '';
                 $feed['keywords'] = array_map( 'trim', $keywords );
@@ -89,7 +94,7 @@ class InterQ_Rss_Pi_Admin_Processor {
                 'url' => sanitize_text_field(wp_unslash($_POST[$id . '-url'] ?? '')),
                 'name' => sanitize_text_field(wp_unslash($_POST[$id . '-name'] ?? '')),
                 'max_posts' => intval(sanitize_text_field(wp_unslash($_POST[$id . '-max_posts'] ?? 0))),
-                'author_id' => intval($_POST['author_id'] ?? 1),
+                'author_id' => isset( $_POST['author_id'] ) ? intval( wp_unslash( $_POST['author_id'] ) ) : 1,
                 'category_id' => sanitize_text_field(wp_unslash($_POST[$id . '-category_id'] ?? '')),
                 'tags_id' => sanitize_text_field(wp_unslash($_POST[$id . '-tags_id'] ?? '')),
                 'keywords' => array_map('trim', $keywords),
@@ -109,8 +114,8 @@ class InterQ_Rss_Pi_Admin_Processor {
         global $interq_rss_post_importer;
 
         // bail if there's nothing to process or the data is invalid
-        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( $_POST['interq_rss_pi_nonce_field'] ) : '';
-        if (! isset($_POST['interq_rss_pi_nonce_field']) || !wp_verify_nonce(sanitize_key($_POST['interq_rss_pi_nonce_field']), 'interq_rss_pi_ajax_nonce_action')) {
+        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( wp_unslash( $_POST['interq_rss_pi_nonce_field'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'interq_rss_pi_save_settings_action' ) ) {
             return;
         }
 
@@ -124,7 +129,7 @@ class InterQ_Rss_Pi_Admin_Processor {
         $frequency_check = isset( $_POST['frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['frequency'] ) ) : '';
 
         if ($frequency_check === "custom_frequency") {
-            $rss_custom_frequency = isset($_POST['rss_custom_frequency']) ? intval($_POST['rss_custom_frequency']) : 0;
+            $rss_custom_frequency = isset( $_POST['rss_custom_frequency'] ) ? intval( wp_unslash( $_POST['rss_custom_frequency'] ) ) : 0;
             $frequency = "minutes_" . $rss_custom_frequency;
             $custom_frequency = 'true';
             // Adding option for custom cron
@@ -235,7 +240,7 @@ class InterQ_Rss_Pi_Admin_Processor {
                 $feed['url'] = isset( $_POST[ $feed['id'] . '-url' ] ) ? esc_url_raw( wp_unslash( $_POST[ $feed['id'] . '-url' ] ) ) : '';
                 $feed['name'] = isset( $_POST[ $feed['id'] . '-name' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-name' ] ) ) : '';
                 $feed['max_posts'] = isset( $_POST[ $feed['id'] . '-max_posts' ] ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-max_posts' ] ) ) : 0;
-                $feed['author_id'] = intval( $_POST['author_id'] ?? ( $feed['author_id'] ?? 1 ) );
+                $feed['author_id'] = isset( $_POST['author_id'] ) ? intval( wp_unslash( $_POST['author_id'] ) ) : intval( $feed['author_id'] ?? 1 );
                 $feed['category_id'] = isset( $_POST[ $feed['id'] . '-category_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-category_id' ] ) ) : '';
                 $feed['tags_id'] = isset( $_POST[ $feed['id'] . '-tags_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-tags_id' ] ) ) : '';
                 $feed['keywords'] = array_map( 'trim', $keywords );
@@ -268,7 +273,7 @@ class InterQ_Rss_Pi_Admin_Processor {
                 'url' => sanitize_text_field(wp_unslash($_POST[$id . '-url'] ?? '')),
                 'name' => sanitize_text_field(wp_unslash($_POST[$id . '-name'] ?? '')),
                 'max_posts' => intval(sanitize_text_field(wp_unslash($_POST[$id . '-max_posts'] ?? 0))),
-                'author_id' => intval($_POST['author_id'] ?? 1),
+                'author_id' => isset( $_POST['author_id'] ) ? intval( wp_unslash( $_POST['author_id'] ) ) : 1,
                 'category_id' => sanitize_text_field(wp_unslash($_POST[$id . '-category_id'] ?? '')),
                 'tags_id' => sanitize_text_field(wp_unslash($_POST[$id . '-tags_id'] ?? '')),
                 'keywords' => array_map('trim', $keywords),
@@ -325,7 +330,7 @@ class InterQ_Rss_Pi_Admin_Processor {
      */
 
     public function purge_deleted_posts_cache(): void {
-        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( $_POST['interq_rss_pi_nonce_field'] ) : '';
+        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( wp_unslash( $_POST['interq_rss_pi_nonce_field'] ) ) : '';
         if (
             empty( $nonce ) || ! wp_verify_nonce( $nonce, 'interq_rss_pi_save_settings_action' ) ||
             !isset($_POST['purge_deleted_cache'])

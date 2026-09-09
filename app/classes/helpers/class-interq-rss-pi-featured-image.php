@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Sets a featured image
  *
- * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
 if (!function_exists('download_url')) {
     require_once(ABSPATH . '/wp-admin/includes/file.php');
@@ -28,12 +27,10 @@ class InterQ_Rss_Pi_Featured_Image {
         try {
             // Validate input parameters
             if (!$item || !is_object($item)) {
-                $this->err_log("RSS PI Featured Image: Invalid item object provided");
                 return false;
             }
             
             if ($post_id <= 0) {
-                $this->err_log("RSS PI Featured Image: Invalid post ID provided: {$post_id}");
                 return false;
             }
             
@@ -45,12 +42,10 @@ class InterQ_Rss_Pi_Featured_Image {
 
                         
             } catch (Exception $e) {
-                $this->err_log("RSS PI Featured Image: Error getting item content: " . $e->getMessage());
                 return false;
             }
             
             if (empty($content) || !is_string($content)) {
-                $this->err_log("RSS PI Featured Image: No content available from feed item");
                 return false;
             }
             
@@ -64,7 +59,6 @@ class InterQ_Rss_Pi_Featured_Image {
             $img_url = $this->extract_image_url($content);
             
             if (empty($img_url)) {
-                $this->err_log("RSS PI Featured Image: No image found in content for post ID: {$post_id}");
                 return false;
             }
             
@@ -72,13 +66,11 @@ class InterQ_Rss_Pi_Featured_Image {
             $absolute_img_url = $this->make_absolute_url($img_url, $baseref);
             
             if (!$absolute_img_url) {
-                $this->err_log("RSS PI Featured Image: Could not construct absolute URL from: {$img_url}");
                 return false;
             }
             
             // Validate the final URL
             if (!filter_var($absolute_img_url, FILTER_VALIDATE_URL)) {
-                $this->err_log("RSS PI Featured Image: Invalid image URL: {$absolute_img_url}");
                 return false;
             }
             
@@ -86,31 +78,18 @@ class InterQ_Rss_Pi_Featured_Image {
             $featured_id = $this->_sideload($absolute_img_url, $post_id);
             
             if ($featured_id === false) {
-                $this->err_log("RSS PI Featured Image: Failed to sideload image: {$absolute_img_url}");
                 return false;
             }
             
-            $this->err_log("RSS PI Featured Image: Successfully prepared image with ID: {$featured_id}");
             return $featured_id;
             
         } catch (Exception $e) {
-            $this->err_log("RSS PI Featured Image: Unexpected error in _prepare: " . $e->getMessage());
             return false;
         } catch (Error $e) {
-            $this->err_log("RSS PI Featured Image: Fatal error in _prepare: " . $e->getMessage());
             return false;
         }
     }
 
-    private function err_log($message): void {
-        if (defined('WP_DEBUG') && WP_DEBUG ) {
-            if (is_array($message) || is_object($message) ) {
-                error_log(print_r($message, true));
-            } else {
-                error_log($message);
-            }
-        }
-    }
 
     private function make_absolute_url(string $img_url, string $baseref): string|false {
         // If already absolute URL, validate and return
@@ -121,7 +100,6 @@ class InterQ_Rss_Pi_Featured_Image {
         // Try to parse the image URL to see if it has a host
         $img_parsed = wp_parse_url($img_url);
         if ($img_parsed === false) {
-            $this->err_log("RSS PI Featured Image: Could not parse image URL: {$img_url}");
             return false;
         }
         
@@ -132,14 +110,12 @@ class InterQ_Rss_Pi_Featured_Image {
         
         // Need base reference for relative URLs
         if (empty($baseref)) {
-            $this->err_log("RSS PI Featured Image: No base reference for relative URL: {$img_url}");
             return false;
         }
         
         // Parse base reference
         $base_parsed = wp_parse_url($baseref);
         if ($base_parsed === false || empty($base_parsed['host'])) {
-            $this->err_log("RSS PI Featured Image: Invalid base reference URL: {$baseref}");
             return false;
         }
         
