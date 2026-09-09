@@ -5,87 +5,69 @@
   Plugin URI: https://wordpress.org/plugins/interq-rss-posts-importer/
   Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
   Author: Guy Louzon
-  Version: 2025.7.01
+  Version: 2026.9.1
   Author URI: https://github.com/guylouzon/RSS-posts-importer
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
-  Text Domain: interq-rss-pi
+  Text Domain: interq-rss-posts-importer
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // define some constants
-if (!defined('RSS_PI_PATH')) {
-    define('RSS_PI_PATH', trailingslashit(plugin_dir_path(__FILE__)));
+if (!defined('INTERQ_RSS_PI_PATH')) {
+    define('INTERQ_RSS_PI_PATH', trailingslashit(plugin_dir_path(__FILE__)));
 }
 
-if (!defined('RSS_PL_PATH')) {
-    define('RSS_PL_PATH', trailingslashit(plugin_dir_path(dirname(__FILE__))));
+if (!defined('INTERQ_RSS_PI_PL_PATH')) {
+    define('INTERQ_RSS_PI_PL_PATH', trailingslashit(plugin_dir_path(dirname(__FILE__))));
 }
 
-if (!defined('RSS_PI_URL')) {
-    define('RSS_PI_URL', trailingslashit(plugin_dir_url(__FILE__)));
+if (!defined('INTERQ_RSS_PI_URL')) {
+    define('INTERQ_RSS_PI_URL', trailingslashit(plugin_dir_url(__FILE__)));
 }
 
-if (!defined('RSS_PI_BASENAME')) {
-    define('RSS_PI_BASENAME', plugin_basename(__FILE__));
+if (!defined('INTERQ_RSS_PI_BASENAME')) {
+    define('INTERQ_RSS_PI_BASENAME', plugin_basename(__FILE__));
 }
 
-if (!defined('RSS_PI_VERSION')) {
-    define('RSS_PI_VERSION', '2025.7.01');
+if (!defined('INTERQ_RSS_PI_VERSION')) {
+    define('INTERQ_RSS_PI_VERSION', '2026.9.1');
 }
 
-if (!defined('RSS_PI_LOG_PATH')) {
-    define('RSS_PI_LOG_PATH', trailingslashit(WP_CONTENT_DIR) . 'rsspi-log/');
+if (!defined('INTERQ_RSS_PI_LOG_PATH')) {
+    $interq_rss_pi_upload_dir = wp_upload_dir();
+    define('INTERQ_RSS_PI_LOG_PATH', trailingslashit($interq_rss_pi_upload_dir['basedir']) . 'interq-rss-posts-importer/');
 }
 
-if (!is_dir(RSS_PI_LOG_PATH)) {
-    global $wp_filesystem;
-
-    // Initialize WP_Filesystem if not already available
-    if ( empty( $wp_filesystem ) ) {
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        WP_Filesystem();
-    }
-
-    $target_dir = RSS_PI_LOG_PATH;
-
-    // Check if the directory exists using WP_Filesystem abstraction
-    if ( ! $wp_filesystem->is_dir( $target_dir ) ) {
-        /**
-         * mkdir parameters: 
-         * path, 
-         * chmod (null defaults to FS_CHMOD_DIR), 
-         * recursive (true)
-         */
-        $wp_filesystem->mkdir( $target_dir, FS_CHMOD_DIR );
-    }
+if (!is_dir(INTERQ_RSS_PI_LOG_PATH)) {
+    wp_mkdir_p(INTERQ_RSS_PI_LOG_PATH);
 }
 
 // helper classes
-include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-log.php';
-include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-featured-image.php';
-include_once RSS_PI_PATH . 'app/classes/helpers/class-rss-pi-parser.php';
-include_once RSS_PI_PATH . 'app/classes/helpers/rss-pi-functions.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/helpers/class-interq-rss-pi-log.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/helpers/class-interq-rss-pi-featured-image.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/helpers/class-interq-rss-pi-parser.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/helpers/interq-rss-pi-functions.php';
 
 // admin classes
-include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-admin-processor.php';
-include_once RSS_PI_PATH . 'app/classes/admin/class-rss-pi-admin.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/admin/class-interq-rss-pi-admin-processor.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/admin/class-interq-rss-pi-admin.php';
 
 // Front classes
-include_once RSS_PI_PATH . 'app/classes/front/class-rss-pi-front.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/front/class-interq-rss-pi-front.php';
 
 // main importers
-include_once RSS_PI_PATH . 'app/classes/import/class-rss-pi-engine.php';
-include_once RSS_PI_PATH . 'app/classes/import/class-rss-pi-cron.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/import/class-interq-rss-pi-engine.php';
+include_once INTERQ_RSS_PI_PATH . 'app/classes/import/class-interq-rss-pi-cron.php';
 
 // the main loader class
-include_once RSS_PI_PATH . 'app/class-rss-posts-importer.php';
+include_once INTERQ_RSS_PI_PATH . 'app/class-interq-rss-posts-importer.php';
 
 // initialise plugin as a global var
-global $rss_post_importer;
+global $interq_rss_post_importer;
 
-$rss_post_importer = new rssPostImporter();
+$interq_rss_post_importer = new InterQ_Rss_Posts_Importer();
 
-$rss_post_importer->init();
+$interq_rss_post_importer->init();
 

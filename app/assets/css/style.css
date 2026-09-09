@@ -307,3 +307,5 @@ display:none;
 .rss_pi_banner_img {
 	width: 281px;
 }
+/* Feed table: keep the preloaded hidden new-feed rows out of sight (moved from inline <style> in feed-table.php) */
+.rss_pi-table tfoot tr.data-row,.rss_pi-table tfoot tr.edit-row{display:none;}

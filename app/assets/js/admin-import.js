@@ -6,8 +6,8 @@
 
     $(function() {
         // Check if our localized data exists
-        if (typeof rss_pi_import_data !== 'undefined' && rss_pi_import_data.feed_ids) {
-            var feedList = rss_pi_import_data.feed_ids;
+        if (typeof interq_rss_pi_import_data !== 'undefined' && interq_rss_pi_import_data.feed_ids) {
+            var feedList = interq_rss_pi_import_data.feed_ids;
             
             if (typeof feeds !== 'undefined' && typeof feeds.set === 'function') {
                 feeds.set(feedList);

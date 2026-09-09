@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
 
-class rssPostImporter {
+class InterQ_Rss_Posts_Importer {
 
     /**
      * A var to store the options in
@@ -24,19 +24,19 @@ class rssPostImporter {
     /**
      * To initialise the admin and cron classes
      *
-     * @var rssPIAdmin
+     * @var InterQ_Rss_Pi_Admin
      */
-    private rssPIAdmin $admin;
+    private InterQ_Rss_Pi_Admin $admin;
 
     /**
-     * @var rssPICron
+     * @var InterQ_Rss_Pi_Cron
      */
-    private rssPICron $cron;
+    private InterQ_Rss_Pi_Cron $cron;
 
     /**
-     * @var rssPIFront
+     * @var InterQ_Rss_Pi_Front
      */
-    private rssPIFront $front;
+    private InterQ_Rss_Pi_Front $front;
 
     /**
      * Start
@@ -48,20 +48,48 @@ class rssPostImporter {
         // do any upgrade if needed
         $this->upgrade();
 
-        $settings = [];
-        $valid_api_key = '';
 
         // setup this plugin options page link
         $this->page_link = admin_url(
-            'options-general.php?page=rss_pi&version=' . RSS_PI_VERSION
+            'options-general.php?page=interq_rss_pi&version=' . INTERQ_RSS_PI_VERSION
         );
 
         add_action( 'init', [ $this, 'load_textdomain' ], 0 );
 
         add_filter(
-            'plugin_action_links_' . RSS_PI_BASENAME,
+            'plugin_action_links_' . INTERQ_RSS_PI_BASENAME,
             [$this, 'settings_link']
         );
+    }
+
+    /**
+     * Migrate pre-prefix option names and the legacy cron hook.
+     * One-time upgrade for installs from before the interq_rss_pi_ prefix.
+     */
+    public function migrate_option_names(): void {
+
+        $option_map = [
+            'rss_pi_feeds' => 'interq_rss_pi_feeds',
+            'rss_pi_deleted_posts' => 'interq_rss_pi_deleted_posts',
+            'rss_pi_imported_posts' => 'interq_rss_pi_imported_posts',
+            'rss_pi_imported_posts_migrated' => 'interq_rss_pi_imported_posts_migrated',
+            'rsspi_custom_cron_frequency' => 'interq_rss_pi_custom_cron_frequency',
+        ];
+
+        foreach ($option_map as $old_name => $new_name) {
+            $old_value = get_option($old_name, null);
+            if ($old_value !== null) {
+                if (get_option($new_name, null) === null) {
+                    add_option($new_name, $old_value);
+                }
+                delete_option($old_name);
+            }
+        }
+
+        // clear the legacy cron hook; the new one is scheduled by InterQ_Rss_Pi_Cron::schedule()
+        if (wp_next_scheduled('rss_pi_cron')) {
+            wp_clear_scheduled_hook('rss_pi_cron');
+        }
     }
 
     /**
@@ -69,9 +97,10 @@ class rssPostImporter {
      */
     public function load_options(): void {
 
+        $this->migrate_option_names();
+
         $default_settings = [
             'enable_logging' => true,
-            'feeds_api_key' => false,
             'frequency' => 0,
             'post_template' => "{\$content}\n<hr>\nContinue reading: {\$permalink}\n",
             'post_status' => 'publish',
@@ -85,7 +114,7 @@ class rssPostImporter {
             'cache_deleted' => true,
         ];
 
-        $options = get_option('rss_pi_feeds', []);
+        $options = get_option('interq_rss_pi_feeds', []);
 
         // prepare default options when there is no record in the database
         if (!isset($options['feeds']))  {
@@ -139,7 +168,7 @@ class rssPostImporter {
                 'upgraded' => $this->options['upgraded'] ?? null
             );
             // update in db
-            update_option('rss_pi_feeds', $new_options);
+            update_option('interq_rss_pi_feeds', $new_options);
         }
     }
 
@@ -152,31 +181,31 @@ class rssPostImporter {
         $upgraded = false;
         $bail = false;
 
-        // migrate to rss_pi_deleted_posts only items from rss_pi_imported_posts that are actually deleted, discard the others
+        // migrate to interq_rss_pi_deleted_posts only items from interq_rss_pi_imported_posts that are actually deleted, discard the others
         // do this in iterations so not to degrade the UX
         if (!isset($this->options['upgraded']['deleted_posts'])) {
             // get meta data for "deleted" and "imported" posts
-            $rss_pi_deleted_posts = get_option('rss_pi_deleted_posts', []);
-            $rss_pi_imported_posts = get_option('rss_pi_imported_posts', []);
-            $rss_pi_imported_posts_migrated = get_option('rss_pi_imported_posts_migrated', []);
+            $interq_rss_pi_deleted_posts = get_option('interq_rss_pi_deleted_posts', []);
+            $interq_rss_pi_imported_posts = get_option('interq_rss_pi_imported_posts', []);
+            $interq_rss_pi_imported_posts_migrated = get_option('interq_rss_pi_imported_posts_migrated', []);
             // limit execution time (in seconds)
             $_limit = ((defined('DOING_CRON') && DOING_CRON) ? 20 : ((defined('DOING_AJAX') && DOING_AJAX) ? 10 : 3));
             $_start = microtime(true);
             // iterate through all imported posts' source URLs
-            foreach ($rss_pi_imported_posts as $k => $source_url) {
+            foreach ($interq_rss_pi_imported_posts as $k => $source_url) {
                 // hash the URL for storage
                 $source_md5 = md5($source_url);
                 // properly format the URL for comparison
                 $source_url = esc_url($source_url);
                 // skip if we already have "migrated" this item
-                if (in_array($k, $rss_pi_imported_posts_migrated)) {
+                if (in_array($k, $interq_rss_pi_imported_posts_migrated)) {
                     continue;
                 }
                 // skip if we already have "deleted" metadata for this item
-                if (in_array($source_md5, $rss_pi_deleted_posts)) {
+                if (in_array($source_md5, $interq_rss_pi_deleted_posts)) {
                     continue;
                 }
-                $rss_pi_imported_posts_migrated[] = $k;
+                $interq_rss_pi_imported_posts_migrated[] = $k;
                 // check if there is a post with this source URL
 
                 $posts = get_posts( [
@@ -205,7 +234,7 @@ class rssPostImporter {
                 // when there is no such post (it was deleted?)
                 if (!$post_id) {
                     // add this source URL to "deleted" metadata
-                    $rss_pi_deleted_posts[] = $source_md5;
+                    $interq_rss_pi_deleted_posts[] = $source_md5;
                 } else {
                     // otherwise update the post metadata to include hashed URL
                     update_post_meta($post_id, 'rss_pi_source_md5', $source_md5);
@@ -219,17 +248,17 @@ class rssPostImporter {
                 }
             }
             // shed any duplicates
-            $rss_pi_deleted_posts = array_unique($rss_pi_deleted_posts);
-            update_option('rss_pi_deleted_posts', $rss_pi_deleted_posts);
+            $interq_rss_pi_deleted_posts = array_unique($interq_rss_pi_deleted_posts);
+            update_option('interq_rss_pi_deleted_posts', $interq_rss_pi_deleted_posts);
             // keep record of migrated items
-            update_option('rss_pi_imported_posts_migrated', $rss_pi_imported_posts_migrated);
+            update_option('interq_rss_pi_imported_posts_migrated', $interq_rss_pi_imported_posts_migrated);
             // are there still source URLs in the "imported" metadata?
-            if (count($rss_pi_imported_posts_migrated) < count($rss_pi_imported_posts)) {
+            if (count($interq_rss_pi_imported_posts_migrated) < count($interq_rss_pi_imported_posts)) {
                 // not finished yet
             } else {
                 // remove the "imported" metadata from database
-                delete_option('rss_pi_imported_posts_migrated');
-                delete_option('rss_pi_imported_posts');
+                delete_option('interq_rss_pi_imported_posts_migrated');
+                delete_option('interq_rss_pi_imported_posts');
                 // mark this upgrade as completed
                 $this->options['upgraded']['deleted_posts'] = true;
                 $upgraded = true;
@@ -242,7 +271,7 @@ class rssPostImporter {
 
         // if there is something to record as an upgrade
         if ($upgraded) {
-            update_option('rss_pi_feeds', $this->options);
+            update_option('interq_rss_pi_feeds', $this->options);
         }
     }
 
@@ -252,7 +281,7 @@ class rssPostImporter {
 
     public function load_textdomain(): void {
         load_plugin_textdomain(
-            'interq-rss-pi',
+            'interq-rss-posts-importer',
             false,
             dirname( plugin_basename( __FILE__ ) ) . '/app/languages/'
         );
@@ -264,47 +293,14 @@ class rssPostImporter {
     public function init(): void {
 
         // initialise admin and cron
-        $this->cron = new rssPICron();
+        $this->cron = new InterQ_Rss_Pi_Cron();
         $this->cron->init();
 
-        $this->admin = new rssPIAdmin();
+        $this->admin = new InterQ_Rss_Pi_Admin();
         $this->admin->init();
 
-        $this->front = new rssPIFront();
+        $this->front = new InterQ_Rss_Pi_Front();
         $this->front->init();
-    }
-
-    /**
-     * Check if a given API key is valid
-     *
-     * @param string $key
-     * @return bool
-     */
-    public function is_valid_key(string $key): bool {
-
-        if (empty($key)) {
-            return false;
-        }
-
-        $url = "https://www.feedsapi.org/fetch.php?key=$key" .
-            "&url=" . "http://dummyurl.com";
-
-        $content = @file_get_contents($url);
-        $content = trim((string)$content);
-
-        if ($content == "A valid key must be supplied") {
-            return false;
-        }
-
-        if ($content == "Invalid IP/DOMAIN") {
-            return false;
-        }
-
-        if ($content == "No URL supplied") {
-            return false;
-        }
-
-        return true;
     }
 
     /**

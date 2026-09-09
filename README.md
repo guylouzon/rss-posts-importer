@@ -45,7 +45,7 @@ OLD readme starts here
 ***
 
 === RSS Post Importer ===
-Contributors: feedsapi
+Contributors: guylouzon
 Donate link: (outdated)
 Tags: rss aggregation, wordpress autoblog aggregator, Autoblogger, rss autopost and syndicator, blog content curation, feedsyndicate, feedwordpress, multiple rss feed importer, rss feeds to post, content syndication, blog migration, yahoo pipes
 Requires at least: 3.5

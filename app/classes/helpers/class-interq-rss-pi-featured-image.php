@@ -15,7 +15,7 @@ if (!function_exists('media_handle_sideload')) {
     require_once(ABSPATH . "wp-admin" . '/includes/media.php');
 }
 
-class rssPIFeaturedImage {
+class InterQ_Rss_Pi_Featured_Image {
 
     /**
      * Prepare featured image
@@ -214,7 +214,7 @@ class rssPIFeaturedImage {
         $featured_id = $this->_prepare($item, $post_id);
 
         if (!is_wp_error($featured_id) && $featured_id) {
-            do_action('set_rss_pi_featured_image', $featured_id, $post_id);
+            do_action('interq_rss_pi_set_featured_image', $featured_id, $post_id);
             // set as featured image
             $meta_id = set_post_thumbnail($post_id, $featured_id);
         } else {

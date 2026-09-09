@@ -5,14 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
-class rssPIFront {
-
-    /**
-     * Whether the API key is valid
-     *
-     * @var bool
-     */
-    public bool $is_key_valid;
+class InterQ_Rss_Pi_Front {
 
     /**
      * The options
@@ -22,30 +15,24 @@ class rssPIFront {
     public array $options;
 
     /**
-     * Aprompt for invalid/absent API keys
-     * @var string
-     */
-    public string $key_prompt;
-
-    /**
      * Initialise and hook all actions
      */
     public function init(): void {
-        global $post, $rss_post_importer;
+        global $post, $interq_rss_post_importer;
 
         // add noidex to front
-        add_action('wp_head', [$this, 'rss_pi_noindex_meta_tag']);
+        add_action('wp_head', [$this, 'interq_rss_pi_noindex_meta_tag']);
         // add canonical urls
 
         remove_action('wp_head', 'rel_canonical');
-        add_action('wp_head', [$this, 'rss_pi_canonical_urls_meta_tag']);
+        add_action('wp_head', [$this, 'interq_rss_pi_canonical_urls_meta_tag']);
 
         // add options
-        $this->options = $rss_post_importer->options;
+        $this->options = $interq_rss_post_importer->options;
 
         // Check for block indexing
         if (($this->options['settings']['nofollow_outbound'] ?? '') === true || (string)($this->options['settings']['nofollow_outbound'] ?? '') == 'true') {
-            add_filter('the_content', [$this, 'rss_pi_url_parse']);
+            add_filter('the_content', [$this, 'interq_rss_pi_url_parse']);
         }
 
         $social = [
@@ -63,8 +50,8 @@ class rssPIFront {
         }
     }
 
-    public function rss_pi_noindex_meta_tag(): void {
-        global $post, $rss_post_importer;
+    public function interq_rss_pi_noindex_meta_tag(): void {
+        global $post, $interq_rss_post_importer;
 
         //Add meta tag for UTF-8 character encoding.
         echo '<meta http-equiv="Content-type" content="text/html; charset=utf-8" />';
@@ -76,7 +63,7 @@ class rssPIFront {
             $current_post_id = $post->ID;
 
             // add options
-            $this->options = $rss_post_importer->options;
+            $this->options = $interq_rss_post_importer->options;
 
             // get value of block indexing
             $block_indexing = $this->options['settings']['block_indexing'] ?? '';
@@ -92,8 +79,8 @@ class rssPIFront {
         }
     }
 
-    public function rss_pi_canonical_urls_meta_tag(): void {
-        global $post, $rss_post_importer;
+    public function interq_rss_pi_canonical_urls_meta_tag(): void {
+        global $post, $interq_rss_post_importer;
 
         // Check if single post
         if (is_single()) {
@@ -101,7 +88,7 @@ class rssPIFront {
             // Get current post id
             $current_post_id = $post->ID;
             // add options
-            $this->options = $rss_post_importer->options;
+            $this->options = $interq_rss_post_importer->options;
 
             $meta_rss_pi_canonical_url = get_post_meta($current_post_id, 'rss_pi_canonical_url', false);
             if (!empty($meta_rss_pi_canonical_url) && $meta_rss_pi_canonical_url[0] === "source_blog") {
@@ -139,7 +126,7 @@ class rssPIFront {
         }
     }
 
-    public function rss_pi_url_parse(string $content): string {
+    public function interq_rss_pi_url_parse(string $content): string {
 
         $regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>";
         if (preg_match_all("/$regexp/siU", $content, $matches, PREG_SET_ORDER)) {
@@ -194,15 +181,13 @@ class rssPIFront {
                     $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
                     $tc_image_thumb = $img_src[0];
                 } else {
-                    $tc_image_thumb = plugins_url('app/assets/img/03-04-feedsapi-api.jpg', __FILE__);
+                    $tc_image_thumb = plugins_url('app/assets/img/iq_rss_pi_banner.jpg', __FILE__);
                 }
                 echo '<meta name="twitter:card" value="summary" />';
-                echo '<meta name="twitter:site" value="@feedsapi" />';
                 echo '<meta name="twitter:title" value="' . esc_attr($tc_title) . '" />';
                 echo '<meta name="twitter:description" value="' . esc_attr($tc_description) . '" />';
                 echo '<meta name="twitter:url" value="' . esc_url($tc_url) . '" />';
                 echo '<meta name="twitter:image" value="' . esc_url($tc_image_thumb) . '" />';
-                echo '<meta name="twitter:creator" value="@feedsapi" />';
             }
         }
     }
@@ -215,7 +200,7 @@ class rssPIFront {
                     $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
                     $tc_image_thumb = $img_src[0];
                 } else {
-                    $tc_image_thumb = plugins_url('app/assets/img/03-04-feedsapi-api.jpg', __FILE__);
+                    $tc_image_thumb = plugins_url('app/assets/img/iq_rss_pi_banner.jpg', __FILE__);
                 }
 
                 $excerpt = '';
@@ -243,7 +228,7 @@ class rssPIFront {
                     $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
                     $tc_image_thumb = $img_src[0];
                 } else {
-                    $tc_image_thumb = plugins_url('app/assets/img/03-04-feedsapi-api.jpg', __FILE__);
+                    $tc_image_thumb = plugins_url('app/assets/img/iq_rss_pi_banner.jpg', __FILE__);
                 }
 
                 $excerpt = '';

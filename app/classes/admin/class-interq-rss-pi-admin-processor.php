@@ -1,14 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class rssPIAdminProcessor {
-
-    /**
-     * If we have a valid api key
-     *
-     * @var bool
-     */
-    public bool $is_key_valid = false;
+class InterQ_Rss_Pi_Admin_Processor {
 
 /**
  * Creates the feeds array from the submitted data
@@ -55,19 +48,15 @@ class rssPIAdminProcessor {
 
             if ( in_array( $feed['id'], $modified_feeds, true ) ) {
                 $keywords = [];
-                $keyword_str = '';
-                if ( $this->is_key_valid ) {
-                    // if the key is valid set up keywords (otherwise don't)
-                    $keyword_str = isset( $_POST[ $feed['id'] . '-keywords' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-keywords' ] ) ) : '';
-                    if ( ! empty( $keyword_str ) ) {
-                        $keywords = explode( ',', $keyword_str );
-                    }
+                $keyword_str = isset( $_POST[ $feed['id'] . '-keywords' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-keywords' ] ) ) : '';
+                if ( ! empty( $keyword_str ) ) {
+                    $keywords = explode( ',', $keyword_str );
                 }
 
                 $feed['url'] = isset( $_POST[ $feed['id'] . '-url' ] ) ? esc_url_raw( wp_unslash( $_POST[ $feed['id'] . '-url' ] ) ) : '';
                 $feed['name'] = isset( $_POST[ $feed['id'] . '-name' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-name' ] ) ) : '';
                 $feed['max_posts'] = isset( $_POST[ $feed['id'] . '-max_posts' ] ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-max_posts' ] ) ) : 0;
-                $feed['author_id'] = ( $this->is_key_valid && isset( $_POST[ $feed['id'] . '-author_id' ] ) ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-author_id' ] ) ) : intval( $_POST['author_id'] );
+                $feed['author_id'] = intval( $_POST['author_id'] ?? ( $feed['author_id'] ?? 1 ) );
                 $feed['category_id'] = isset( $_POST[ $feed['id'] . '-category_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-category_id' ] ) ) : '';
                 $feed['tags_id'] = isset( $_POST[ $feed['id'] . '-tags_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-tags_id' ] ) ) : '';
                 $feed['keywords'] = array_map( 'trim', $keywords );
@@ -86,14 +75,11 @@ class rssPIAdminProcessor {
 
             $keywords = [];
             $keyword_str = '';
-            if ($this->is_key_valid) {
-                // if the key is valid set up keywords (otherwise don't)
-                if (isset($_POST[$id . '-keywords'])) {
-                    $keyword_str = sanitize_text_field(wp_unslash($_POST[$id . '-keywords']));
-                }
-                if (!empty($keyword_str)) {
-                    $keywords = explode(',', $keyword_str);
-                }
+            if (isset($_POST[$id . '-keywords'])) {
+                $keyword_str = sanitize_text_field(wp_unslash($_POST[$id . '-keywords']));
+            }
+            if (!empty($keyword_str)) {
+                $keywords = explode(',', $keyword_str);
             }
 
             $feed_status = in_array($id, $paused_feeds) ? 'pause' : 'active';
@@ -103,8 +89,7 @@ class rssPIAdminProcessor {
                 'url' => sanitize_text_field(wp_unslash($_POST[$id . '-url'] ?? '')),
                 'name' => sanitize_text_field(wp_unslash($_POST[$id . '-name'] ?? '')),
                 'max_posts' => intval(sanitize_text_field(wp_unslash($_POST[$id . '-max_posts'] ?? 0))),
-                // different author ids depending on valid API keys
-                'author_id' => ($this->is_key_valid && isset($_POST[$id . '-author_id'])) ? intval($_POST[$id . '-author_id']) : intval($_POST['author_id'] ?? 0),
+                'author_id' => intval($_POST['author_id'] ?? 1),
                 'category_id' => sanitize_text_field(wp_unslash($_POST[$id . '-category_id'] ?? '')),
                 'tags_id' => sanitize_text_field(wp_unslash($_POST[$id . '-tags_id'] ?? '')),
                 'keywords' => array_map('trim', $keywords),
@@ -121,11 +106,11 @@ class rssPIAdminProcessor {
     }
 
     public function process(): void {
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
 
         // bail if there's nothing to process or the data is invalid
-        $nonce = isset( $_POST['rss_pi_nonce_field'] ) ? sanitize_key( $_POST['rss_pi_nonce_field'] ) : '';
-        if (! isset($_POST['rss_pi_nonce_field']) || !wp_verify_nonce(sanitize_key($_POST['rss_pi_nonce_field']), 'rss_pi_ajax_nonce_action')) {
+        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( $_POST['interq_rss_pi_nonce_field'] ) : '';
+        if (! isset($_POST['interq_rss_pi_nonce_field']) || !wp_verify_nonce(sanitize_key($_POST['interq_rss_pi_nonce_field']), 'interq_rss_pi_ajax_nonce_action')) {
             return;
         }
 
@@ -133,8 +118,6 @@ class rssPIAdminProcessor {
         //$_POST['info_update'] = sanitize_text_field($_POST['info_update']);
         $save_to_db = isset($_POST['save_to_db'] ) && 'true' === sanitize_text_field( wp_unslash($_POST['save_to_db']));
         $import_now  = (isset($_POST['import_now']) && 'true' === sanitize_text_field( wp_unslash( $_POST['import_now'])));
-        file_put_contents(RSS_PI_LOG_PATH . 'debug_'  . '.log', time() . ' ' . print_r($_POST, true), FILE_APPEND);
-        
 
         // process settings
 
@@ -145,26 +128,25 @@ class rssPIAdminProcessor {
             $frequency = "minutes_" . $rss_custom_frequency;
             $custom_frequency = 'true';
             // Adding option for custom cron
-            $rsspi_custom_cron_frequency = serialize(
+            $interq_rss_pi_custom_cron_frequency = serialize(
                 [
                     'time' => $rss_custom_frequency,
                     'frequency' => $frequency
                 ]
             );
 
-            delete_option('rsspi_custom_cron_frequency');
-            add_option('rsspi_custom_cron_frequency', $rsspi_custom_cron_frequency);
+            delete_option('interq_rss_pi_custom_cron_frequency');
+            add_option('interq_rss_pi_custom_cron_frequency', $interq_rss_pi_custom_cron_frequency);
         } else {
             $frequency = isset( $_POST['frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['frequency'] ) ) : '';
             $custom_frequency = 'false';
 
             // Delete custom cron if not exists
-            delete_option('rsspi_custom_cron_frequency');
+            delete_option('interq_rss_pi_custom_cron_frequency');
         }
 
         $settings = [
             'frequency'                => $frequency,
-            'feeds_api_key'            => isset( $_POST['feeds_api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['feeds_api_key'] ) ) : '',
             'post_template'            => isset( $_POST['post_template'] ) ? wp_kses_post( wp_unslash( $_POST['post_template'] ) ) : '',
             'post_status'              => isset( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : '',
             'author_id'                => isset( $_POST['author_id'] ) ? intval( wp_unslash( $_POST['author_id'] ) ) : 0,
@@ -182,53 +164,30 @@ class rssPIAdminProcessor {
             'custom_frequency'         => $custom_frequency,
         ];
 
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
 
-        // check if submitted api key is valid
-        $this->is_key_valid = $rss_post_importer->is_valid_key($settings['feeds_api_key']);
-        // save key validity state
-        $settings['is_key_valid'] = $this->is_key_valid;
-
-        // filter settings
-        // if the key is not fine
-        if (!empty($settings['feeds_api_key']) && !$this->is_key_valid) {
-
-            // unset from settings
-            unset($settings['feeds_api_key']);
-            $settings['invalid_api_key'] = true;
+        // set up keyword filtering
+        $keyword_str = '';
+        if (isset($_POST['keyword_filter'])) {
+            // Strip Slashes for RegEx
+            $keyword_str = sanitize_text_field(wp_unslash($_POST['keyword_filter']));
         }
 
-        // if the key is valid
-        if ($this->is_key_valid) {
+        $keywords = [];
 
-            // set up keywords (otherwise don't)
-            $keyword_str = '';
-            if (isset($_POST['keyword_filter'])) {
-                // Strip Slashes for RegEx
-                $keyword_str = sanitize_text_field(wp_unslash($_POST['keyword_filter']));
-            }
-
-            $keywords = [];
-
-            if (!empty($keyword_str)) {
-                $keywords = explode(',', $keyword_str);
-            }
-
-            $settings['keywords'] = array_map('trim', $keywords);
-
-            // set up "import deleted posts" (otherwise don't)
-            $settings['cache_deleted'] = sanitize_text_field(wp_unslash($_POST['cache_deleted'] ?? 'true'));
+        if (!empty($keyword_str)) {
+            $keywords = explode(',', $keyword_str);
         }
-        // formulate the settings array
 
-        // check result for "invalid_key" flag
-        $invalid_api_key = isset($settings['invalid_api_key']);
-        unset($settings['invalid_api_key']);
+        $settings['keywords'] = array_map('trim', $keywords);
+
+        // set up "import deleted posts" cache
+        $settings['cache_deleted'] = sanitize_text_field(wp_unslash($_POST['cache_deleted'] ?? 'true'));
 
         // update cron settings
         $this->update_cron($settings['frequency']);
 
-        $feeds = $this->process_feeds($rss_post_importer->options['feeds']);
+        $feeds = $this->process_feeds($interq_rss_post_importer->options['feeds']);
         // process feeds start
         $paused_feeds = [];
         if (isset($_POST['paused_feeds'])) {
@@ -268,19 +227,15 @@ class rssPIAdminProcessor {
 
             if ( in_array( $feed['id'], $modified_feeds, true ) ) {
                 $keywords = [];
-                $keyword_str = '';
-                if ( $this->is_key_valid ) {
-                    // if the key is valid set up keywords (otherwise don't)
-                    $keyword_str = isset( $_POST[ $feed['id'] . '-keywords' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-keywords' ] ) ) : '';
-                    if ( ! empty( $keyword_str ) ) {
-                        $keywords = explode( ',', $keyword_str );
-                    }
+                $keyword_str = isset( $_POST[ $feed['id'] . '-keywords' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-keywords' ] ) ) : '';
+                if ( ! empty( $keyword_str ) ) {
+                    $keywords = explode( ',', $keyword_str );
                 }
 
                 $feed['url'] = isset( $_POST[ $feed['id'] . '-url' ] ) ? esc_url_raw( wp_unslash( $_POST[ $feed['id'] . '-url' ] ) ) : '';
                 $feed['name'] = isset( $_POST[ $feed['id'] . '-name' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-name' ] ) ) : '';
                 $feed['max_posts'] = isset( $_POST[ $feed['id'] . '-max_posts' ] ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-max_posts' ] ) ) : 0;
-                $feed['author_id'] = ( $this->is_key_valid && isset( $_POST[ $feed['id'] . '-author_id' ] ) ) ? intval( wp_unslash( $_POST[ $feed['id'] . '-author_id' ] ) ) : intval( $_POST['author_id'] ?? 0 );
+                $feed['author_id'] = intval( $_POST['author_id'] ?? ( $feed['author_id'] ?? 1 ) );
                 $feed['category_id'] = isset( $_POST[ $feed['id'] . '-category_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-category_id' ] ) ) : '';
                 $feed['tags_id'] = isset( $_POST[ $feed['id'] . '-tags_id' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $feed['id'] . '-tags_id' ] ) ) : '';
                 $feed['keywords'] = array_map( 'trim', $keywords );
@@ -299,14 +254,11 @@ class rssPIAdminProcessor {
 
             $keywords = [];
             $keyword_str = '';
-            if ($this->is_key_valid) {
-                // if the key is valid set up keywords (otherwise don't)
-                if (isset($_POST[$id . '-keywords'])) {
-                    $keyword_str = sanitize_text_field(wp_unslash($_POST[$id . '-keywords']));
-                }
-                if (!empty($keyword_str)) {
-                    $keywords = explode(',', $keyword_str);
-                }
+            if (isset($_POST[$id . '-keywords'])) {
+                $keyword_str = sanitize_text_field(wp_unslash($_POST[$id . '-keywords']));
+            }
+            if (!empty($keyword_str)) {
+                $keywords = explode(',', $keyword_str);
             }
 
             $feed_status = in_array($id, $paused_feeds) ? 'pause' : 'active';
@@ -316,8 +268,7 @@ class rssPIAdminProcessor {
                 'url' => sanitize_text_field(wp_unslash($_POST[$id . '-url'] ?? '')),
                 'name' => sanitize_text_field(wp_unslash($_POST[$id . '-name'] ?? '')),
                 'max_posts' => intval(sanitize_text_field(wp_unslash($_POST[$id . '-max_posts'] ?? 0))),
-                // different author ids depending on valid API keys
-                'author_id' => ($this->is_key_valid && isset($_POST[$id . '-author_id'])) ? intval($_POST[$id . '-author_id']) : intval($_POST['author_id'] ?? 0),
+                'author_id' => intval($_POST['author_id'] ?? 1),
                 'category_id' => sanitize_text_field(wp_unslash($_POST[$id . '-category_id'] ?? '')),
                 'tags_id' => sanitize_text_field(wp_unslash($_POST[$id . '-tags_id'] ?? '')),
                 'keywords' => array_map('trim', $keywords),
@@ -331,15 +282,6 @@ class rssPIAdminProcessor {
         }
 
         // process feeds end
-
-        // import CSV file
-        if (
-            isset($_FILES['import_csv']) &&
-            isset($settings['is_key_valid']) &&
-            $settings['is_key_valid']
-        ) {
-            $feeds = $this->import_csv($feeds);
-        }
 
         // import OPML file
         // @since v2.1.3
@@ -360,7 +302,7 @@ class rssPIAdminProcessor {
 
         if ($import_now) {
             // yield the routine for import feeds via AJAX when needed
-            do_action('rss_pi_cron');
+            do_action('interq_rss_pi_cron');
         }
 
         wp_redirect(add_query_arg(
@@ -368,10 +310,10 @@ class rssPIAdminProcessor {
                 'settings-updated' => 'true',
                 // yield the routine for import feeds via AJAX when needed
                 'import' => $save_to_db,
-                'message' => $invalid_api_key ? 2 : 1,
+                'message' => 1,
                 //'opml_errors' => $opml_errors ? urlencode(implode('<br/>', $opml_errors)) : '',
             ],
-            $rss_post_importer->page_link
+            $interq_rss_post_importer->page_link
         ));
 
         exit;
@@ -383,9 +325,9 @@ class rssPIAdminProcessor {
      */
 
     public function purge_deleted_posts_cache(): void {
-        $nonce = isset( $_POST['rss_pi_nonce_field'] ) ? sanitize_key( $_POST['rss_pi_nonce_field'] ) : '';
+        $nonce = isset( $_POST['interq_rss_pi_nonce_field'] ) ? sanitize_key( $_POST['interq_rss_pi_nonce_field'] ) : '';
         if (
-            empty( $nonce ) || ! wp_verify_nonce( $nonce, 'rss_pi_save_settings_action' ) ||
+            empty( $nonce ) || ! wp_verify_nonce( $nonce, 'interq_rss_pi_save_settings_action' ) ||
             !isset($_POST['purge_deleted_cache'])
         ) {
             return;
@@ -393,16 +335,16 @@ class rssPIAdminProcessor {
 
         $_POST['purge_deleted_cache'] = sanitize_text_field( wp_unslash( $_POST['purge_deleted_cache'] ) );
 
-        delete_option('rss_pi_deleted_posts');
-        delete_option('rss_pi_imported_posts');
+        delete_option('interq_rss_pi_deleted_posts');
+        delete_option('interq_rss_pi_imported_posts');
 
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
 
         wp_redirect(add_query_arg(
             [
                 'deleted_cache_purged' => 'true',
             ],
-            $rss_post_importer->page_link
+            $interq_rss_post_importer->page_link
         ));
 
         exit;
@@ -528,7 +470,7 @@ class rssPIAdminProcessor {
     /**
      * Process submitted data to formulate settings array
      *
-     * @global object $rss_post_importer
+     * @global object $interq_rss_post_importer
      * @return array
      */
 
@@ -540,11 +482,11 @@ class rssPIAdminProcessor {
     private function update_cron(string $frequency): void {
 
         // If cron settings have changed
-        if (wp_get_schedule('rss_pi_cron') != $frequency) {
+        if (wp_get_schedule('interq_rss_pi_cron') != $frequency) {
 
             // Reset cron
-            wp_clear_scheduled_hook('rss_pi_cron');
-            wp_schedule_event(time(), $frequency, 'rss_pi_cron');
+            wp_clear_scheduled_hook('interq_rss_pi_cron');
+            wp_schedule_event(time(), $frequency, 'interq_rss_pi_cron');
         }
     }
 
@@ -558,15 +500,15 @@ class rssPIAdminProcessor {
     /**
      * Update options and reload global options
      *
-     * @global type $rss_post_importer
+     * @global type $interq_rss_post_importer
      * @param array $settings
      * @param array $feeds
      */
     private function save_reload_options(array $settings, array $feeds): void {
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
 
         // existing options
-        $options = $rss_post_importer->options;
+        $options = $interq_rss_post_importer->options;
 
         // new data
         $new_options = [
@@ -578,17 +520,10 @@ class rssPIAdminProcessor {
         ];
 
         // update in db
-        update_option('rss_pi_feeds', $new_options);
+        update_option('interq_rss_pi_feeds', $new_options);
 
         // reload so that the new options are used henceforth
-        $rss_post_importer->load_options();
+        $interq_rss_post_importer->load_options();
     }
-
-    /**
-     * Filter settings for API key vs non-API key installs
-     *
-     * @param array $settings
-     * @return array
-     */
 
 }

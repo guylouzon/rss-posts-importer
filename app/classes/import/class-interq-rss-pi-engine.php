@@ -5,14 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
  */
-class rssPIEngine {
-
-    /**
-     * Whether the API key is valid
-     *
-     * @var bool
-     */
-    public bool $is_key_valid;
+class InterQ_Rss_Pi_Engine {
 
     /**
      * The options
@@ -21,26 +14,26 @@ class rssPIEngine {
      */
     public array $options = [];
     
-    public rssPILog $log;
+    public InterQ_Rss_Pi_Log $log;
     /**
      * Start the engine
      *
-     * @global object $rss_post_importer
+     * @global object $interq_rss_post_importer
      */
     public function __construct() {
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
         $this->load_options();
-        $this->log = new rssPILog();
+        $this->log = new InterQ_Rss_Pi_Log();
     }
 
     /**
      * Load options
      *
-     * @global object $rss_post_importer
+     * @global object $interq_rss_post_importer
      */
     public function load_options(): void {
-        global $rss_post_importer;
-        $this->options = $rss_post_importer->options;
+        global $interq_rss_post_importer;
+        $this->options = $interq_rss_post_importer->options;
     }
 
     /**
@@ -49,34 +42,13 @@ class rssPIEngine {
      * @return int
      */
     public function import_feed(): int {
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
         $this->load_options();
         $post_count = 0;
         // filter cache lifetime
         add_filter('wp_feed_cache_transient_lifetime', [$this, 'frequency']);
 
-        foreach ($this->options['feeds'] as $i => $f) {
-
-            // before the first feed, we check for key validity
-            if ($i === 0) {
-                $this->is_key_valid = $rss_post_importer->is_valid_key($this->options['settings']['feeds_api_key']);
-                $this->options['settings']['is_key_valid'] = $this->is_key_valid;
-                // if the key is not fine
-                if (!empty($this->options['settings']['feeds_api_key']) && !$this->is_key_valid) {
-                    // unset from settings
-                    unset($this->options['settings']['feeds_api_key']);
-                }
-                // update options
-                $new_options = [
-                    'feeds' => $this->options['feeds'],
-                    'settings' => $this->options['settings'],
-                    'latest_import' => $this->options['latest_import'] ?? null,
-                    'imports' => $this->options['imports'] ?? null,
-                    'upgraded' => $this->options['upgraded'] ?? null
-                ];
-                // update in db
-                update_option('rss_pi_feeds', $new_options);
-            }
+        foreach ($this->options['feeds'] as $f) {
 
             // prepare, import feed and count imported posts
             if ($items = $this->do_import($f)) {
@@ -88,7 +60,7 @@ class rssPIEngine {
         $imports = intval($this->options['imports'] ?? 0) + $post_count;
 
         // update options
-        update_option('rss_pi_feeds', [
+        update_option('interq_rss_pi_feeds', [
             'feeds' => $this->options['feeds'],
             'settings' => $this->options['settings'],
             'latest_import' => gmdate("Y-m-d H:i:s"),
@@ -96,14 +68,14 @@ class rssPIEngine {
             'upgraded' => $this->options['upgraded'] ?? null
         ]);
 
-        global $rss_post_importer;
+        global $interq_rss_post_importer;
         // reload options
-        $rss_post_importer->load_options();
+        $interq_rss_post_importer->load_options();
 
         remove_filter('wp_feed_cache_transient_lifetime', [$this, 'frequency']);
 
         // log this
-//        rssPILog::log($post_count);
+//        InterQ_Rss_Pi_Log::log($post_count);
         $this->log->log($post_count);
 
         return $post_count;
@@ -204,9 +176,6 @@ class rssPIEngine {
         // include the default WP feed processing functions
         include_once(ABSPATH . WPINC . '/feed.php');
 
-        // get the right url for fetching (premium vs free)
-        $url = $this->url($url);
-
         // fetch the feed
         $feed = fetch_feed($url);
 
@@ -218,25 +187,6 @@ class rssPIEngine {
         $posts = $this->save($feed, $args);
 
         return $posts;
-    }
-
-    /**
-     * Formulate the right url
-     *
-     * @param string $url
-     * @return string
-     */
-    private function url(string $url): string {
-
-        $key = $this->options['settings']['feeds_api_key'] ?? '';
-
-        //if api key has been saved by user and is not empty
-        if (!empty($key)) {
-            $api_url = 'http://176.58.108.28/fetch.php?key=' . $key . '&url=' . urlencode($url);
-            return $api_url;
-        }
-
-        return $url;
     }
 
     /**
@@ -369,10 +319,10 @@ class rssPIEngine {
         $saved_posts = [];
 
         // Initialise the content parser
-        $parser = new rssPIParser($this->options);
+        $parser = new InterQ_Rss_Pi_Parser($this->options);
 
         // Featured Image setter
-        $thumbnail = new rssPIFeaturedImage();
+        $thumbnail = new InterQ_Rss_Pi_Featured_Image();
 
         // If Item is active then Import
         if (($args['feed_status'] ?? '') === "active") {
@@ -397,7 +347,7 @@ class rssPIEngine {
 
                     //Filter content for /* Add rel="nofollow" to all outbounded links. */
                     if (($args['nofollow_outbound'] ?? '') === 'true') {
-                        $content = $this->rss_pi_url_parse_content($content);
+                        $content = $this->interq_rss_pi_url_parse_content($content);
                     }
 
                     // Get auto categories from Feeds
@@ -580,14 +530,14 @@ class rssPIEngine {
         if (!$post_exists && ($this->options['settings']['cache_deleted'] ?? '') === 'true') {
             // check if the post has been imported and then deleted
             if ($this->options['upgraded']['deleted_posts'] ?? false) { // database migrated
-                $rss_pi_deleted_posts = get_option('rss_pi_deleted_posts', []);
-                if (in_array($permalink_md5, $rss_pi_deleted_posts)) {
+                $interq_rss_pi_deleted_posts = get_option('interq_rss_pi_deleted_posts', []);
+                if (in_array($permalink_md5, $interq_rss_pi_deleted_posts)) {
                     $post_exists = true;
                 }
             } else {
                 //do it the old fashion way
-                $rss_pi_imported_posts = get_option('rss_pi_imported_posts', []);
-                if (in_array($permalink, $rss_pi_imported_posts)) {
+                $interq_rss_pi_imported_posts = get_option('interq_rss_pi_imported_posts', []);
+                if (in_array($permalink, $interq_rss_pi_imported_posts)) {
                     $post_exists = true;
                 }
             }
@@ -625,11 +575,11 @@ class rssPIEngine {
             }
         }
 
-        $_post = apply_filters('pre_rss_pi_insert_post', $post);
+        $_post = apply_filters('interq_rss_pi_pre_insert_post', $post);
 
         $post_id = wp_insert_post($_post);
 
-        add_action('save_rss_pi_post', $post_id);
+        add_action('interq_rss_pi_save_post', $post_id);
 
         $url_md5 = md5($url);
         update_post_meta($post_id, 'rss_pi_source_url', esc_url($url));
@@ -885,7 +835,7 @@ public function download_images_locally_regex_fallback(array $post): array {
     return $post;
 }
 
-    public function rss_pi_url_parse_content(string $content): string {
+    public function interq_rss_pi_url_parse_content(string $content): string {
         $regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>";
         if (preg_match_all("/$regexp/siU", $content, $matches, PREG_SET_ORDER)) {
             if (!empty($matches)) {
