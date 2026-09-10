@@ -37,7 +37,6 @@ Content syndication allows bloggers to share relevant content from other sources
 
 = 2026.9.1 =
 * WordPress.org review compliance: all classes, options, hooks, AJAX actions and nonces now use the unique interq_rss_pi_ prefix, with automatic migration of existing settings and the old cron hook.
-* Removed the FeedsAPI full-text integration: no external service is called anymore and keyword filtering works locally for all users.
 * Log directory moved from wp-content/rsspi-log to the uploads folder; removed the raw POST debug log write.
 * Text domain now matches the plugin slug (interq-rss-posts-importer); translation files renamed accordingly.
 * Removed inline styles and unused template files.

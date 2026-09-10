@@ -29,19 +29,6 @@ msgstr ""
 msgid "new posts imported."
 msgstr ""
 
-#: classes/admin/class-rss-pi-admin-processor.php:192
-msgid "Invalid API key!"
-msgstr ""
-
-#: classes/admin/class-rss-pi-admin.php:40
-msgid ""
-"You need a <a href=\"http://www.feedsapi.com/?utm_source=rsspi-full-rss-key-"
-"here\" target=\"_blank\">Full Text RSS Key</a> to activate this section, "
-"please <a href=\"http://www.feedsapi.com/?utm_source=rsspi-full-rss-key-here"
-"\" target=\"_blank\">get one and try it free</a> for the next 14 days to see "
-"how it goes."
-msgstr ""
-
 # @ rss_pi
 #: classes/helpers/class-rss-pi-log.php:46
 msgid "Log has been cleared."
@@ -195,10 +182,6 @@ msgstr "Frecuencia"
 #: templates/settings-table.php:14
 msgid "How often will the import run."
 msgstr "¿Con qué frecuencia se ejecutará la importación."
-
-#: templates/settings-table.php:30
-msgid "Full Text RSS Feed API Key"
-msgstr ""
 
 #: templates/settings-table.php:32
 msgid "Boost Your traffic with Full RSS Content - "

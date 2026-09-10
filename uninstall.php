@@ -22,6 +22,7 @@ if (!is_multisite()) {
 } else {
 	// For Multisite
 	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall must enumerate every site once; caching disposable cleanup data is inappropriate.
 	$blog_ids = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT blog_id FROM {$wpdb->blogs} WHERE archived = %d AND deleted = %d",

@@ -232,7 +232,6 @@ Not only does this WordPress RSS Aggregator Plugin import a snippet of the rss f
 * Bug fixed and Improvements in code.
 
 = Version 2.0.4 =
-* Added Single tag(Without API key) and Multiple tags(With API key) assigned to imported posts
 
 = Version 2.0.3 =
 * show Category removed from feeds section to prevent UI breaking

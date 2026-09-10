@@ -22,7 +22,7 @@ $new_version = INTERQ_RSS_PI_VERSION;
             <input type="hidden" name="import_now" id="import_now" value="false">
 
             <?php wp_nonce_field('interq_rss_pi_save_settings_action', 'interq_rss_pi_nonce_field'); ?>
-            <input type="hidden" name="interq_rss_pi_nonce_field" id="interq_rss_pi_ajax_nonce" value="<?php echo esc_attr(wp_create_nonce('interq_rss_pi_ajax_nonce_action')); ?>" />
+            <input type="hidden" name="interq_rss_pi_ajax_nonce" id="interq_rss_pi_ajax_nonce" value="<?php echo esc_attr(wp_create_nonce('interq_rss_pi_ajax_nonce_action')); ?>" />
 
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder columns-2">
