@@ -210,6 +210,7 @@ class InterQ_Rss_Posts_Importer {
 
                 $posts = get_posts( [
                     'post_type'   => 'any',
+                    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one-time upgrade migration of the legacy imported-posts option, time-boxed and not on the front end
                     'meta_query'  => [
                         [
                             'key'     => 'rss_pi_source_url',

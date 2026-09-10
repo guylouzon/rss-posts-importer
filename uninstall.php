@@ -21,13 +21,13 @@ if (!is_multisite()) {
 	wp_clear_scheduled_hook('interq_rss_pi_cron');
 } else {
 	// For Multisite
-	global $wpdb;
-	$blog_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT blog_id FROM {$wpdb->blogs} WHERE archived = %d AND deleted = %d",
-			0,
-			0
-		)
+	$blog_ids = get_sites(
+		[
+			'fields'   => 'ids',
+			'archived' => 0,
+			'deleted'  => 0,
+			'number'   => 0,
+		]
 	);
 	$original_blog_id = get_current_blog_id();
 	foreach ($blog_ids as $blog_id) {

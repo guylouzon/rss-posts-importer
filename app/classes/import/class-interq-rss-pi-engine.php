@@ -483,22 +483,23 @@ class InterQ_Rss_Pi_Engine {
         $post_exists = false;
 
         if (isset($this->options['upgraded']['deleted_posts'])) { // database migrated
-            if ( ! empty( $existing_posts ) ) {
+            $cache_key = 'interq_rss_pi_post_exists_' . $permalink_md5;
+            $cached_hit = wp_cache_get( $cache_key, 'interq-rss-pi' );
+            if ( false === $cached_hit ) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- md5 lookup on postmeta joined with posts; a WP_Query meta_query would trip the slow-query sniff, result is cached above
+                $posts = $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT meta_id FROM {$wpdb->postmeta} pm, {$wpdb->posts} p WHERE pm.meta_key = 'rss_pi_source_md5' AND ( pm.meta_value = %s) AND pm.post_id = p.ID AND p.post_status <> 'trash'",
+                        $permalink_md5
+                    ),
+                    'ARRAY_A'
+                );
+                $cached_hit = count( $posts ) ? 1 : 0;
+                wp_cache_set( $cache_key, $cached_hit, 'interq-rss-pi', 5 * MINUTE_IN_SECONDS );
+            }
+            if ( $cached_hit ) {
                 $post_exists = true;
             }
-
-            $posts = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT meta_id FROM {$wpdb->postmeta} pm, {$wpdb->posts} p WHERE pm.meta_key = 'rss_pi_source_md5' AND ( pm.meta_value = %s) AND pm.post_id = p.ID AND p.post_status <> 'trash'",
-                    $permalink_md5
-                ),
-                'ARRAY_A'
-            );
-            if (count($posts)) {
-                $post_exists = true;
-            }
-
-
         }
         if (!$post_exists) {
             // do it the old fashion way -> check for post title and source domain
@@ -506,17 +507,19 @@ class InterQ_Rss_Pi_Engine {
             $domain_old = $this->get_domain($permalink);
 
             //checking if post title already exists
-            $posts = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT ID FROM {$wpdb->prefix}posts WHERE post_title = %s and post_status = 'publish' ",
-                    $title
-                ),
-                'ARRAY_A'
+            $posts = get_posts(
+                [
+                    'title'          => $title,
+                    'post_type'      => 'any',
+                    'post_status'    => 'publish',
+                    'fields'         => 'ids',
+                    'posts_per_page' => -1,
+                    'no_found_rows'  => true,
+                ]
             );
             if ($posts) {
                 //checking if post source is also same
-                foreach ($posts as $post) {
-                    $post_id = $post['ID'];
+                foreach ($posts as $post_id) {
                     $source_url = get_post_meta($post_id, 'rss_pi_source_url', true);
                     $domain_new = $this->get_domain($source_url);
 
@@ -584,6 +587,9 @@ class InterQ_Rss_Pi_Engine {
         $url_md5 = md5($url);
         update_post_meta($post_id, 'rss_pi_source_url', esc_url($url));
         update_post_meta($post_id, 'rss_pi_source_md5', $url_md5);
+
+        // prime the post_exists() lookup cache for this source URL
+        wp_cache_set( 'interq_rss_pi_post_exists_' . $url_md5, 1, 'interq-rss-pi', 5 * MINUTE_IN_SECONDS );
 
         return $post_id;
     }
