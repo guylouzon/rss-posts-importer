@@ -4,7 +4,7 @@ Plugin Name: InterQ Rss Posts Importer
 Donate link: https://github.com/guylouzon/rss-posts-importer
 Tags: rss aggregation, autoblog, rss feed, content curation, importer
 Requires at least: 4.9
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 2026.9.1
 License: GPLv2 or later
