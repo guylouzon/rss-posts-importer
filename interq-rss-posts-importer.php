@@ -64,6 +64,29 @@ include_once INTERQ_RSS_PI_PATH . 'app/classes/import/class-interq-rss-pi-cron.p
 // the main loader class
 include_once INTERQ_RSS_PI_PATH . 'app/class-interq-rss-posts-importer.php';
 
+/**
+ * Schedule the import cron event on activation.
+ *
+ * The event is otherwise only created on front-end page loads
+ * (InterQ_Rss_Pi_Cron::schedule() runs on the 'wp' action) or when the
+ * settings form is saved with a recurrence. A fresh (re)install activated
+ * from wp-admin would otherwise have no scheduled event at all.
+ */
+function interq_rss_pi_activate(): void {
+    if (!wp_next_scheduled('interq_rss_pi_cron')) {
+        wp_schedule_event(time(), 'hourly', 'interq_rss_pi_cron');
+    }
+}
+register_activation_hook(__FILE__, 'interq_rss_pi_activate');
+
+/**
+ * Clear the scheduled import event on deactivation.
+ */
+function interq_rss_pi_deactivate(): void {
+    wp_clear_scheduled_hook('interq_rss_pi_cron');
+}
+register_deactivation_hook(__FILE__, 'interq_rss_pi_deactivate');
+
 // initialise plugin as a global var
 global $interq_rss_post_importer;
 
