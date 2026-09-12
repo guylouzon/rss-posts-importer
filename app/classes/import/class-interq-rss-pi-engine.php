@@ -124,7 +124,7 @@ class InterQ_Rss_Pi_Engine {
             'nofollow_outbound' => $f['nofollow_outbound'],
             'automatic_import_categories' => $f['automatic_import_categories'],
             'automatic_import_author' => $f['automatic_import_author'],
-            'feed_status' => $f['feed_status'],
+            'feed_status' => !empty($f['feed_status']) ? $f['feed_status'] : 'active',
             'canonical_urls' => $f['canonical_urls'],
             'save_to_db' => true
         ];
@@ -582,7 +582,7 @@ class InterQ_Rss_Pi_Engine {
 
         $post_id = wp_insert_post($_post);
 
-        add_action('interq_rss_pi_save_post', $post_id);
+        do_action('interq_rss_pi_save_post', $post_id, $post);
 
         $url_md5 = md5($url);
         update_post_meta($post_id, 'rss_pi_source_url', esc_url($url));

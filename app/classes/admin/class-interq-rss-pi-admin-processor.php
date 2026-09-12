@@ -399,7 +399,13 @@ class InterQ_Rss_Pi_Admin_Processor {
 
             // Reset cron
             wp_clear_scheduled_hook('interq_rss_pi_cron');
-            wp_schedule_event(time(), $frequency, 'interq_rss_pi_cron');
+            $scheduled = wp_schedule_event(time(), $frequency, 'interq_rss_pi_cron');
+
+            // Scheduling failed (invalid or empty recurrence): fall back to hourly
+            // so imports never silently stop.
+            if (!$scheduled || is_wp_error($scheduled)) {
+                wp_schedule_event(time(), 'hourly', 'interq_rss_pi_cron');
+            }
         }
     }
 

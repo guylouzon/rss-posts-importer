@@ -127,11 +127,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (action === 'pause') {
             this.setAttribute('data-action', 'enable');
             this.innerHTML = 'Enable Feed';
-            paused_feeds.push(target);
+            if (paused_feeds.indexOf(target) === -1) {
+                paused_feeds.push(target);
+            }
         } else {
             this.setAttribute('data-action', 'pause');
             this.innerHTML = 'Pause';
-            paused_feeds.pop(target);
+            paused_feeds = paused_feeds.filter(function (id) { return id !== target; });
         }
         $('#paused_feeds').value = paused_feeds.join(',');
     });
