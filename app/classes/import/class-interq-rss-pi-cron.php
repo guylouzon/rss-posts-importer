@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Handles cron jobs
  *
- * @author mobilova UG (haftungsbeschränkt) <rsspostimporter@feedsapi.com>
+ * 
  */
 class InterQ_Rss_Pi_Cron {
 
