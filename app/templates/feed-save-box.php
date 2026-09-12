@@ -16,6 +16,9 @@
             </ul>
         </div>
         <div id="major-publishing-actions">
+            <a class="button button-large" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=interq_rss_pi_fetch_now' ), 'interq_rss_pi_fetch_now_action', 'interq_rss_pi_fetch_now_nonce' ) ); ?>">
+                <?php esc_html_e('Fetch Now', 'interq-rss-posts-importer'); ?>
+            </a>
             <input class="button button-large right" type="submit" name="info_update" value="<?php esc_attr_e('Save All', 'interq-rss-posts-importer'); ?>" style="background-color:#d63638;color:#fff;border-color:#d63638;" />
         </div>
     </div>

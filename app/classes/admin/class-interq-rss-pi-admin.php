@@ -87,6 +87,35 @@ class InterQ_Rss_Pi_Admin {
 
         add_filter('cron_schedules', [$this, 'interq_rss_pi_cron_add_custom']);
 
+        // the manual "Fetch Now" import trigger
+        add_action('admin_post_interq_rss_pi_fetch_now', [$this, 'fetch_now']);
+
+    }
+
+    /**
+     * Manually import all active feeds ("Fetch Now" button).
+     * Runs the same import the scheduled cron event runs.
+     */
+    public function fetch_now(): void {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Sorry, you are not allowed to do this.', 'interq-rss-posts-importer' ) );
+        }
+
+        check_admin_referer( 'interq_rss_pi_fetch_now_action', 'interq_rss_pi_fetch_now_nonce' );
+
+        global $interq_rss_post_importer;
+
+        $engine = new InterQ_Rss_Pi_Engine();
+        $post_count = $engine->import_feed();
+
+        wp_redirect( add_query_arg(
+            [
+                'fetch_now' => 'done',
+                'imported'  => $post_count,
+            ],
+            $interq_rss_post_importer->page_link
+        ) );
+        exit;
     }
 
     /**
@@ -219,6 +248,20 @@ class InterQ_Rss_Pi_Admin {
         $deleted_cache_purged = filter_input( INPUT_GET, 'deleted_cache_purged', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $settings_updated     = filter_input( INPUT_GET, 'settings-updated', FILTER_VALIDATE_BOOLEAN );
         $import_requested     = filter_input( INPUT_GET, 'import', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $fetch_now_done       = filter_input( INPUT_GET, 'fetch_now', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $fetch_now_count      = filter_input( INPUT_GET, 'imported', FILTER_VALIDATE_INT );
+
+        if ( 'done' === $fetch_now_done ) {
+            $fetch_now_count = $fetch_now_count ?: 0;
+            echo '<div id="message" class="updated"><p><strong>' .
+                esc_html(
+                    sprintf(
+                        /* translators: %d: number of posts imported */
+                        _n( 'Fetch complete: %d new post imported.', 'Fetch complete: %d new posts imported.', $fetch_now_count, 'interq-rss-posts-importer' ),
+                        $fetch_now_count
+                    )
+                ) . '</strong></p></div>';
+        }
 
         // 1. Success Messages
         if ( $deleted_cache_purged || $settings_updated || ( $import_requested && $settings_updated ) ) {
