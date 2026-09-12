@@ -238,16 +238,22 @@ class InterQ_Rss_Pi_Engine {
             if (empty($feed_item)) {
                 break;
             }
-            // get the content
-            $content = $feed_item[0]->get_content();
+            try {
+                // get the content - SimplePie returns null for items without content
+                $content = $feed_item[0]->get_content();
+                $content = is_string($content) ? $content : '';
 
-            // test it against the keywords
-            $tested = $this->test($content, $args['keywords']);
+                // test it against the keywords
+                $tested = $this->test($content, $args['keywords']);
 
-            // if this is good for us
-            if ($tested) {
-                $got++;
-                $filtered[] = $feed_item[0];
+                // if this is good for us
+                if ($tested) {
+                    $got++;
+                    $filtered[] = $feed_item[0];
+                }
+            } catch (\Throwable $e) {
+                // one bad item must not kill the whole import run
+                $this->err_log('RSS PI: skipping feed item after error: ' . $e->getMessage());
             }
             // shift the index
             $index++;
@@ -259,11 +265,13 @@ class InterQ_Rss_Pi_Engine {
     /**
      * Test a piece of content against keywords
      *
-     * @param string $content
+     * @param string|null $content
      * @param array|null $keywords
      * @return bool
      */
-    public function test(string $content, ?array $keywords = null): bool {
+    public function test(?string $content, ?array $keywords = null): bool {
+        $content = $content ?? '';
+
         if ($keywords === null) {
             $keywords = $this->options['settings']['keywords'] ?? [];
         }
@@ -329,134 +337,142 @@ class InterQ_Rss_Pi_Engine {
 
             foreach ($items as $item) {
 
-                if (!$this->post_exists($item)) {
+                // one bad item must not kill the whole import run
+                try {
 
-                    /* Code to convert tags id array to tag name array */
-                    $tags_name = [];
-                    if (!empty($args['tags_id']) && is_array($args['tags_id'])) {
-                        foreach ($args['tags_id'] as $tagid) {
-                            $tag_name = get_tag($tagid); // <-- your tag ID
-                            if ($tag_name && isset($tag_name->name)) {
-                                $tags_name[] = $tag_name->name;
-                            }
-                        }
-                    }
+                    if (!$this->post_exists($item)) {
 
-                    // parse the content
-                    $content = $parser->_parse($item, $args['feed_title'], $args['strip_html']);
-
-                    //Filter content for /* Add rel="nofollow" to all outbounded links. */
-                    if (($args['nofollow_outbound'] ?? '') === 'true') {
-                        $content = $this->interq_rss_pi_url_parse_content($content);
-                    }
-
-                    // Get auto categories from Feeds
-                    $post_category = [];
-                    if (($args['automatic_import_categories'] ?? '') === 'true') {
-                        $category_array = [];
-                        foreach ($item->get_categories() as $category) {
-                            $cat_id = wp_create_category($category->get_label());
-                            if ($cat_id > 0) {
-                                $category_array[] = $cat_id;
-                            } else {
-                                $category_obj = get_term_by('name', $category->get_label(), 'category');
-                                if ($category_obj) {
-                                    $category_array[] = $category_obj->term_id;
+                        /* Code to convert tags id array to tag name array */
+                        $tags_name = [];
+                        if (!empty($args['tags_id']) && is_array($args['tags_id'])) {
+                            foreach ($args['tags_id'] as $tagid) {
+                                $tag_name = get_tag($tagid); // <-- your tag ID
+                                if ($tag_name && isset($tag_name->name)) {
+                                    $tags_name[] = $tag_name->name;
                                 }
                             }
                         }
-                        $post_category = $category_array;
-                    } else {
-                        $post_category = is_array($args['category_id']) ? $args['category_id'] : [$args['category_id']];
-                    }
 
-                    // Get Author From Feed URl
-                    if (($args['automatic_import_author'] ?? '') === 'true') {
-                        if ($author = $item->get_author()) {
-                            $array_author = explode(",", $author->get_name());
-                            $user_name = preg_replace('/[^A-Za-z0-9\-]/', ' ', $array_author[0]);
-                            $user_id = username_exists($user_name);
-                            if (!$user_id) {
-                                $random_password = wp_generate_password(12, false);
-                                $user_id = wp_create_user($user_name, $random_password, '');
+                        // parse the content
+                        $content = $parser->_parse($item, $args['feed_title'], $args['strip_html']);
+
+                        //Filter content for /* Add rel="nofollow" to all outbounded links. */
+                        if (($args['nofollow_outbound'] ?? '') === 'true') {
+                            $content = $this->interq_rss_pi_url_parse_content($content);
+                        }
+
+                        // Get auto categories from Feeds
+                        $post_category = [];
+                        if (($args['automatic_import_categories'] ?? '') === 'true') {
+                            $category_array = [];
+                            foreach ($item->get_categories() as $category) {
+                                $cat_id = wp_create_category($category->get_label());
+                                if ($cat_id > 0) {
+                                    $category_array[] = $cat_id;
+                                } else {
+                                    $category_obj = get_term_by('name', $category->get_label(), 'category');
+                                    if ($category_obj) {
+                                        $category_array[] = $category_obj->term_id;
+                                    }
+                                }
                             }
-                            $post_author = $user_id;
+                            $post_category = $category_array;
+                        } else {
+                            $post_category = is_array($args['category_id']) ? $args['category_id'] : [$args['category_id']];
+                        }
+
+                        // Get Author From Feed URl
+                        if (($args['automatic_import_author'] ?? '') === 'true') {
+                            if ($author = $item->get_author()) {
+                                $array_author = explode(",", $author->get_name());
+                                $user_name = preg_replace('/[^A-Za-z0-9\-]/', ' ', $array_author[0]);
+                                $user_id = username_exists($user_name);
+                                if (!$user_id) {
+                                    $random_password = wp_generate_password(12, false);
+                                    $user_id = wp_create_user($user_name, $random_password, '');
+                                }
+                                $post_author = $user_id;
+                            } else {
+                                $post_author = $args['author_id'];
+                            }
                         } else {
                             $post_author = $args['author_id'];
                         }
-                    } else {
-                        $post_author = $args['author_id'];
-                    }
 
-                    $post = [
-                        'post_title' => $item->get_title(),
-                        'post_content' => $content,
-                        'post_status' => $this->options['settings']['post_status'],
-                        'post_author' => $post_author,
-                        'post_category' => $post_category,
-                        'tags_input' => $tags_name,
-                        'comment_status' => $this->options['settings']['allow_comments'],
-                        'post_date' => get_date_from_gmt($item->get_date('Y-m-d H:i:s'))
-                    ];
-
-                    // catch base url and replace any img src with it
-                    if (preg_match('/src="\//ui', $content)) {
-                        preg_match('/href="(.+?)"/ui', $content, $matches);
-                        $baseref = (is_array($matches) && !empty($matches)) ? $matches[1] : '';
-                        if (!empty($baseref)) {
-                            $bc = wp_parse_url($baseref);
-                            $scheme = (!isset($bc['scheme']) || empty($bc['scheme'])) ? 'http' : $bc['scheme'];
-                            $port = isset($bc['port']) ? ':' . $bc['port'] : '';
-                            $host = $bc['host'] ?? '';
-                            if (!empty($host)) {
-                                $preurl = $scheme . $port . '//' . $host;
-                                $post['post_content'] = preg_replace('/(src="\/)/i', 'src="' . $preurl . '/', $content);
-                            }
-                        }
-                    }
-
-                    //download images and save them locally if setting suggests so
-                    if ((string)($this->options['settings']['import_images_locally'] ?? '') === 'true' || (string)($this->options['settings']['import_images_locally'] ?? '') === 'true') {
-                        $post = $this->download_images_locally($post);
-                    }
-
-                    // insert as post
-                    $post_id = $this->_insert($post, $item->get_permalink());
-
-                    // set thumbnail
-                    if (($this->options['settings']['disable_thumbnail'] ?? '') === 'false'  || (string)($this->options['settings']['disable_thumbnail'] ?? '') === 'false') {
-                        // assign a thumbnail (featured image) to the post
-                        $thumbnail->_set($item, $post_id);
-                        $attachment_id = get_post_thumbnail_id($post_id);
-                    } else {
-                        // just download the image to the media library
-                        $attachment_id = $thumbnail->_prepare($item, $post_id);
-                    }
-
-                    /* Parse {$inline_image} template tag
-                     * @since 2.1.3
-                     */
-                    if (preg_match('/\{\$inline_image\}/i', $post['post_content'])) {
-                        $_post_content = $post['post_content'];
-                        if ($attachment_id) {
-                            $featured_image = wp_get_attachment_image_src($attachment_id, 'full');
-                            $featured_image = '<img src="' . $featured_image[0] . '" width="' . $featured_image[1] . '" height="' . $featured_image[2] . '">';
-                        } else {
-                            $featured_image = '';
-                        }
-                        $_post_content = preg_replace('/\{\$inline_image\}/i', $featured_image, $_post_content);
-                        $_post = [
-                            'ID' => $post_id,
-                            'post_content' => $_post_content
+                        $post = [
+                            'post_title' => $item->get_title(),
+                            'post_content' => $content,
+                            'post_status' => $this->options['settings']['post_status'],
+                            'post_author' => $post_author,
+                            'post_category' => $post_category,
+                            'tags_input' => $tags_name,
+                            'comment_status' => $this->options['settings']['allow_comments'],
+                            'post_date' => get_date_from_gmt($item->get_date('Y-m-d H:i:s'))
                         ];
 
-                        wp_update_post($_post);
+                        // catch base url and replace any img src with it
+                        if (preg_match('/src="\//ui', $content)) {
+                            preg_match('/href="(.+?)"/ui', $content, $matches);
+                            $baseref = (is_array($matches) && !empty($matches)) ? $matches[1] : '';
+                            if (!empty($baseref)) {
+                                $bc = wp_parse_url($baseref);
+                                $scheme = (!isset($bc['scheme']) || empty($bc['scheme'])) ? 'http' : $bc['scheme'];
+                                $port = isset($bc['port']) ? ':' . $bc['port'] : '';
+                                $host = $bc['host'] ?? '';
+                                if (!empty($host)) {
+                                    $preurl = $scheme . $port . '//' . $host;
+                                    $post['post_content'] = preg_replace('/(src="\/)/i', 'src="' . $preurl . '/', $content);
+                                }
+                            }
+                        }
 
-                        $post['post_content'] = $_post_content;
+                        //download images and save them locally if setting suggests so
+                        if ((string)($this->options['settings']['import_images_locally'] ?? '') === 'true' || (string)($this->options['settings']['import_images_locally'] ?? '') === 'true') {
+                            $post = $this->download_images_locally($post);
+                        }
+
+                        // insert as post
+                        $post_id = $this->_insert($post, $item->get_permalink());
+
+                        // set thumbnail
+                        if (($this->options['settings']['disable_thumbnail'] ?? '') === 'false'  || (string)($this->options['settings']['disable_thumbnail'] ?? '') === 'false') {
+                            // assign a thumbnail (featured image) to the post
+                            $thumbnail->_set($item, $post_id);
+                            $attachment_id = get_post_thumbnail_id($post_id);
+                        } else {
+                            // just download the image to the media library
+                            $attachment_id = $thumbnail->_prepare($item, $post_id);
+                        }
+
+                        /* Parse {$inline_image} template tag
+                         * @since 2.1.3
+                         */
+                        if (preg_match('/\{\$inline_image\}/i', $post['post_content'])) {
+                            $_post_content = $post['post_content'];
+                            if ($attachment_id) {
+                                $featured_image = wp_get_attachment_image_src($attachment_id, 'full');
+                                $featured_image = '<img src="' . $featured_image[0] . '" width="' . $featured_image[1] . '" height="' . $featured_image[2] . '">';
+                            } else {
+                                $featured_image = '';
+                            }
+                            $_post_content = preg_replace('/\{\$inline_image\}/i', $featured_image, $_post_content);
+                            $_post = [
+                                'ID' => $post_id,
+                                'post_content' => $_post_content
+                            ];
+
+                            wp_update_post($_post);
+
+                            $post['post_content'] = $_post_content;
+                        }
+                        // canonical_urls
+                        update_post_meta($post_id, 'rss_pi_canonical_url', $args['canonical_urls']);
+                        $saved_posts[] = $post;
                     }
-                    // canonical_urls
-                    update_post_meta($post_id, 'rss_pi_canonical_url', $args['canonical_urls']);
-                    $saved_posts[] = $post;
+
+                } catch (\Throwable $e) {
+                    $this->err_log('RSS PI: skipping feed item after error: ' . $e->getMessage());
+                    continue;
                 }
             }
         }
