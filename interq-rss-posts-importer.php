@@ -5,7 +5,7 @@
   Plugin URI: https://wordpress.org/plugins/interq-rss-posts-importer/
   Description: This plugin lets you set up an import posts from one or several rss-feeds and save them as posts on your site, simple and flexible.
   Author: Guy Louzon
-  Version: 2026.9.1
+  Version: 2026.9.2
   Author URI: https://github.com/guylouzon/RSS-posts-importer
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
